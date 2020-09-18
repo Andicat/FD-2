@@ -1,0 +1,68 @@
+@font-face {
+	font-style: normal;
+	font-weight: normal;
+	font-family: "Roboto";
+  
+	src:
+	  url("../fonts/Roboto-Regular.woff2") format("woff2"),
+	  url("../fonts/Roboto-Regular.woff") format("woff");
+}
+  
+@font-face {
+	font-style: normal;
+	font-weight: bold;
+	font-family: "Roboto";
+  
+	src:
+	  url("../fonts/Roboto-Bold.woff2") format("woff2"),
+	  url("../fonts/Roboto-Bold.woff") format("woff");
+}
+
+body {
+	font-family: "Roboto", sans-serif;
+	font-size: 14px;
+	line-height: 21px;
+	color: #000000;
+	font-style: italic;
+	text-align: center;
+	background-color: #f2f2f2;
+}
+
+a {
+	text-decoration: none;
+}
+
+.visually-hidden {
+	position: absolute;
+	clip: rect(0 0 0 0);
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	border: 0px;
+	padding: 0px;
+}
+
+.tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+button {
+	font-size: 24px;
+	margin: 15px;
+	padding: 15px;
+	@include transition (all);
+	min-width: 200px;
+	border-radius: 3px;
+	border: none;
+	background-color: rgb(37, 99, 107);
+	color: white;
+	cursor: pointer;
+}
+
+button:hover,
+button:focus {
+	outline: none;
+	opacity: 0.9;
+}

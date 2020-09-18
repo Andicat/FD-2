@@ -1,1 +1,1 @@
-# FD-2 Andreeva
+# Обучение "Разработка веб-приложений на JavaScript" от It-Academy
