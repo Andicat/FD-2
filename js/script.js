@@ -1,6 +1,8 @@
 'use strict';
   
 var btnAnketa = document.querySelector('.Anketa');
+const SEX_MALE = "мужской";
+const SEX_FEMALE = "женский";
 
 function getName (question) {
   var str = "";
@@ -15,11 +17,11 @@ function getAge (question) {
   while (!age || age<=0 || age>125) {
     age = Number(prompt(question));
   };
-  return parseInt(age);
+  return age;
 }
 
 function isOnRest (age, sex) {
-  var ageForRest = (sex==="мужской") ? 65 : 60;
+  var ageForRest = (sex===SEX_MALE) ? 65 : 60;
   return (age>=ageForRest ? "да" : "нет");
 }
 
@@ -29,7 +31,7 @@ if (btnAnketa) {
 	var firstName = getName("Введите ваше имя");
 	var patrName = getName("Введите ваше отчество");
 	var age = getAge("Введите ваш возраст");
-	var sex = confirm("Выберите ваш пол: \n - Нажмите \"Ок\", если вы мужчина \n - Нажмите \"Отмена\", если вы женщина!") ? "мужчина" : "женщина";
+	var sex = confirm("Выберите ваш пол: \n - Нажмите \"Ок\", если вы мужчина \n - Нажмите \"Отмена\", если вы женщина!") ? SEX_MALE : SEX_FEMALE;
 	var result = "ваше ФИО: " + lastName + " " + firstName + " " + patrName + "\n"
 				+ "ваш возраст в годах: " + age + "\n"
 				+ "ваш возраст в днях: " + (age*365) + "\n"
