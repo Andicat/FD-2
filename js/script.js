@@ -1,8 +1,6 @@
 'use strict';
   
 var btnAnketa = document.querySelector('.Anketa');
-const SEX_MALE = "мужской";
-const SEX_FEMALE = "женский";
 
 function getName (question) {
   var str = "";
@@ -20,9 +18,9 @@ function getAge (question) {
   return age;
 }
 
-function isOnRest (age, sex) {
-  var ageForRest = (sex===SEX_MALE) ? 65 : 60;
-  return (age>=ageForRest ? "да" : "нет");
+function isOnRest (age, isMale) {
+  var ageForRest = isMale ? 65 : 60;
+  return (age>=ageForRest ? true : false);
 }
 
 if (btnAnketa) {
@@ -31,13 +29,13 @@ if (btnAnketa) {
 	var firstName = getName("Введите ваше имя");
 	var patrName = getName("Введите ваше отчество");
 	var age = getAge("Введите ваш возраст");
-	var sex = confirm("Выберите ваш пол: \n - Нажмите \"Ок\", если вы мужчина \n - Нажмите \"Отмена\", если вы женщина!") ? SEX_MALE : SEX_FEMALE;
+	var isMale = confirm("Выберите ваш пол: \n - Нажмите \"Ок\", если вы мужчина \n - Нажмите \"Отмена\", если вы женщина!") ? true : false;
 	var result = "ваше ФИО: " + lastName + " " + firstName + " " + patrName + "\n"
 				+ "ваш возраст в годах: " + age + "\n"
 				+ "ваш возраст в днях: " + (age*365) + "\n"
 				+ "через 5 лет вам будет: " + (age+5) + "\n"
-				+ "ваш пол: " + sex + "\n"
-				+ "вы на пенсии: " + isOnRest(age, sex);
+				+ "ваш пол: " + (isMale ? "мужчина" : "женщина") + "\n"
+				+ "вы на пенсии: " + (isOnRest(age, isMale) ? "да" : "нет");
 	alert(result);
 	});
 }
