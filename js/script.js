@@ -107,7 +107,6 @@
     var count = 0;
     for (var i = 0; i < str.length; i++) {
       count = count + ((str[i] in vowels) ? 1 : 0);
-      //console.log("Проверка буквы " + str[i] + " - " + ((str[i] in vowels)?"":" не ") + " гласная");
     }
     return count;
   }
@@ -116,7 +115,7 @@
     btnTask.addEventListener('click', (event) => {
       var testStr = prompt("Введите слово. А мы посчитаем количество русских гласных в нём.");
       var result = vowelsCount(testStr.toLowerCase());
-      alert("Количество русских гласных: " + result);
+      console.log("Количество русских гласных: " + result);
     });
   }
 })();
