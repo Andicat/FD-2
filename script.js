@@ -29,10 +29,8 @@ A2+
       last--;
     }
     
-    //собираем строку
-    for (var i = first; i <= last; i++) {
-      strRes = strRes + str[i];
-    } 
+    //вырезаем строку
+      strRes = str.slice(first,last+1);
 
     return strRes;
   }
