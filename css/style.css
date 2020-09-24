@@ -57,6 +57,10 @@ a {
 	align-items: center;
 }
 
+.task__item--done {
+	display: none;
+}
+
 .task__item span {
 	color: peru;
 	font-size: 20px;
