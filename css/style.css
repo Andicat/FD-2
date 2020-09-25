@@ -50,6 +50,7 @@ a {
 
 .task__list {
 	list-style: none;
+	padding: 0;
 }
 
 .task__item {
