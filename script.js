@@ -17,7 +17,8 @@ A3+
   var btnTask = document.querySelector('.Palindrome');
   
   function isPalindrome (str) {
-
+    str = str.toLowerCase();
+    
     var exception = {" ":true, "?":true, ",":true, ".":true, "!":true, ";":true, ":":true, "-":true, "(":true, ")":true, '"':true, "'":true, "ь":true, "ъ":true};
         
     var first = 0;
@@ -27,15 +28,15 @@ A3+
       var leftSymbol = str[first];
       var rightSymbol = str[last];
 
-      //игнорируем пробелы, знаки препинания, ь, ъ
-      if (leftSymbol in exception) {
+      //пропускаем пробелы, знаки препинания, ь, ъ
+      while (leftSymbol in exception) {
         first++;
-        continue;
+        leftSymbol = str[first];
       }
 
-      if (rightSymbol in exception) {
+      while (rightSymbol in exception) {
         last--;
-        continue;
+        rightSymbol = str[last];
       }
 
       //игнорируем разницу между буквами "е" и "ё"
@@ -62,7 +63,7 @@ A3+
   if (btnTask) {
     btnTask.addEventListener('click', (event) => {
       var testStr = prompt("Введите фразу. А мы проверим, является ли она палидромом.");
-      var result = isPalindrome(testStr.toLowerCase());
+      var result = isPalindrome(testStr);
       console.log("Ваша фраза '" + testStr + "' - " + (result ? "ПАЛИНДРОМ!": "НЕ палиндром!"));
     });
   }
