@@ -40,9 +40,11 @@ A3+
       }
 
       //игнорируем разницу между буквами "е" и "ё"
-      if (leftSymbol==="ё" && leftSymbol!==rightSymbol) {
+      if (leftSymbol==="ё") {
         leftSymbol = "е";
-      } else if (rightSymbol==="ё"  && rightSymbol!==leftSymbol) {
+      }
+
+      if (rightSymbol==="ё") {
         rightSymbol = "е";
       }
 
