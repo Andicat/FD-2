@@ -51,6 +51,9 @@ a {
 .task__list {
 	list-style: none;
 	padding: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 }
 
 .task__item {
