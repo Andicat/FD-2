@@ -19,7 +19,7 @@ A4+
 
     function isPalindrome (str) {
 
-        if (str.length == 1) {
+        if (str.length <= 1) {
             return true;
         }
 
