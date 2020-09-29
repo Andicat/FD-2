@@ -19,6 +19,7 @@ A4+
 
     function isPalindrome (str) {
 
+        //если строка пустая или состоит из одного символа, она палиндром.
         if (str.length <= 1) {
             return true;
         }
