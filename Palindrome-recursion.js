@@ -17,49 +17,56 @@ A4+
 
     var btnTask = document.querySelector('.Palindrome-r');
 
-    function isPalindrome (str) {
+    function isPalindrome (phrase) {
 
-        //если строка пустая или состоит из одного символа, она палиндром.
-        if (str.length <= 1) {
-            return true;
-        }
-
-        str = str.toLowerCase();            
+        phrase = phrase.toLowerCase();            
     
-        var exception = {" ":true, "?":true, ",":true, ".":true, "!":true, ";":true, ":":true, "-":true, "(":true, ")":true, '"':true, "'":true, "ь":true, "ъ":true};
-                
-        var first = 0;
-        var last = str.length - 1;
+        var exceptionsList = {" ":true, "?":true, ",":true, ".":true, "!":true, ";":true, ":":true, "-":true, "(":true, ")":true, '"':true, "'":true, "ь":true, "ъ":true};
+        
+        //функция проверки строки с заданными исключениями
+        function checkStr(str, exception) {
 
-        var leftSymbol = str[first];
-        var rightSymbol = str[last];
+            //если фраза пустая или состоит из одного символа, она палиндром.
+            if (str.length <= 1) {
+                return true;
+            }
 
-        //пропускаем пробелы, знаки препинания, ь, ъ
-        while (leftSymbol in exception) {
-            first++;
-            leftSymbol = str[first];
-        }
-    
-        while (rightSymbol in exception) {
-            last--;
-            rightSymbol = str[last];
+            var first = 0;
+            var last = str.length - 1;
+
+            var leftSymbol = str[first];
+            var rightSymbol = str[last];
+
+            //пропускаем пробелы, знаки препинания, ь, ъ
+            while (leftSymbol in exception) {
+                first++;
+                leftSymbol = str[first];
+            }
+        
+            while (rightSymbol in exception) {
+                last--;
+                rightSymbol = str[last];
+            }
+
+            //игнорируем разницу между буквами "е" и "ё"
+            if (leftSymbol==="ё") {
+                leftSymbol = "е";
+            }
+        
+            if (rightSymbol==="ё") {
+                rightSymbol = "е";
+            }
+
+            //если крайние символы одинаковы, вызываем рекурсивно проверку урезанной строки
+            if (leftSymbol===rightSymbol) {
+                return checkStr(str.slice(first+1,last), exception);
+            }
+        
+            return false;
         }
 
-        //игнорируем разницу между буквами "е" и "ё"
-        if (leftSymbol==="ё") {
-            leftSymbol = "е";
-        }
-    
-        if (rightSymbol==="ё") {
-            rightSymbol = "е";
-        }
-         
-        //если крайние символы одинаковы, вызываем рекурсивно проверку урезанной строки
-        if (leftSymbol===rightSymbol) {
-          return isPalindrome(str.slice(first+1,last));
-        }
-  
-        return false;
+        return checkStr(phrase,exceptionsList);
+
     }
   
     if (btnTask) {
