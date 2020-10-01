@@ -49,6 +49,7 @@ var n2=deepCopy(n1);
 typeof(n2)===typeof(n1) будет true
 isNaN(n2) будет true
 */
+
 (function () {
 
     var btnTask = document.querySelector('.DeepCopy');
