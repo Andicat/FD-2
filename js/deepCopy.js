@@ -57,20 +57,6 @@ isNaN(n2) будет true
     function deepCopy(a) {
         var b;
 
-        if (typeof a === "number") {
-            b = a;
-            return b;
-        }
-
-        if (typeof a === "string") {
-            b = a;
-            return b;
-        }
-        
-        if ( a === null) {
-            return null;
-        }
-        
         if (a instanceof Array) {
             b = [];
             for (var i = 0; i < a.length; i++) {
@@ -87,7 +73,7 @@ isNaN(n2) будет true
             return b;
         }
         
-        return b;           
+        return a;           
     }
 
     function tests() {
