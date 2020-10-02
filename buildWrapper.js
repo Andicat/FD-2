@@ -22,33 +22,42 @@ B6+
     var btnTask = document.querySelector('.buildWrapper');
 
     function buildWrapper(tag) {
-        var funcBody = "function mnemonic (text) { return text.split(\"&\").join(\"&amp;\").split(\"<\").join(\"&lt;\").split(\">\").join(\"&gt;\").split(\"'\").join(\"&#039;\")}"
-        funcBody = funcBody + "var str = " + "\"<" + tag + "\"" + ";\n";
-        funcBody = funcBody + "for (var k in args) {str = str + \"" + " " + "\" + k + \"=" + "\'" + "\" + args[k] + \"" + "\'" + "\";}" + ";\n";
-        funcBody = funcBody + "str = str + '>' + text + " + "'</" + tag + ">'" + ";\n";
-        funcBody = funcBody + "str = str.split(\"&\").join(\"&amp;\")" + ";\n";
-        funcBody = funcBody + "str = str.split(\"<\").join(\"&lt;\")" + ";\n";
-        funcBody = funcBody + "str = str.split(\">\").join(\"&gt;\")" + ";\n";
-        funcBody = funcBody + "str = str.split(\"'\").join(\"&#039;\")" + ";\n";
-        funcBody = funcBody + "str = str.split(\'\"\').join(\"&quot;\")" + ";\n";
-        funcBody = funcBody + "return str;";
-        //console.log(funcBody);
-        var func = new Function('text','args', funcBody);
-        //console.log(func);
-        return func;
+
+      //замена символов < > ' " & на мнемоники
+      function mnemonic (text) { 
+        return text.split("&").join("&amp;")
+                    .split("<").join("&lt;")
+                    .split(">").join("&gt;")
+                    .split("'").join("&#039;")
+                    .split('"').join("&quot;");
+      };
+
+      //сборка строки
+      function buildStr (text, args) {
+        var str = "<" + tag;
+
+        for (var k in args) {
+          str = str + " " + k + "='"  + mnemonic(args[k]) + "'";
+        }
+        str = str + ">" + mnemonic(text) + "</" + tag + ">";
+        return str;
+      }
+      
+      //возврат функции в качестве результата
+      return buildStr;
     }
 
     function tests() {
         var wrapP = buildWrapper("P");
         console.log("в консоль выводится строка " + "<P>Однажды в студёную зимнюю пору</P>");
-        console.log( wrapP("Однажды в студёную зимнюю пору") );
+        console.log("РЕЗУЛЬТАТ:                 " + wrapP("Однажды в студёную зимнюю пору") );
         console.log("в консоль выводится строка " + "<P lang='ru'>Однажды в студёную зимнюю пору</P>");
-        console.log( wrapP("Однажды в студёную зимнюю пору",{lang:"ru"}) );
+        console.log("РЕЗУЛЬТАТ:                 " +  wrapP("Однажды в студёную зимнюю пору",{lang:"ru"}) );
         console.log("в консоль выводится строка " + "<P>Однажды в &lt;студёную&gt; зимнюю пору</P>");
-        console.log( wrapP("Однажды в <студёную> зимнюю пору") );
+        console.log("РЕЗУЛЬТАТ:                 " +  wrapP("Однажды в <студёную> зимнюю пору") );
         var wrapH1 = buildWrapper("H1");
         console.log("в консоль выводится строка " + "<H1 align='center' title='M&amp;M&apos;s'>СТИХИ</H1>");
-        console.log( wrapH1("СТИХИ",{align:"center",title:"M&M's"}) );
+        console.log("РЕЗУЛЬТАТ:                 " +  wrapH1("СТИХИ",{align:"center",title:"M&M's"}) );
     }
         
     if (btnTask) {
