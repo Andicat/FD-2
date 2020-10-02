@@ -77,63 +77,29 @@ deepComp("aaa","bbb") будет false
         }
 
         return a===b;           
-    }
+    };
+
+    function setVar (name,value) {
+        console.log("Значение " + name + ":");
+        console.log(value);
+        return value;
+    };
 
     function tests() {
 
-        var H1={ a:5, b: { b1:6, b2:7 } };
-        var H2={ b: { b1:6, b2:7 }, a:5 };
-        var H3={ a:5, b: { b1:6 } };
-        var H4={ a:5, b: { b1:66, b2:7 } };
-        var H5={ a:5, b: { b1:6, b2:7, b3:8 } };
-        var H6={ a:null, b:undefined, c:Number.NaN };
-        var H7={ c:Number.NaN, b:undefined, a:null };
-        var H8={a:5,b:6};
-        var H9={c:5,d:6};
-        var H10={a:5};
-        var A1=[5,7];
-        var A2=[5,5,7];
-        var A3=[5,8,7];
-
-        console.log("H1");
-        console.log(H1);
-
-        console.log("H2");
-        console.log(H2);
-
-        console.log("H3");
-        console.log(H3);
-
-        console.log("H4");
-        console.log(H4);
-
-        console.log("H5");
-        console.log(H5);
-
-        console.log("H6");
-        console.log(H6);
-
-        console.log("H7");
-        console.log(H7);
-
-        console.log("H8");
-        console.log(H8);
-
-        console.log("H9");
-        console.log(H9);
-
-        console.log("H10");
-        console.log(H10);
-
-        console.log("A1");
-        console.log(A1);
-
-        console.log("A2");
-        console.log(A2);
-        
-        console.log("A3");
-        console.log(A3);
-
+        var H1 = setVar("H1", { a:5, b: { b1:6, b2:7 } });
+        var H2 = setVar("H2", { b: { b1:6, b2:7 }, a:5 });
+        var H3 = setVar("H3", { a:5, b: { b1:6 } });
+        var H4 = setVar("H4", { a:5, b: { b1:66, b2:7 } });
+        var H5 = setVar("H5", { a:5, b: { b1:6, b2:7, b3:8 } });
+        var H6 = setVar("H6", { a:null, b:undefined, c:Number.NaN });
+        var H7 = setVar("H7", { c:Number.NaN, b:undefined, a:null });
+        var H8 = setVar("H8", {a:5,b:6});
+        var H9 = setVar("H9", {c:5,d:6});
+        var H10 = setVar("H10", {a:5});
+        var A1 = setVar("A1", [5,7]);
+        var A2 = setVar("A2", [5,5,7]);
+        var A3 =  setVar("A3", [5,8,7]);
 
         var testsArr = [
             ["проверяем deepComp(H1,H2) будет true", deepComp(H1,H2), true],
