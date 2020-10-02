@@ -47,7 +47,24 @@ deepComp("aaa","bbb") будет false
 
     function deepComp(a, b) {
 
-       //сравниваем два хэша или массива
+        //сравниваем два массива
+        if (a instanceof Array && b instanceof Array) {
+            
+            //если разная длина
+            if (a.length!==b.length) {
+                return false;
+            }
+
+            //сравниванием элементы
+            for (var i = 0; i < a.length; i++) {
+                if (!deepComp(a[i],b[i])) {
+                    return false;
+                };
+            };
+            return true;
+        }
+
+       //сравниваем два хэша
         if (a instanceof Object && b instanceof Object) {
             //если один - массив, а второй - нет
             if ((a instanceof Array)!==(b instanceof Array)) {
@@ -59,7 +76,7 @@ deepComp("aaa","bbb") будет false
                 return false;
             }
 
-            //сравниванием по ключам
+            //сравниванием ключи
             for (var k in a) {
                 if (!(k in b)) {
                     return false;
@@ -73,7 +90,7 @@ deepComp("aaa","bbb") будет false
 
         //NaN
         if ((typeof a) === "number" && isNaN(a)) {
-            return isNaN(b);
+            return (typeof b) === "number" && isNaN(b);
         }
 
         return a===b;           
@@ -120,7 +137,7 @@ deepComp("aaa","bbb") будет false
             ["проверяем deepComp(A2,A3) будет false", deepComp(A2,A3), false],
             ["проверяем deepComp( {a:5,b:undefined}, {a:5,c:undefined} ) будет false", deepComp( {a:5,b:undefined}, {a:5,c:undefined} ), false],
             ["проверяем deepComp([5,7],{0:5,1:7}) будет false", deepComp([5,7],{0:5,1:7}), false],
-            ["проверяем deepComp(\"aaa\",\"bbb\") будет false", deepComp("aaa","bbb"), false]
+            ["проверяем deepComp(Number.NaN,\"sdfg\") будет false", deepComp(Number.NaN,"sdfg"), false]
         ];
 
         testsArr.forEach(function (test) {
