@@ -28,7 +28,7 @@ B6+
         return text.replaceAll("&","&amp;")
                     .replaceAll("<","&lt;")
                     .replaceAll(">","&gt;")
-                    .replaceAll("'","&#039;")
+                    .replaceAll("'","&apos;")
                     .replaceAll('"',"&quot;");
       };
 
