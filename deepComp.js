@@ -79,6 +79,7 @@ deepComp("aaa","bbb") будет false
         return a===b;           
     };
 
+    //устанавливаем значения переменным, выводим в консоль
     function setVar (name,value) {
         console.log("Значение " + name + ":");
         console.log(value);
