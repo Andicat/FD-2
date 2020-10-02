@@ -22,14 +22,14 @@ B6+
     var btnTask = document.querySelector('.buildWrapper');
 
     function buildWrapper(tag) {
-
+      
       //замена символов < > ' " & на мнемоники
       function mnemonic (text) { 
-        return text.split("&").join("&amp;")
-                    .split("<").join("&lt;")
-                    .split(">").join("&gt;")
-                    .split("'").join("&#039;")
-                    .split('"').join("&quot;");
+        return text.replaceAll("&","&amp;")
+                    .replaceAll("<","&lt;")
+                    .replaceAll(">","&gt;")
+                    .replaceAll("'","&#039;")
+                    .replaceAll('"',"&quot;");
       };
 
       //сборка строки
