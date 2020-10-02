@@ -95,6 +95,46 @@ deepComp("aaa","bbb") будет false
         var A2=[5,5,7];
         var A3=[5,8,7];
 
+        console.log("H1");
+        console.log(H1);
+
+        console.log("H2");
+        console.log(H2);
+
+        console.log("H3");
+        console.log(H3);
+
+        console.log("H4");
+        console.log(H4);
+
+        console.log("H5");
+        console.log(H5);
+
+        console.log("H6");
+        console.log(H6);
+
+        console.log("H7");
+        console.log(H7);
+
+        console.log("H8");
+        console.log(H8);
+
+        console.log("H9");
+        console.log(H9);
+
+        console.log("H10");
+        console.log(H10);
+
+        console.log("A1");
+        console.log(A1);
+
+        console.log("A2");
+        console.log(A2);
+        
+        console.log("A3");
+        console.log(A3);
+
+
         var testsArr = [
             ["проверяем deepComp(H1,H2) будет true", deepComp(H1,H2), true],
             ["проверяем deepComp(H1,H3) будет false", deepComp(H1,H3), false],
