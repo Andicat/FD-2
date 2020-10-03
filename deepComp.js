@@ -89,8 +89,8 @@ deepComp("aaa","bbb") будет false
         }
 
         //NaN
-        if ((typeof a) === "number" && isNaN(a)) {
-            return (typeof b) === "number" && isNaN(b);
+        if (Number.isNaN(a)) {
+            return Number.isNaN(b);
         }
 
         return a===b;           
