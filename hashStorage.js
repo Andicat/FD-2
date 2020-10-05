@@ -63,6 +63,12 @@ getKeys() — возвращает массив, состоящий из одн�
             return Object.keys(self).filter(k => (typeof self[k])!=="function");
         }
     }
+
+    function showInfo (text) {
+        if (cntRecipe) {
+            cntRecipe.innerHTML = text;
+        }
+    }
     
     //вносит в базу напитков
     if (btnAdd) {
@@ -73,6 +79,7 @@ getKeys() — возвращает массив, состоящий из одн�
                 var drinkRecipe = prompt("Напишите рецепт напитка \"" + drinkName + "\"") || "рецепта нет";
                 drinkStorage.addValue(drinkName, {"alc":drinkAlc, "recipe":drinkRecipe});
             }
+            showInfo("");
         });
     }
 
@@ -81,16 +88,14 @@ getKeys() — возвращает массив, состоящий из одн�
         btnGet.addEventListener('click', (event) => {
             var drinkName = prompt("Введите название напитка, информацию о котором нужно вывести");
             if (drinkName in drinkStorage) {
-                if (cntRecipe) {
-                    var drinkInfo = drinkStorage.getValue(drinkName);
-                    cntRecipe.innerHTML = "Напиток \"" + drinkName + "\"<br>"
-                                        + "Алкогольный: " + (drinkInfo.alc?"Да":"Нет") + "<br>"
-                                        + "Рецепт приготовления:<br>" + drinkInfo.recipe;
-                }
+                var drinkInfo = drinkStorage.getValue(drinkName);
+                showInfo("Напиток \"" + drinkName + "\"<br>"
+                        + "Алкогольный: " + (drinkInfo.alc?"Да":"Нет") + "<br>"
+                        + "Рецепт приготовления:<br>" + drinkInfo.recipe);
                 return;
             };
             if (drinkName) {
-                alert("Напиток \"" + drinkName + "\" не найден в базе");
+                showInfo("Напиток \"" + drinkName + "\" не найден в базе");
             };
         });
     }
@@ -101,11 +106,11 @@ getKeys() — возвращает массив, состоящий из одн�
             var drinkName = prompt("Введите название напитка, информацию о котором нужно удалить");
             if (drinkName in drinkStorage) {
                 delete drinkStorage[drinkName];
-                alert("Напиток \"" + drinkName + "\" удален из базы");
+                showInfo("Напиток \"" + drinkName + "\" удален из базы");
                 return;
             };
             if (drinkName) {
-                alert("Напиток \"" + drinkName + "\" не найден в базе");
+                showInfo("Напиток \"" + drinkName + "\" не найден в базе");
             };
         });
     }
@@ -115,14 +120,14 @@ getKeys() — возвращает массив, состоящий из одн�
         btnShow.addEventListener('click', (event) => {
             var drinks = drinkStorage.getKeys();
             if (!drinks.length) {
-                alert("Напитков в базе нет");
+                showInfo("Напитков в базе нет");
                 return;
             };
-            var drinkList = "Напитки в базе: \n";
+            var text = "Напитки в базе: <br>";
             for (var i = 0; i < drinks.length; i++) {
-                drinkList = drinkList + "\"" + drinks[i] + "\"\n";
+                text = text + "\"" + drinks[i] + "\"<br>";
             };
-            alert(drinkList);
+            showInfo(text);
         });
     }
 
