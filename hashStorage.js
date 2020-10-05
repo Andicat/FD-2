@@ -46,21 +46,23 @@ getKeys() — возвращает массив, состоящий из одн�
     function HashStorageFunc () {
         var self = this;
         
+        self.storage = {};
+        
         self.addValue = function (key,value) {
-            self[key] = value;
+            self.storage[key] = value;
             return self;
         }
 
         self.getValue = function (key) {
-            return self[key];
+            return self.storage[key];
         }
 
         self.deleteValue = function (key) {
-            delete self[key];
+            delete self.storage[key];
         }
 
         self.getKeys = function () {
-            return Object.keys(self).filter(k => (typeof self[k])!=="function");
+            return Object.keys(self.storage);
         }
     }
 
@@ -87,7 +89,7 @@ getKeys() — возвращает массив, состоящий из одн�
     if (btnGet) {
         btnGet.addEventListener('click', (event) => {
             var drinkName = prompt("Введите название напитка, информацию о котором нужно вывести");
-            if (drinkName in drinkStorage) {
+            if (drinkName in drinkStorage.storage) {
                 var drinkInfo = drinkStorage.getValue(drinkName);
                 showInfo("Напиток \"" + drinkName + "\"<br>"
                         + "Алкогольный: " + (drinkInfo.alc?"Да":"Нет") + "<br>"
@@ -104,8 +106,8 @@ getKeys() — возвращает массив, состоящий из одн�
     if (btnDelete) {
         btnDelete.addEventListener('click', (event) => {
             var drinkName = prompt("Введите название напитка, информацию о котором нужно удалить");
-            if (drinkName in drinkStorage) {
-                delete drinkStorage[drinkName];
+            if (drinkName in drinkStorage.storage) {
+                delete drinkStorage.storage[drinkName];
                 showInfo("Напиток \"" + drinkName + "\" удален из базы");
                 return;
             };
