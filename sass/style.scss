@@ -1,0 +1,12 @@
+// Global
+//---------------------------------
+@import "_variables";
+@import "_mixins";
+@import "_fonts";
+@import "_global";
+
+// Blocks
+//---------------------------------
+@import "blocks/_tasks.scss";
+@import "blocks/_button.scss";
+@import "blocks/_hashStorage.scss";

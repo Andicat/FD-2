@@ -1,0 +1,23 @@
+body {
+	font-family: "Roboto", sans-serif;
+	font-size: 14px;
+	line-height: 21px;
+	color: $color-black;
+	font-style: italic;
+	text-align: center;
+	background-color: $bg-color-white;
+}
+
+a {
+	text-decoration: none;
+}
+
+.visually-hidden {
+	position: absolute;
+	clip: rect(0 0 0 0);
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	border: 0px;
+	padding: 0px;
+}
