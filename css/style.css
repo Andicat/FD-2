@@ -59,9 +59,6 @@ a {
 .task__item {
 	display: flex;
 	align-items: center;
-	flex-wrap: wrap;
-	padding: 10px;
-	justify-content: center;
 }
 
 .task__item--done {
@@ -86,6 +83,13 @@ button:hover,
 button:focus {
 	outline: none;
 	opacity: 0.9;
+}
+
+.HashStorage {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: center;
 }
 
 .HashStorage__title,

@@ -1,6 +1,6 @@
 'use strict';
 
-//======================================HashStorage==================================
+//======================================HashStorageFunc==================================
 /*
 1.
 Разработать класс HashStorageFunc в функциональном стиле (т.е. функцию-конструктор) для хранения в хэше произвольных пар ключ-значение.
@@ -36,11 +36,17 @@ getKeys() — возвращает массив, состоящий из одн�
 
 (function () {
 
-    var btnAdd = document.querySelector('.HashStorage__add');
-    var btnGet = document.querySelector('.HashStorage__get');
-    var btnDelete = document.querySelector('.HashStorage__delete');
-    var btnShow = document.querySelector('.HashStorage__show');
-    var cntRecipe = document.querySelector('.HashStorage__recipe');
+    var blockFunc = document.querySelector('.HashStorage--func');
+
+    if (!blockFunc) {
+        return;
+    }
+    var btnAdd = blockFunc.querySelector('.HashStorage__add');
+    var btnGet = blockFunc.querySelector('.HashStorage__get');
+    var btnDelete = blockFunc.querySelector('.HashStorage__delete');
+    var btnShow = blockFunc.querySelector('.HashStorage__show');
+    var cntRecipe = blockFunc.querySelector('.HashStorage__recipe');
+    
     var drinkStorage = new HashStorageFunc();
 
     function HashStorageFunc () {
