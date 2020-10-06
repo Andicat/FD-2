@@ -46,23 +46,27 @@ getKeys() — возвращает массив, состоящий из одн�
     function HashStorageFunc () {
         var self = this;
         
-        self.storage = {};
+        var storage = {};
         
         self.addValue = function (key,value) {
-            self.storage[key] = value;
+            storage[key] = value;
             return self;
         }
 
         self.getValue = function (key) {
-            return self.storage[key];
+            return storage[key];
         }
 
         self.deleteValue = function (key) {
-            delete self.storage[key];
+            if (key in storage) {
+                delete storage[key];
+                return true;
+            };
+            return false;
         }
 
         self.getKeys = function () {
-            return Object.keys(self.storage);
+            return Object.keys(storage);
         }
     }
 
@@ -89,16 +93,14 @@ getKeys() — возвращает массив, состоящий из одн�
     if (btnGet) {
         btnGet.addEventListener('click', (event) => {
             var drinkName = prompt("Введите название напитка, информацию о котором нужно вывести");
-            if (drinkName in drinkStorage.storage) {
-                var drinkInfo = drinkStorage.getValue(drinkName);
+            var drinkInfo = drinkStorage.getValue(drinkName);
+            if (drinkInfo) {
                 showInfo("Напиток \"" + drinkName + "\"<br>"
                         + "Алкогольный: " + (drinkInfo.alc?"Да":"Нет") + "<br>"
                         + "Рецепт приготовления:<br>" + drinkInfo.recipe);
                 return;
             };
-            if (drinkName) {
-                showInfo("Напиток \"" + drinkName + "\" не найден в базе");
-            };
+            showInfo("Напиток \"" + drinkName + "\" не найден в базе");
         });
     }
 
@@ -106,14 +108,8 @@ getKeys() — возвращает массив, состоящий из одн�
     if (btnDelete) {
         btnDelete.addEventListener('click', (event) => {
             var drinkName = prompt("Введите название напитка, информацию о котором нужно удалить");
-            if (drinkName in drinkStorage.storage) {
-                delete drinkStorage.storage[drinkName];
-                showInfo("Напиток \"" + drinkName + "\" удален из базы");
-                return;
-            };
-            if (drinkName) {
-                showInfo("Напиток \"" + drinkName + "\" не найден в базе");
-            };
+            var drinkIsDeleted = drinkStorage.deleteValue(drinkName);
+            showInfo("Напиток \"" + drinkName + "\" " + (drinkIsDeleted ? "удален из базы" : "не найден в базе"));
         });
     }
 
