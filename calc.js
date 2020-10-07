@@ -79,14 +79,25 @@ B3+
                     var i = arr.indexOf(op);
                     var op1 = arr[i-1];
                     var op2 = arr[i+1];
+                    var oplength = 3;
+                    var start = i-1;
                     if (op1 instanceof Array) {
                         op1 = calcExp(op1);
                     }
                     if (op2 instanceof Array) {
                         op2 = calcExp(op2);
                     }
+                    if (op2==="-") {
+                        op2 += arr[i+2];
+                        oplength = oplength +1; 
+                    }
+                    if (!op1) {
+                        op1 = 0;
+                        oplength = oplength -1;
+                        start = start - 1;
+                    }
                     var res = operations[op](op1,op2);
-                    arr.splice(i-1,3,res);
+                    arr.splice(start,oplength,res);
                     console.log(arr);
                 }
             }
