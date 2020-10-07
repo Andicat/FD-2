@@ -99,7 +99,7 @@ button:hover, button:focus {
   opacity: 0.9;
 }
 
-.HashStorage {
+.hashStorage {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -113,7 +113,7 @@ button:hover, button:focus {
           align-items: center;
 }
 
-.HashStorage__title, .HashStorage__recipe {
+.hashStorage__title, .hashStorage__recipe {
   width: 100%;
   font-size: 24px;
   line-height: normal;
@@ -121,10 +121,39 @@ button:hover, button:focus {
   margin: 10px;
 }
 
-.HashStorage__add, .HashStorage__get, .HashStorage__delete, .HashStorage__show {
+.hashStorage__add, .hashStorage__get, .hashStorage__delete, .hashStorage__show {
   font-size: 20px;
   text-transform: none;
   font-weight: 400;
+  margin: 10px;
+}
+
+.calc {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.calc__input {
+  font-size: 24px;
+  margin: 15px;
+  padding: 15px;
+  min-width: 500px;
+  border-radius: 5px;
+  border: 1px solid gray;
+}
+
+.calc__result {
+  font-size: 24px;
+  line-height: normal;
+  font-weight: 600;
   margin: 10px;
 }
 /*# sourceMappingURL=style.css.map */

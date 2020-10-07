@@ -1,22 +1,22 @@
 'use strict';
 
-//======================================HashStorageClass==================================
+//======================================hashStorageClass==================================
 /*
-Создать проект DRINKS_HASH_CLASS по аналогии с проектом DRINKS_HASH_FUNC, только класс должен быть описан в ES6-стиле (ключевым словом class).
+Создать проект DRINKS_hash_CLASS по аналогии с проектом DRINKS_hash_FUNC, только класс должен быть описан в ES6-стиле (ключевым словом class).
 */
 
 (function () {
 
-    var blockClass = document.querySelector('.HashStorage--class');
+    var blockClass = document.querySelector('.hashStorage--class');
 
     if (!blockClass) {
         return;
     }
-    var btnAdd = blockClass.querySelector('.HashStorage__add');
-    var btnGet = blockClass.querySelector('.HashStorage__get');
-    var btnDelete = blockClass.querySelector('.HashStorage__delete');
-    var btnShow = blockClass.querySelector('.HashStorage__show');
-    var cntRecipe = blockClass.querySelector('.HashStorage__recipe');
+    var btnAdd = blockClass.querySelector('.hashStorage__add');
+    var btnGet = blockClass.querySelector('.hashStorage__get');
+    var btnDelete = blockClass.querySelector('.hashStorage__delete');
+    var btnShow = blockClass.querySelector('.hashStorage__show');
+    var cntRecipe = blockClass.querySelector('.hashStorage__recipe');
     
     class HashStorageClass {
 
