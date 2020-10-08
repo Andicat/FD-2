@@ -35,62 +35,46 @@ B3+
 
         //преобразование строки в массив операторов и операндов
         function parseStr (exp) {
-            var exp1 = [];
-            exp1.push(exp);
+           
             var arr = [];
-            //res.arr = [];
-            //res.len = 0;
             var symb = "";
             var arrLengthInside = 0;
+
+            function pushSymbToArr () {
+                if (symb) {
+                    arr.push(symb);
+                }
+                symb = "";
+            }
                 
-            while (exp1[0].length > 0) {
+            while (exp[0].length > 0) {
                 // если символ - оператор, но не минус перед отрицательным числом
-                if ((exp1[0][0] in operations)&&(symb!=="")) {
-                    if (symb) {
-                        arr.push(symb);
-                    }
-                    arr.push(exp1[0][0]);
-                    symb = "";
-                    exp1[0] = exp1[0].substr(1);
+                if ((exp[0][0] in operations)&&(symb!=="")) {
+                    pushSymbToArr();
+                    arr.push(exp[0][0]);
+                    exp[0] = exp[0].substr(1);
                     continue;
                 }
                 //начало выражения в скобках
-                if (exp1[0][0]==="(") {
-                    if (symb) {
-                        arr.push(symb);
-                    }
-                    exp1[0] = exp1[0].substr(1);
-                    var arrInside = parseStr(exp1[0]); 
-                    var arrLengthInside = arrInside.join("").length;  
-                    exp1[0] = exp1[0].substr(arrLengthInside);
-                    //res.arr.push(arrInside);
-                    //symb = "";
-                    //console.log(arrInside.join(""));
-                    //console.log(arrInside.length);
-                    //i = i + arrInside.len + 1;
+                if (exp[0][0]==="(") {
+                    pushSymbToArr();
+                    exp[0] = exp[0].substr(1);
+                    var arrInside = parseStr(exp); 
+                    symb = arrInside;
                     continue;
                 }
                 //конец выражения в скобках
-                if (exp1[0][0]===")") {
-                    //res.arr.push(arrInside);
-                    if (symb) {
-                        arr.push(symb);
-                        //len = res.arr.join("").length;
-                    }
-
-
+                if (exp[0][0]===")") {
+                    pushSymbToArr();
+                    exp[0] = exp[0].substr(1);
                     return arr;
-                    
                 }
                 //если это все еще не оператор и не скобки, то это часть операнда
-                symb += exp1[0][0];
-                exp1[0] = exp1[0].substr(1);
-                
+                symb += exp[0][0];
+                exp[0] = exp[0].substr(1);
             };
             //что осталось в конце
-            if (symb) {
-                arr.push(symb);
-            }
+            pushSymbToArr();
             return arr;
         }
 
@@ -122,8 +106,10 @@ B3+
             //console.log(res);
             return res;
         }
-
-        var arrCalc = parseStr(str);
+        
+        var exp = [];
+        exp.push(str);
+        var arrCalc = parseStr(exp);
         console.log(arrCalc);
         var res = calcExp(arrCalc);
         if (!isFinite(res)) {
