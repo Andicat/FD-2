@@ -27,45 +27,67 @@ B3+
 
     function calculation(str) {
         var operations = {
-            "*": function (a,b) { return a*b},
-            "/": function (a,b) { return a/b},
-            "+": function (a,b) { return a+b},
-            "-": function (a,b) { return a-b}
+            "*": function (a,b) { return a*b },
+            "/": function (a,b) { return a/b },
+            "-": function (a,b) { return a-b },
+            "+": function (a,b) { return parseFloat(a)+parseFloat(b) }
         };
 
-        //парсинг строки в массив операторов и операндов
+        //преобразование строки в массив операторов и операндов
         function parseStr (exp) {
+            var exp1 = [];
+            exp1.push(exp);
             var arr = [];
+            //res.arr = [];
+            //res.len = 0;
             var symb = "";
+            var arrLengthInside = 0;
                 
-            for (var i = 0; i < exp.length; i++) {
-                // если символ - оператор
-                if (exp[i] in operations) {
+            while (exp1[0].length > 0) {
+                // если символ - оператор, но не минус перед отрицательным числом
+                if ((exp1[0][0] in operations)&&(symb!=="")) {
                     if (symb) {
                         arr.push(symb);
                     }
-                    arr.push(exp[i]);
+                    arr.push(exp1[0][0]);
                     symb = "";
+                    exp1[0] = exp1[0].substr(1);
                     continue;
-                } 
+                }
                 //начало выражения в скобках
-                if (exp[i]==="(") {
-                    i++;
-                    var eee = parseStr(exp.substr(i))
-                    arr.push(eee);
-                    i = i + eee.join("").length;
+                if (exp1[0][0]==="(") {
+                    if (symb) {
+                        arr.push(symb);
+                    }
+                    exp1[0] = exp1[0].substr(1);
+                    var arrInside = parseStr(exp1[0]); 
+                    var arrLengthInside = arrInside.join("").length;  
+                    exp1[0] = exp1[0].substr(arrLengthInside);
+                    //res.arr.push(arrInside);
+                    //symb = "";
+                    //console.log(arrInside.join(""));
+                    //console.log(arrInside.length);
+                    //i = i + arrInside.len + 1;
                     continue;
                 }
                 //конец выражения в скобках
-                if (exp[i]===")") {
+                if (exp1[0][0]===")") {
+                    //res.arr.push(arrInside);
                     if (symb) {
                         arr.push(symb);
+                        //len = res.arr.join("").length;
                     }
+
+
                     return arr;
+                    
                 }
-                //если это все еще не оператов или не скобки, то это часть операнда
-                symb += exp[i];
+                //если это все еще не оператор и не скобки, то это часть операнда
+                symb += exp1[0][0];
+                exp1[0] = exp1[0].substr(1);
+                
             };
+            //что осталось в конце
             if (symb) {
                 arr.push(symb);
             }
@@ -74,48 +96,42 @@ B3+
 
         //вычисления
         function calcExp(arr) {
+            //если массив состоит из одного элемента
+            if (arr.length===1 ) {
+                return (arr[0] instanceof Array) ? calcExp(arr[0]) : parseFloat(arr[0]);
+            }
+            //перебор операций
             for (var op in operations) {
                 while(arr.includes(op)) {
                     var i = arr.indexOf(op);
                     var op1 = arr[i-1];
                     var op2 = arr[i+1];
-                    var oplength = 3;
-                    var start = i-1;
                     if (op1 instanceof Array) {
                         op1 = calcExp(op1);
                     }
                     if (op2 instanceof Array) {
                         op2 = calcExp(op2);
                     }
-                    if (op2==="-") {
-                        op2 += arr[i+2];
-                        oplength = oplength +1; 
-                    }
-                    if (!op1) {
-                        op1 = 0;
-                        oplength = oplength -1;
-                        start = start - 1;
-                    }
                     var res = operations[op](op1,op2);
-                    arr.splice(start,oplength,res);
-                    console.log(arr);
+                    arr.splice(i-1,3,res);
+                    //console.log(arr);
                 }
             }
+            console.log(arr);
             var res = (arr.length === 1)? parseFloat(arr[0]) : false;
+            //console.log(res);
             return res;
         }
 
         var arrCalc = parseStr(str);
         console.log(arrCalc);
         var res = calcExp(arrCalc);
+        if (!isFinite(res)) {
+            return "Выражение не может быть вычислено";
+        }
         return res;
     }
 
-
-    
-
-    
-    
     if (btnCalc) {
         btnCalc.addEventListener('click', (event) => {
             var str = inputCalc.value;
@@ -124,73 +140,65 @@ B3+
                 return;
             };
             var res = calculation(str);
-            showResult(res?("Результат: " + res):"Выражение не может быть вычислено");
+            showResult("Результат: " + res);
         });
     }
 
 })();
 
 
+/*//преобразование строки в массив операторов и операндов
+        function parseStr (exp) {
+            var res = {};
+            res.arr = [];
+            res.len = 0;
+            var symb = "";
+            var arrLengthInside = 0;
+                
+            for (var i = 0; i < exp.length; i++) {
+                // если символ - оператор, но не минус перед отрицательным числом
+                if ((exp[i] in operations)&&!isNaN(Number(exp[i-1]))) {
+                    if (symb) {
+                        res.arr.push(symb);
+                    }
+                    res.arr.push(exp[i]);
+                    symb = "";
+                    continue;
+                } 
+                //начало выражения в скобках
+                if (exp[i]==="(") {
+                    if (symb) {
+                        res.arr.push(symb);
+                    }
+                    //i++;
+                    var arrInside = parseStr(exp.substr(i+1)); 
+                    symb = arrInside.arr;
+                    //arrLengthInside = arrLengthInside + arrInside.join("").length;  
+                    //res.arr.push(arrInside);
+                    //symb = "";
+                    //console.log(arrInside.join(""));
+                    //console.log(arrInside.length);
+                    i = i + arrInside.len + 1;
+                    continue;
+                }
+                //конец выражения в скобках
+                if (exp[i]===")") {
+                    //res.arr.push(arrInside);
+                    if (symb) {
+                        res.arr.push(symb);
+                        res.len = res.arr.join("").length;
+                    }
 
-/*
-function calcExp (exp, i = -1) {
 
-        var aaa = ;
-
-        //var eee = "";
-
-        function isEndOfExp(symb) {
-            if (symb===")"||symb===undefined) {
-                i++;
-                return true;
+                    return res;
+                    
+                }
+                //если это все еще не оператор и не скобки, то это часть операнда
+                symb += exp[i];
+            };
+            //что осталось в конце
+            if (symb) {
+                res.arr.push(symb);
             }
-            return false;
-        }
-        
-        do {
-            i++;
-            var symbol = exp[i];
-            if (symbol==="+"||symbol==="-"||symbol==="*"||symbol==="/") {
-
-            }
-            
-            if (symbol==="(") {
-                calcExp(exp, i);
-            }
-            //eee = eee + symbol;
-        } while (!isEndOfExp(symbol))
-        //console.log("вычисляли " + eee); 
-    }
-
-
-
-
-
-
-
-
-
-    function resolve(exp,i) {
-        //find right operand
-        while (isNumber(exp[i-1])||exp[i-1]=".") {
-            
-        }
-        var opr = exp[i-1];
-        var opl = exp[i+1];
-        var str = "" + opr + "*" + opl;
-        console.log("right " + opr + " " + exp[i] + " left " + opl);
-
-        return exp.replace(str,(opr*opl));
-
-    }
-
-    function calcExp (exp) {
-        var op = exp.indexOf("*");
-        while (op >= 0) {
-            console.log("find of * at " + op + " place. Try to solve")
-            exp = resolve(exp,op);
-            op = exp.indexOf("*");
-            console.log(exp);
-        } 
-    }
-*/
+            return res;
+        } */
