@@ -38,8 +38,7 @@ B3+
            
             var arr = [];
             var symb = "";
-            var arrLengthInside = 0;
-
+            
             function pushSymbToArr () {
                 if (symb) {
                     arr.push(symb);
@@ -59,7 +58,7 @@ B3+
                 if (exp[0][0]==="(") {
                     pushSymbToArr();
                     exp[0] = exp[0].substr(1);
-                    var arrInside = parseStr(exp); 
+                    var arrInside = parseStr(exp, str); 
                     symb = arrInside;
                     continue;
                 }
@@ -98,24 +97,18 @@ B3+
                     }
                     var res = operations[op](op1,op2);
                     arr.splice(i-1,3,res);
-                    //console.log(arr);
                 }
             }
-            console.log(arr);
             var res = (arr.length === 1)? parseFloat(arr[0]) : false;
-            //console.log(res);
             return res;
         }
         
-        var exp = [];
-        exp.push(str);
+        var exp = [str];
         var arrCalc = parseStr(exp);
         console.log(arrCalc);
         var res = calcExp(arrCalc);
-        if (!isFinite(res)) {
-            return "Выражение не может быть вычислено";
-        }
-        return res;
+
+        return (!isFinite(res)) ? "Выражение не может быть вычислено" : res;
     }
 
     if (btnCalc) {
@@ -131,60 +124,3 @@ B3+
     }
 
 })();
-
-
-/*//преобразование строки в массив операторов и операндов
-        function parseStr (exp) {
-            var res = {};
-            res.arr = [];
-            res.len = 0;
-            var symb = "";
-            var arrLengthInside = 0;
-                
-            for (var i = 0; i < exp.length; i++) {
-                // если символ - оператор, но не минус перед отрицательным числом
-                if ((exp[i] in operations)&&!isNaN(Number(exp[i-1]))) {
-                    if (symb) {
-                        res.arr.push(symb);
-                    }
-                    res.arr.push(exp[i]);
-                    symb = "";
-                    continue;
-                } 
-                //начало выражения в скобках
-                if (exp[i]==="(") {
-                    if (symb) {
-                        res.arr.push(symb);
-                    }
-                    //i++;
-                    var arrInside = parseStr(exp.substr(i+1)); 
-                    symb = arrInside.arr;
-                    //arrLengthInside = arrLengthInside + arrInside.join("").length;  
-                    //res.arr.push(arrInside);
-                    //symb = "";
-                    //console.log(arrInside.join(""));
-                    //console.log(arrInside.length);
-                    i = i + arrInside.len + 1;
-                    continue;
-                }
-                //конец выражения в скобках
-                if (exp[i]===")") {
-                    //res.arr.push(arrInside);
-                    if (symb) {
-                        res.arr.push(symb);
-                        res.len = res.arr.join("").length;
-                    }
-
-
-                    return res;
-                    
-                }
-                //если это все еще не оператор и не скобки, то это часть операнда
-                symb += exp[i];
-            };
-            //что осталось в конце
-            if (symb) {
-                res.arr.push(symb);
-            }
-            return res;
-        } */
