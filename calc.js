@@ -108,7 +108,7 @@ B3+
         console.log(arrCalc);
         var res = calcExp(arrCalc);
 
-        return (!isFinite(res)) ? "Выражение не может быть вычислено" : res;
+        return (!isFinite(res)) ? null  : res;
     }
 
     if (btnCalc) {
@@ -119,7 +119,7 @@ B3+
                 return;
             };
             var res = calculation(str);
-            showResult("Результат: " + res);
+            showResult("Результат: " + (res!==null ? res : "Выражение не может быть вычислено"));
         });
     }
 
