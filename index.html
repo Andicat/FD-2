@@ -76,11 +76,19 @@
               <span class="hashStorage__recipe"></span>
             </div>
           </li>
-          <li class="tasks__item">
+          <li class="tasks__item tasks__item--done">
             <div class="calc">
               <input class="calc__input" type="text" placeholder="Введите выражение" value="2*(-3+1)">
               <button class="calc__button">Вычислить</button> 
-              <span class="calc__result"></span>
+              <span class="calc__result result"></span>
+            </div>
+          </li>
+          <li class="tasks__item">
+            <div class="chain">
+              <input class="chain__start" type="text" placeholder="Введите начальное слово">
+              <input class="chain__end" type="text" placeholder="Введите конечное слово">
+              <button class="chain__button">Построить цепочку</button> 
+              <span class="chain__result result"></span>
             </div>
           </li>
           <li class="tasks__item tasks__item--done">
@@ -89,7 +97,7 @@
         </ul>
       </section>
     </main>
-    <script src="calc.js"></script>
+    <script src="chain.js"></script>
     <!--<script src="tests.js"></script>-->
   </body>
 </html>

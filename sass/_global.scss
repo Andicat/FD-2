@@ -21,3 +21,20 @@ a {
 	border: 0px;
 	padding: 0px;
 }
+
+input {
+	font-size: 24px;
+	margin: 15px;
+	padding: 15px;
+	min-width: 500px;
+	border-radius: 5px;
+	border: 1px solid gray;
+}
+
+.result {
+	display: block;
+	font-size: 24px;
+	line-height: normal;
+	font-weight: 600;
+	margin: 10px;;
+}
