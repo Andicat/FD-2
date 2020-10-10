@@ -38,6 +38,10 @@ B4+
 
         var chains = [];
 
+        if (wordStart.length!==wordEnd.length) {
+            return chains;
+        }
+
         wordStart = wordStart.toUpperCase();
         wordEnd = wordEnd.toUpperCase();
        
@@ -73,24 +77,22 @@ B4+
             return;
         };
 
-       //1-преобразуем массив слов в массив соотношений слов между собой
+       //1-преобразуем массив слов в массив отношений слов между собой
         var wordsArr = words.map( v => ({value:v, similar:[]}));
 
         //2-добавляем стартовое и конечное слова в массив, если их там нет.
-        var indexOfStart = words.indexOf(wordStart);
-        if (indexOfStart < 0) {
-            indexOfStart = wordsArr.push({value:wordStart, similar:[]}) - 1;
-            console.log("not find, but added on " + indexOfStart);
-        };
         var indexOfEnd = words.indexOf(wordEnd);
         if (indexOfEnd < 0) {
             indexOfEnd = wordsArr.push({value:wordEnd, similar:[]}) - 1;
-            console.log("not find, but added on " + indexOfEnd);
+        };
+        var indexOfStart = words.indexOf(wordStart);
+        if (indexOfStart < 0) {
+            indexOfStart = wordsArr.push({value:wordStart, similar:[]}) - 1;
         };
 
-        //3-заполняем массив соотношений слов между собой
-        for (var i = 0; i < wordsArr.length; i++) {
-            for (var j = i+1; j < wordsArr.length; j++) {
+        //3-заполняем массив отношений слов между собой
+        for (var i = wordsArr.length - 1; i >= 0; i--) {
+            for (var j = i-1; j >= 0; j--) {
                 if (compareTwo(wordsArr[i].value,wordsArr[j].value)) {
                     wordsArr[i].similar.push(j);
                     wordsArr[j].similar.push(i);
@@ -118,7 +120,7 @@ B4+
         }
     }
 
-    if (btnChain) {
+    if (btnChain && inputChainStart && inputChainEnd) {
         btnChain.addEventListener('click', (event) => {
             var wordStart = inputChainStart.value;
             var wordEnd = inputChainEnd.value;
