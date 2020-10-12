@@ -157,4 +157,40 @@ button:hover, button:focus {
       -ms-flex-align: center;
           align-items: center;
 }
+
+.chess__board {
+  display: table;
+  width: 50vw;
+  height: 50vw;
+  border: 2px solid black;
+}
+
+.chess__row {
+  display: table-row;
+}
+
+.chess__ceil {
+  display: table-cell;
+  border: 0.5px solid #414141;
+}
+
+.chess__ceil--black {
+  background-color: #414141;
+}
+
+.chess__ceil--red {
+  background-color: #c44133;
+}
+
+.chess__queen {
+  background-image: url("../img/queen.svg");
+  background-size: 90% 90%;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.chess__queen.chess__ceil--red {
+  background-size: cover;
+  background-color: #a31a0b;
+}
 /*# sourceMappingURL=style.css.map */
