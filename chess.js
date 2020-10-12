@@ -36,7 +36,7 @@
 
     function chessQueens () {
 
-        const QUEENS_COUNT = 1;
+        const QUEENS_COUNT = 2;
         const CHESS_SIZE = 8;
 
         function initBoard() {
@@ -53,7 +53,7 @@
 
         var board = initBoard();
 
-        var queens = [];
+        //var queens = [];
 
         var combinations = [];
 
@@ -89,7 +89,7 @@
             var battlefield = [];
             boardCurr[row][col] = false;
             battlefield.push([row,col]);
-            for (var i = 1; i < 7; i++) {
+            for (var i = 1; i < 8; i++) {
                 //горизонтальный ряд
                 boardCurr[row][i] = false;
                 battlefield.push([row,i]);
@@ -97,19 +97,19 @@
                 boardCurr[i][col] = false;
                 battlefield.push([i,col]);
                 //диагональные ряды
-                if ((row+i)<7 && (col+i)<7) {
+                if ((row+i)<8 && (col+i)<8) {
                     boardCurr[row+i][col+i] = false;
                     battlefield.push([row+i,col+i]);
                 }
-                if ((row-i)>0 && (col-i)>0) {
+                if ((row-i)>=0 && (col-i)>=0) {
                     boardCurr[row-i][col-i] = false;
                     battlefield.push([row-i,col-i]);
                 }
-                if ((row+i)<7 && (col-i)>0) {
+                if ((row+i)<8 && (col-i)>=0) {
                     boardCurr[row+i][col-i] = false;
                     battlefield.push([row+i,col-i]);
                 }
-                if ((row-i)>0 && (col+i)<7) {
+                if ((row-i)>=0 && (col+i)<8) {
                     boardCurr[row-i][col+i] = false;
                     battlefield.push([row-i,col+i]);
                 }
@@ -118,14 +118,15 @@
         };
 
         //функция поиска возможных комбинаций
-        function findCombinations(ceilStart,queens,board) {
-            if (queens.length>0) {
-                combinations.push(queens);
-                return;
-            }
+        function findCombinations(ceilStart,queens,boardCurr) {
+            
             //перебор доски
             for (var i = ceilStart; i <= 64; i++) {
-                var boardCurr = board.slice();
+                if (queens.length>=QUEENS_COUNT) {
+                    combinations.push(queens);
+                    return;
+                }
+                //var boardCurr = board.slice();
                 //var board = initBoard();
                 var row = Math.ceil(i/8)-1;
                 var col = 8-(8*(row+1)-i)-1;
@@ -142,9 +143,9 @@
             return;
         };
         
-        findCombinations(1,queens,board);
+        findCombinations(1,[],board);
         //console.log(board);
-        console.log(queens);
+        //console.log(queens);
         console.log(combinations);
         drawBoard();
 
