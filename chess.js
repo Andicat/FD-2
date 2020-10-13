@@ -33,38 +33,29 @@
         var resultChess = blockchess.querySelector('.chess__result');
         var btnComb = resultChess.querySelector('.chess__button--combination');
         var comb = resultChess.querySelector('.chess__combination');
+        var resultChessText = resultChess.querySelector('.chess__result-text');
         var chessCeils;
 
+        if (!btnComb || !resultChess || !comb || !resultChessText) {
+            return;
+        }
+        
         if (cntChessBoard) {
             cntChessBoard.remove();
+            comb.value = "";    
         }
-
-        if (btnComb) {
-            comb.value = "";
-
-        }
-
+        
         const CHESS_SIZE = 8;
         var combinations = [];
 
         //выводит количество комбинаций
         function showResult(combinations) {
             chessCeils = cntChessBoard.querySelectorAll('.chess__ceil');
-            if (!resultChess) {
-                return;
-            } 
-            var resultChessText = resultChess.querySelector('.chess__result-text');
-            if (resultChessText) {
-                resultChessText.innerHTML = "Найдено комбинаций: " + combinations.length;
-            } 
+            resultChessText.innerHTML = "Найдено комбинаций: " + combinations.length; 
             if (combinations.length) {
                 resultChess.classList.add("chess__result--show");
             }
-            
-            if (btnComb) {
-                btnComb.addEventListener("click", showCombination.bind(comb));
-            }
-
+            btnComb.addEventListener("click", showCombination.bind(comb));
         }
         
         //рисует комбинацию на шахматной доске
