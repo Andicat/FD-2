@@ -25,16 +25,31 @@
     }
     
     var btnChess = blockchess.querySelector('.chess__button');
-    var cntChessBoard = blockchess.querySelector('.chess__board');
     
+        
     function chessQueens () {
 
-        const QUEENS_COUNT = 8;
-        const CHESS_SIZE = 8;
+        var cntChessBoard = blockchess.querySelector('.chess__board');
+        var resultChess = blockchess.querySelector('.chess__result');
+        var btnComb = resultChess.querySelector('.chess__button--combination');
+        var comb = resultChess.querySelector('.chess__combination');
+        var chessCeils;
 
-        //отрисовка
-        function showCombinations(combinations) {
-            var resultChess = blockchess.querySelector('.chess__result');
+        if (cntChessBoard) {
+            cntChessBoard.remove();
+        }
+
+        if (btnComb) {
+            comb.value = "";
+
+        }
+
+        const CHESS_SIZE = 8;
+        var combinations = [];
+
+        //выводит количество комбинаций
+        function showResult(combinations) {
+            chessCeils = cntChessBoard.querySelectorAll('.chess__ceil');
             if (!resultChess) {
                 return;
             } 
@@ -45,58 +60,66 @@
             if (combinations.length) {
                 resultChess.classList.add("chess__result--show");
             }
-            var btnComb = resultChess.querySelector('.chess__button--combination');
-            var comb = resultChess.querySelector('.chess__combination');
+            
             if (btnComb) {
-                btnComb.addEventListener("click", drawBoard.bind(comb));
+                btnComb.addEventListener("click", showCombination.bind(comb));
             }
+
         }
         
-        function drawBoard() {
-            if (!cntChessBoard) {
-                return;
-            }
+        //рисует комбинацию на шахматной доске
+        function showCombination() {
+            
             if (!Number(this.value)) {
                 return;
             }
-            var chessCeils = cntChessBoard.querySelectorAll('.chess__ceil');
-                        
+                                    
             chessCeils.forEach(function(e) {
                 e.classList.remove("chess__ceil--red");
                 e.classList.remove("chess__queen");
             })
 
-            function colorBoard(evt,q) {
-                chessCeils.forEach(function(e) {
-                    e.classList.remove("chess__ceil--red");
-                })
-                evt.target.classList.add("chess__ceil--red");
-                q.battlefield.forEach(function(b) {
-                    chessCeils[b].classList.add("chess__ceil--red");
-                })
-            }
-
             if (combinations[this.value-1]) {
                 combinations[this.value-1].forEach( function(q) {
                     var ceil = chessCeils[q.ceil];
                     ceil.classList.add("chess__queen");
-                    ceil.addEventListener("click", function(evt) { colorBoard(evt,q) })
+                    ceil.addEventListener("click", function(evt) { showBattlefield(evt,q) })
                 })
             }
         };
 
+        //рисует "поле боя" ферзя
+        function showBattlefield(evt,q) {
+            chessCeils.forEach(function(e) {
+                e.classList.remove("chess__ceil--red");
+            })
+            evt.target.classList.add("chess__ceil--red");
+            q.battlefield.forEach(function(b) {
+                chessCeils[b].classList.add("chess__ceil--red");
+            })
+        }
+
+        //создает шахматную доску
         function initBoard() {
             var board = [];
-            for  (var i = 0; i< CHESS_SIZE*CHESS_SIZE; i++) {
-                var battlefield = disableCeils(i);
-                board.push({ceil:i, battlefield:battlefield});    
+            var divBoard = document.createElement('div');
+            divBoard.className = "chess__board";
+            for  (var i = 0; i< CHESS_SIZE; i++) {
+                var row = [];
+                for  (var j = 0; j< CHESS_SIZE; j++) {
+                    row.push(i*CHESS_SIZE+j);
+                    var divCeil = document.createElement('div');
+                    divCeil.className = "chess__ceil " + ((i%2 + j%2)===1? "chess__ceil--black" : "chess__ceil--white");
+                    divBoard.appendChild(divCeil);
+                }
+                board.push(row);    
             }
+            blockchess.appendChild(divBoard);
+            cntChessBoard = blockchess;
             return board;
         }
 
-        var combinations = [];
-
-        //функция блокировки клеток на доске
+        //поиск "поля боя" для ферзя
         function disableCeils(ceilCurr) {
             var battlefield = [];
             
@@ -133,114 +156,46 @@
             return battlefield.sort((a,b)=>a-b);
         };
 
-        function findFreeCeil(i,queens,boardCurr) {
-            console.log("check ceil " + i);
-            if (i > CHESS_SIZE*CHESS_SIZE) {
-                return;
-            }
-            do {
-                var row = Math.floor(i/CHESS_SIZE);
-                var col = CHESS_SIZE-(CHESS_SIZE*(row+1)-i)-1;
-                var ceil = boardCurr[row][col];
-                i++;
-
-            } while (!ceil && (i < (CHESS_SIZE*CHESS_SIZE)));
-            if (ceil) {
-                var battlefield = disableCeils(boardCurr,row,col);
-                var queen = {ceil:[row,col], battlefield:battlefield};
-                //console.log("the queen on [" + row + "," + col + "]");
-                queens.push(queen);    
-            }
-            if (queens.length < QUEENS_COUNT) {
-                findFreeCeil(i,queens,boardCurr);
-                return;
-            }
-            if (queens.length==QUEENS_COUNT) {
+        //поиск возможных комбинаций
+        function findCombinations (queens,board) {
+            //если ферзей уже 8
+            if (queens.length === CHESS_SIZE) {
                 combinations.push(queens);
-                queens = [];
-            };
-        }
-
-        //функция поиска возможных комбинаций
-        function findCombinations(queens,board,t) {
-            console.log("deep " + t);
-            if (queens.length===QUEENS_COUNT) {
-                combinations.push(queens);
-                return;
-            }
-
-            if (combinations.length===1) {
-                //combinations.push(queens);
                 return;
             }
             
-            //перебор доски
-            for (var i = 0; i < board.length; i++) {
-                var bbb = board.filter( function( el ) {
-                    return !battlefield.includes( el );
-                } );
-                //console.log("the queen on " + board[i]);
-                findCombinations(queens.concat([{ceil:board[i], battlefield:battlefield}]),bbb,t+1); 
+            //перебор строки
+            var rowCurr = board[0];
+            for (var i = 0; i < rowCurr.length; i++) {
+                var ceil = rowCurr[i];
+                //массив "поля боя" для ферзя ceil
+                var battleField = disableCeils(ceil);
+                //удаляем с доски клетки
+                var boardCurr = [];
+                for (var j = 1; j < board.length; j++) {
+                    var newRow = board[j].filter(function(i) {
+                        return !battleField.includes(i)
+                    });
+                    //если какая-либо из строк на доске уже пуста, значит комбинация невозможна
+                    if (newRow.length===0) {
+                        return;
+                    };
+                    boardCurr.push(newRow);
+                };
+                findCombinations(queens.concat([{ceil:ceil,battlefield:battleField}]),boardCurr); 
             }
             return;
         };
 
         var board = initBoard();
-        //console.log(board);
-        findCombinations([],board,1);
-        
-        //console.log(board);
-        //console.log(queens);
-        console.log(combinations);
-        showCombinations(combinations);
-        //drawBoard();
-
-
+        findCombinations([],board);
+        showResult(combinations);
     }
 
     if (btnChess) {
         btnChess.addEventListener('click', (event) => {
-            var res = chessQueens();
-            //showResult("Результат: " + (res!==null ? res.join("-") : "Цепочку построить невозможно"));
+            chessQueens();
         });
     }
 
 })();
-
-
-
-
-/*
- function disableCeils(boardCurr,ceil) {
-            var battlefield = [];
-            boardCurr[row][col] = false;
-            battlefield.push([row,col]);
-            for (var i = 0; i < CHESS_SIZE; i++) {
-                //горизонтальный ряд
-                boardCurr[row][i] = false;
-                battlefield.push([row,i]);
-                //вертикальный ряд
-                boardCurr[i][col] = false;
-                battlefield.push([i,col]);
-                //диагональные ряды
-                if ((row+i)<CHESS_SIZE && (col+i)<CHESS_SIZE) {
-                    boardCurr[row+i][col+i] = false;
-                    battlefield.push([row+i,col+i]);
-                }
-                if ((row-i)>=0 && (col-i)>=0) {
-                    boardCurr[row-i][col-i] = false;
-                    battlefield.push([row-i,col-i]);
-                }
-                if ((row+i)<CHESS_SIZE && (col-i)>=0) {
-                    boardCurr[row+i][col-i] = false;
-                    battlefield.push([row+i,col-i]);
-                }
-                if ((row-i)>=0 && (col+i)<CHESS_SIZE) {
-                    boardCurr[row-i][col+i] = false;
-                    battlefield.push([row-i,col+i]);
-                }
-            }
-            return battlefield;
-        };
-
-*/

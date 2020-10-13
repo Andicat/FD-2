@@ -4,7 +4,7 @@
         flex-wrap: wrap;
         width: $chess-size;
         height: $chess-size;
-        border: 2px solid black;
+        //border: 2px solid black;
         margin: 0 auto;
     }
 
@@ -36,7 +36,12 @@
         display: none;
 
         &--show {
-            display: block;
+            display: flex;
+            flex-direction: column;
         }
+    }
+
+    &__combination {
+        min-width: 200px;
     }
 }
