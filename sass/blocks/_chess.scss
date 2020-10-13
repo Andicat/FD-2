@@ -1,17 +1,17 @@
 .chess {
     &__board {
-        display: table;
-        width: 50vw;
-        height: 50vw;
+        display: flex;
+        flex-wrap: wrap;
+        width: $chess-size;
+        height: $chess-size;
         border: 2px solid black;
-    }
-
-    &__row {
-        display: table-row;
+        margin: 0 auto;
     }
 
     &__ceil {
-        display: table-cell;
+        box-sizing: border-box;
+        width: $chess-size-ceil;
+        height: $chess-size-ceil;
         border: 0.5px solid rgb(65, 65, 65);
         &--black {
             background-color: rgb(65, 65, 65);
@@ -31,6 +31,12 @@
             background-color: rgb(163, 26, 11);
         }
     }
-    
-	
+
+    &__result {
+        display: none;
+
+        &--show {
+            display: block;
+        }
+    }
 }

@@ -159,18 +159,22 @@ button:hover, button:focus {
 }
 
 .chess__board {
-  display: table;
-  width: 50vw;
-  height: 50vw;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  width: 400px;
+  height: 400px;
   border: 2px solid black;
-}
-
-.chess__row {
-  display: table-row;
+  margin: 0 auto;
 }
 
 .chess__ceil {
-  display: table-cell;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: calc(400px/8);
+  height: calc(400px/8);
   border: 0.5px solid #414141;
 }
 
@@ -192,5 +196,13 @@ button:hover, button:focus {
 .chess__queen.chess__ceil--red {
   background-size: cover;
   background-color: #a31a0b;
+}
+
+.chess__result {
+  display: none;
+}
+
+.chess__result--show {
+  display: block;
 }
 /*# sourceMappingURL=style.css.map */
