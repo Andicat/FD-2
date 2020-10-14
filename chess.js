@@ -35,7 +35,7 @@
         
         if (cntChessBoard) {
             cntChessBoard.remove();
-            comb.value = "";    
+            inputComb.value = "";    
         }
         
         const CHESS_SIZE = 8;
@@ -100,7 +100,7 @@
             };
 
             blockchess.appendChild(divBoard);
-            cntChessBoard = blockchess;
+            cntChessBoard = divBoard;
             chessCeils = cntChessBoard.querySelectorAll('.chess__ceil');
             return board;
         }
@@ -143,12 +143,7 @@
         };
 
         //поиск возможных комбинаций
-        function findCombinations (queens,board) {
-            //если ферзей уже 8
-            if (queens.length === CHESS_SIZE) {
-                combinations.push(queens);
-                return;
-            }
+        function findCombinations (queens,board,text,count) {
             //перебор строки
             var rowCurr = board[0];
             for (var i = 0; i < rowCurr.length; i++) {
@@ -157,23 +152,33 @@
                 var battleField = disableCeils(ceil);
                 //удаляем с доски клетки
                 var boardCurr = [];
+                var emptyRow = false;
                 for (var j = 1; j < board.length; j++) {
                     var newRow = board[j].filter(function(i) {
-                        return !battleField.includes(i)
+                        return !battleField.includes(i);
                     });
                     //если какая-либо из строк на доске уже пуста, значит комбинация невозможна
-                    if (newRow.length===0) {
-                        return;
+                    if (newRow.length === 0) {
+                        emptyRow = true;
                     };
                     boardCurr.push(newRow);
                 };
-                findCombinations(queens.concat([{ceil:ceil,battlefield:battleField}]),boardCurr); 
+                if (emptyRow) {
+                    continue;
+                }
+                var queensCurr = queens.concat([{ceil:ceil,battlefield:battleField}]);
+                //если ферзей уже 8, то сохраняем компбинацию
+                if (queensCurr.length === CHESS_SIZE) {
+                    combinations.push(queensCurr);
+                    continue;
+                }
+                findCombinations(queensCurr,boardCurr,text + "     ",count+1); 
             }
             return;
         };
 
         var board = initBoard();
-        findCombinations([],board);
+        findCombinations([],board,"",1);
         showResult(combinations);
     }
 
