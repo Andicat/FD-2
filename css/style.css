@@ -204,6 +204,10 @@ button:hover, button:focus {
   background-color: #a31a0b;
 }
 
+.chess__queen:hover, .chess__queen:focus {
+  background-size: cover;
+}
+
 .chess__result {
   display: none;
 }
