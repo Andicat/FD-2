@@ -18,27 +18,20 @@
 
 (function () {
 
-    var blockchess = document.querySelector('.chess');
-
-    if (!blockchess) {
-        return;
-    }
-    
-    var btnChess = blockchess.querySelector('.chess__button');
-    
-        
-    function chessQueens () {
-
+    try {
+        var blockchess = document.querySelector('.chess');
+        var btnChess = blockchess.querySelector('.chess__button');
         var cntChessBoard = blockchess.querySelector('.chess__board');
         var resultChess = blockchess.querySelector('.chess__result');
-        var btnComb = resultChess.querySelector('.chess__button--combination');
-        var comb = resultChess.querySelector('.chess__combination');
         var resultChessText = resultChess.querySelector('.chess__result-text');
+        var btnComb = resultChess.querySelector('.chess__button--combination');
+        var inputComb = resultChess.querySelector('.chess__combination');
         var chessCeils;
-
-        if (!btnComb || !resultChess || !comb || !resultChessText) {
-            return;
-        }
+    } catch {
+        return;
+    }
+            
+    function chessQueens () {
         
         if (cntChessBoard) {
             cntChessBoard.remove();
@@ -50,18 +43,17 @@
 
         //выводит количество комбинаций
         function showResult(combinations) {
-            chessCeils = cntChessBoard.querySelectorAll('.chess__ceil');
             resultChessText.innerHTML = "Найдено комбинаций: " + combinations.length; 
             if (combinations.length) {
                 resultChess.classList.add("chess__result--show");
             }
-            btnComb.addEventListener("click", showCombination.bind(comb));
+            btnComb.addEventListener("click", showCombination);
         }
         
         //рисует комбинацию на шахматной доске
         function showCombination() {
-            
-            if (!Number(this.value)) {
+            var cmbNumber = inputComb.value;
+            if (!Number(cmbNumber)) {
                 return;
             }
                                     
@@ -70,8 +62,8 @@
                 e.classList.remove("chess__queen");
             })
 
-            if (combinations[this.value-1]) {
-                combinations[this.value-1].forEach( function(q) {
+            if (combinations[cmbNumber-1]) {
+                combinations[cmbNumber-1].forEach( function(q) {
                     var ceil = chessCeils[q.ceil];
                     ceil.classList.add("chess__queen");
                     ceil.addEventListener("click", function(evt) { showBattlefield(evt,q) })
@@ -95,6 +87,7 @@
             var board = [];
             var divBoard = document.createElement('div');
             divBoard.className = "chess__board";
+
             for  (var i = 0; i< CHESS_SIZE; i++) {
                 var row = [];
                 for  (var j = 0; j< CHESS_SIZE; j++) {
@@ -104,9 +97,11 @@
                     divBoard.appendChild(divCeil);
                 }
                 board.push(row);    
-            }
+            };
+
             blockchess.appendChild(divBoard);
             cntChessBoard = blockchess;
+            chessCeils = cntChessBoard.querySelectorAll('.chess__ceil');
             return board;
         }
 
@@ -154,7 +149,6 @@
                 combinations.push(queens);
                 return;
             }
-            
             //перебор строки
             var rowCurr = board[0];
             for (var i = 0; i < rowCurr.length; i++) {

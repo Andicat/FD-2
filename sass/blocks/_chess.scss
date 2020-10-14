@@ -2,16 +2,18 @@
     &__board {
         display: flex;
         flex-wrap: wrap;
-        width: $chess-size;
-        height: $chess-size;
-        //border: 2px solid black;
+        width: 96vw;
+        max-width: $chess-size;
+        max-height: $chess-size;
         margin: 0 auto;
     }
 
     &__ceil {
         box-sizing: border-box;
-        width: $chess-size-ceil;
-        height: $chess-size-ceil;
+        width: 12vw;
+        height: 12vw;
+        max-width: $chess-size-ceil;
+        max-height: $chess-size-ceil;
         border: 0.5px solid rgb(65, 65, 65);
         &--black {
             background-color: rgb(65, 65, 65);
@@ -42,6 +44,10 @@
     }
 
     &__combination {
+        box-sizing: border-box;
+        padding: 15px 10px;
         min-width: 200px;
+        //max-width: 270px;
+        margin: 0 15px;
     }
 }

@@ -66,6 +66,10 @@ input {
           align-items: center;
 }
 
+.tasks h2 {
+  max-width: 80%;
+}
+
 .tasks__list {
   list-style: none;
   padding: 0;
@@ -164,16 +168,19 @@ button:hover, button:focus {
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  width: 400px;
-  height: 400px;
+  width: 96vw;
+  max-width: 400px;
+  max-height: 400px;
   margin: 0 auto;
 }
 
 .chess__ceil {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  width: calc(400px/8);
-  height: calc(400px/8);
+  width: 12vw;
+  height: 12vw;
+  max-width: calc(400px/8);
+  max-height: calc(400px/8);
   border: 0.5px solid #414141;
 }
 
@@ -212,6 +219,10 @@ button:hover, button:focus {
 }
 
 .chess__combination {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 15px 10px;
   min-width: 200px;
+  margin: 0 15px;
 }
 /*# sourceMappingURL=style.css.map */
