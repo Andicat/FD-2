@@ -1,5 +1,6 @@
 .chess {
     &__board {
+        position: relative;
         display: flex;
         flex-wrap: wrap;
         width: 96vw;
@@ -9,6 +10,10 @@
     }
 
     &__ceil {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
         box-sizing: border-box;
         width: 12vw;
         height: 12vw;
@@ -17,9 +22,11 @@
         border: 0.5px solid rgb(65, 65, 65);
         &--black {
             background-color: rgb(65, 65, 65);
+            color: white;
         }
         &--red {
             background-color: rgb(196, 65, 51);
+            color: black;
         }
     }
 
@@ -38,13 +45,20 @@
         }
     }
 
-    &__result {
-        display: none;
+    &__knight {
+        background-image: url("../img/knight.svg");
+        background-size: 90% 90%;
+        background-repeat: no-repeat;
+        background-position: center;
+        font-size: 0;
+        position: absolute;
+        z-index: 5;
+        background-color: yellowgreen;
+    }
 
-        &--show {
-            display: flex;
-            flex-direction: column;
-        }
+    &__result {
+        display: flex;
+        flex-direction: column;   
     }
 
     &__combination {
@@ -53,5 +67,14 @@
         min-width: 200px;
         //max-width: 270px;
         margin: 0 15px;
+    }
+
+
+}
+
+.chess-knight {
+    .result {
+        margin-top: 0;
+        margin-bottom: 15px;
     }
 }

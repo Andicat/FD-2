@@ -53,6 +53,10 @@ input {
   margin: 10px;
 }
 
+.hidden {
+  display: none !important;
+}
+
 .tasks {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -163,6 +167,7 @@ button:hover, button:focus {
 }
 
 .chess__board {
+  position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -175,6 +180,16 @@ button:hover, button:focus {
 }
 
 .chess__ceil {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  font-size: 24px;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   width: 12vw;
@@ -186,10 +201,12 @@ button:hover, button:focus {
 
 .chess__ceil--black {
   background-color: #414141;
+  color: white;
 }
 
 .chess__ceil--red {
   background-color: #c44133;
+  color: black;
 }
 
 .chess__queen {
@@ -208,11 +225,18 @@ button:hover, button:focus {
   background-size: cover;
 }
 
-.chess__result {
-  display: none;
+.chess__knight {
+  background-image: url("../img/knight.svg");
+  background-size: 90% 90%;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-size: 0;
+  position: absolute;
+  z-index: 5;
+  background-color: yellowgreen;
 }
 
-.chess__result--show {
+.chess__result {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -228,5 +252,10 @@ button:hover, button:focus {
   padding: 15px 10px;
   min-width: 200px;
   margin: 0 15px;
+}
+
+.chess-knight .result {
+  margin-top: 0;
+  margin-bottom: 15px;
 }
 /*# sourceMappingURL=style.css.map */

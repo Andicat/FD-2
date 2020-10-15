@@ -15,88 +15,119 @@
 (function () {
 
     try {
-        var blockchess = document.querySelector('.chess-knight');
+        var blockchess = document.querySelector('.chess--knight');
         var btnChess = blockchess.querySelector('.chess__button');
         var cntChessBoard = blockchess.querySelector('.chess__board');
         var resultChess = blockchess.querySelector('.chess__result');
-        var resultChessText = resultChess.querySelector('.chess__result-text');
-        var btnComb = resultChess.querySelector('.chess__button--combination');
-        var inputComb = resultChess.querySelector('.chess__combination');
+        var btnGoKnight = resultChess.querySelector('.chess__button--go');
+        var textChessResult = resultChess.querySelector('.chess__result-text');
         var chessCeils;
+        var knight;
     } catch {
         return;
     }
             
     function chessKnight () {
-        
-        if (cntChessBoard) {
-            cntChessBoard.remove();
-            inputComb.value = "";    
-        }
-        
-        const CHESS_SIZE = 8;
-        var combinationIs = false;
-        var result = [];
 
-        //выводит количество комбинаций
+        const CHESS_SIZE = 8;
+        var result = [];
+        var timerId;
+
+        //выводит результат
         function showResult(result) {
-            resultChessText.innerHTML = "Найдена комбинация!"; 
             if (result.length) {
-                resultChess.classList.add("chess__result--show");
+                btnChess.classList.add("hidden");
+                textChessResult.innerHTML = "Найдена комбинация!"; 
+                resultChess.classList.remove("hidden");
+                result.forEach(function (ceil,i) {
+                    chessCeils[ceil-1].innerHTML = i+1;
+                });
+                btnGoKnight.addEventListener("click", showKnightWalk);
             }
-            btnComb.addEventListener("click", showResult);
         }
-        
-        //рисует результат на шахматной доске
-        function showResult() {
-            var cmbNumber = inputComb.value;
-            if (!Number(cmbNumber)) {
+
+        function step(direction) {
+            if (direction==="row-right") {
+                knight.style.left = (knight.offsetLeft + knight.offsetWidth)+'px';
+            }
+            if (direction==="row-left") {
+                knight.style.left = (knight.offsetLeft - knight.offsetWidth)+'px';
+            }
+            if (direction==="col-down") {
+                knight.style.top = (knight.offsetTop + knight.offsetHeight)+'px';
+            }
+            if (direction==="col-up") {
+                knight.style.top = (knight.offsetTop - knight.offsetHeight)+'px';
+            }
+            setTimeout(step, 1000, direction);
+        }
+
+        //код коня
+        function showStep(index,indexPrev) {
+            var ceil = chessCeils[result[index]-1];
+            while (knight.offsetLeft!==ceil.offsetLeft) {
+                step("row" + ((knight.offsetLeft<ceil.offsetLeft)?"-right":"-left"));
+            }
+            while (knight.offsetTop!==ceil.offsetTop) {
+                step("col" + ((knight.offsetTop<ceil.offsetTop)?"-down":"-up"));
+            }
+            /*if (indexPrev!==undefined) {
+                var ceilPrev = chessCeils[result[indexPrev]-1];
+                var ceil = chessCeils[result[index]-1];
+                //ceilPrev.classList.remove("chess__knight");
+                ceil.classList.add("chess__ceil--red");
+                var topStart = ceilPrev.offsetTop;
+                var leftStart = ceilPrev.offsetLeft;
+                var topEnd = ceil.offsetTop;
+                var leftEnd = ceil.offsetLeft;
+                var step = 50;
+                while (topStart!==topEnd) {
+                    setTimeout()                       
+                    }, timeout);green.style.left=(red.offsetLeft-green.offsetWidth)+'px';
+                }
+            }*/
+            //chessCeils[result[index]-1].classList.add("chess__knight");
+            if (index+1>=CHESS_SIZE*CHESS_SIZE) {
+                ceil.classList.add("chess__ceil--red");
                 return;
             }
-                                    
-            chessCeils.forEach(function(e) {
-                e.classList.remove("chess__ceil--red");
-                e.classList.remove("chess__queen");
-            })
-
-            if (combinations[cmbNumber-1]) {
-                combinations[cmbNumber-1].forEach( function(q) {
-                    var ceil = chessCeils[q.ceil];
-                    ceil.classList.add("chess__queen");
-                    ceil.addEventListener("click", function(evt) { showBattlefield(evt,q) })
-                })
-            }
-        };
-
-        //рисует "поле боя" ферзя
-        function showBattlefield(evt,q) {
-            chessCeils.forEach(function(e) {
-                e.classList.remove("chess__ceil--red");
-            })
-            evt.target.classList.add("chess__ceil--red");
-            q.battlefield.forEach(function(b) {
-                chessCeils[b].classList.add("chess__ceil--red");
-            })
+            setTimeout(showStep, 3000, index+1);
         }
+        
+        //Рисует ходы коня по шахматной доске
+        function showKnightWalk() {  
+            knight.classList.remove("hidden");
+            chessCeils.forEach(function(e) {
+                e.classList.remove("chess__ceil--red");
+            })  
+            clearTimeout(timerId);
+            showStep(0);                
+        };
 
         //создает шахматную доску
         function initBoard() {
             var board = [];
             var divBoard = document.createElement('div');
-            divBoard.className = "chess__board";
+            divBoard.className = "chess__board chess__board--knight";
 
             for  (var i = 1; i <= CHESS_SIZE*CHESS_SIZE; i++) {
                 var nextStepArr = nextSteps(i);
                 board.push({step:i, stepsArr:nextStepArr});
                 var divCeil = document.createElement('div');
-                //divCeil.className = "chess__ceil " + ((i%2 + j%2)===1? "chess__ceil--black" : "chess__ceil--white");
+                var colorOfCeil = colorOfCeil==="black"?"white":"black";
+                if ((i-1)%8===0) {
+                    var colorOfCeil = colorOfCeil==="black"?"white":"black";
+                }
+                divCeil.className = "chess__ceil chess__ceil--knight chess__ceil--" + colorOfCeil;
                 divBoard.appendChild(divCeil);
-                //board.push(row);    
             };
-
+            var divKnight = document.createElement('div');
+            divKnight.className = "chess__ceil chess__knight hidden";
+            divBoard.appendChild(divKnight);
             blockchess.appendChild(divBoard);
             cntChessBoard = divBoard;
             chessCeils = cntChessBoard.querySelectorAll('.chess__ceil');
+            knight = cntChessBoard.querySelector('.chess__knight');
             return board;
         }
 
@@ -161,14 +192,14 @@
             return steps.sort((a,b)=>a-b);
         };
 
-        //поиск комбинации начиная с верхнего левого края шахматной доски
-        function findCombinations (knight,board,combination) {
+        //поиск пути начиная с верхнего левого края шахматной доски
+        function findWay (knight,board,combination) {
             var combinationCurr = combination.concat(knight);
             if (combinationCurr.length===CHESS_SIZE*CHESS_SIZE) {
                 result = combinationCurr;
                 return;
             }
-            //сортируем клетки по "многоходовости". Конь шагает в самую "многоходовую в след.шаге" клетку 
+            //сортируем клетки по "многоходовости". Конь шагает в самую "многоходовую" клетку 
             function sf (a,b) {
                 var bl = (board.filter(v => v.step == b)[0].stepsArr.length);
                 var al = board.filter(v => v.step == a)[0].stepsArr.length;
@@ -183,7 +214,6 @@
                 });
                 boardCurr.push({step:board[i].step, stepsArr:newStepsArr});
             }
-            
             //перебор возможных ходов с текущей клетки
             for (var i = 0; i < nextStepsArr.length; i++) {
                 var nextStep = nextStepsArr[i];
@@ -192,14 +222,13 @@
                 }
                 //сортируем таблицу по след.шагу
                 boardCurr = boardCurr.sort((a,b)=>{return a.step===nextStep?-1:0;});
-                findCombinations(nextStep,boardCurr,combinationCurr); 
+                findWay(nextStep,boardCurr,combinationCurr); 
             }
             return;
         };
 
         var board = initBoard();
-        findCombinations(1,board,[]);
-        console.log(result);
+        findWay(1,board,[]);
         showResult(result);
     }
 
