@@ -39,16 +39,16 @@
         var result = [];
 
         //выводит количество комбинаций
-        function showResult(combinations) {
-            resultChessText.innerHTML = "Найдено комбинаций: " + combinations.length; 
-            if (combinations.length) {
+        function showResult(result) {
+            resultChessText.innerHTML = "Найдена комбинация!"; 
+            if (result.length) {
                 resultChess.classList.add("chess__result--show");
             }
-            btnComb.addEventListener("click", showCombination);
+            btnComb.addEventListener("click", showResult);
         }
         
-        //рисует комбинацию на шахматной доске
-        function showCombination() {
+        //рисует результат на шахматной доске
+        function showResult() {
             var cmbNumber = inputComb.value;
             if (!Number(cmbNumber)) {
                 return;
@@ -81,12 +81,13 @@
 
         //создает шахматную доску
         function initBoard() {
-            var board = {};
+            var board = [];
             var divBoard = document.createElement('div');
             divBoard.className = "chess__board";
 
             for  (var i = 1; i <= CHESS_SIZE*CHESS_SIZE; i++) {
-                board[i] = nextSteps(i);
+                var nextStepArr = nextSteps(i);
+                board.push({step:i, stepsArr:nextStepArr});
                 var divCeil = document.createElement('div');
                 //divCeil.className = "chess__ceil " + ((i%2 + j%2)===1? "chess__ceil--black" : "chess__ceil--white");
                 divBoard.appendChild(divCeil);
@@ -160,63 +161,46 @@
             return steps.sort((a,b)=>a-b);
         };
 
-        //урезаем ходы
-        function createNewboard (ceil, board) {
-            var newBoard = {};
-            for (var i in board) {
-                if (i!==ceil) {
-                    newBoard[i] = board[i].filter(function(i) {
-                        return i!==ceil;
-                    });
-                }
-            }
-            return newBoard;
-        }
-
         //поиск комбинации начиная с верхнего левого края шахматной доски
         function findCombinations (knight,board,combination) {
-            var knightSteps = board[knight];
-            if (knightSteps.length===0) {
-                console.log("no more steps");
+            var combinationCurr = combination.concat(knight);
+            if (combinationCurr.length===CHESS_SIZE*CHESS_SIZE) {
+                result = combinationCurr;
                 return;
             }
-            //сделаем копию доски без текущей ячейки
-            var boardCurr = createNewboard(knight,board);
-            if (combination.length===62) {
-                combinationIs = true;
-                result = combination;
-            //    console.log(combinations.sort((a,b)=>a-b));
-            //    console.log(boardCurr);
-            return;
+            //сортируем клетки по "многоходовости". Конь шагает в самую "многоходовую в след.шаге" клетку 
+            function sf (a,b) {
+                var bl = (board.filter(v => v.step == b)[0].stepsArr.length);
+                var al = board.filter(v => v.step == a)[0].stepsArr.length;
+                return al - bl;
             }
-            //if (knight===25) {
-            //    debugger;
-            //}
-            //console.log(boardCurr);
-            console.log("knight " + knight + " steps " + knightSteps);
-            for (var i = 0; i < knightSteps.length; i++) {
-                if (combinationIs) {
-                    //    console.log(combinations.sort((a,b)=>a-b));
-                    //    console.log(boardCurr);
-                    return;
-                    }
-                var nextStep = knightSteps[i];
-                //проверим, свободна ли клетка для этого хода
-                if (nextStep in boardCurr) {
-                    console.log("step on " + nextStep);
-                    findCombinations(nextStep,boardCurr,combination.concat(knight)); 
-                    //console.log(combinations);
-                }
+            var nextStepsArr = board[0].stepsArr.sort(sf);
+            //убираем с доски текущую клетку
+            var boardCurr = [];
+            for (var i = 1; i < board.length; i++) {
+                var newStepsArr = board[i].stepsArr.filter(function(i) {
+                    return i!==knight;
+                });
+                boardCurr.push({step:board[i].step, stepsArr:newStepsArr});
             }
             
+            //перебор возможных ходов с текущей клетки
+            for (var i = 0; i < nextStepsArr.length; i++) {
+                var nextStep = nextStepsArr[i];
+                if (result.length!==0) {
+                    return;
+                }
+                //сортируем таблицу по след.шагу
+                boardCurr = boardCurr.sort((a,b)=>{return a.step===nextStep?-1:0;});
+                findCombinations(nextStep,boardCurr,combinationCurr); 
+            }
             return;
         };
 
         var board = initBoard();
-        //console.log(board);
         findCombinations(1,board,[]);
         console.log(result);
-        //showResult(combinations);
+        showResult(result);
     }
 
     if (btnChess) {
