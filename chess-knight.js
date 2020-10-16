@@ -47,13 +47,26 @@
         }
 
         //отображает один шаг коня
-        function step (i,newCeil) {
+        function step (i,newCeil,goRow,goCol) {
             clearTimeout(timerId);
             timerId = setTimeout(function () {
                 var ceil = chessCeils[result[i]-1];
                 
+                //смена направления/клетки
                 function isReach () {
-                    if (knight.offsetTop === ceil.offsetTop && knight.offsetLeft === ceil.offsetLeft) {
+                    if (knight.offsetTop === ceil.offsetTop) {
+                        goCol = false;
+                        if (knight.offsetLeft !== ceil.offsetLeft) {
+                            goRow = true;
+                        }    
+                    }
+                    if (knight.offsetLeft === ceil.offsetLeft) {
+                        goRow = false;
+                        if (knight.offsetTop !== ceil.offsetTop) {
+                            goCol = true;
+                        }
+                    }
+                    if (!goRow && !goCol) {
                         newCeil = true;
                         i++;
                     }
@@ -63,31 +76,35 @@
                 }
                 
                 if (newCeil) {
+                    //определим начально направление хода коня
                     chessCeils[result[i-1]-1].style.fontSize = "";
                     chessCeils[result[i-1]-1].classList.add("chess__ceil--red");
+                    var row = Math.abs(ceil.offsetLeft - knight.offsetLeft);
+                    var col = Math.abs(ceil.offsetTop - knight.offsetTop);
+                    goRow = (row > col) ? true: false;    
+                    goCol = !goRow;
+                    newCeil = false;
                 }
-                newCeil = false;
-
-                if (knight.offsetTop < ceil.offsetTop) {
+                if (goCol && knight.offsetTop < ceil.offsetTop) { //вниз
                     knight.style.top = (knight.offsetTop + knight.offsetHeight)+'px'; 
                     isReach();
                 } 
-                else if (knight.offsetTop > ceil.offsetTop) {
+                else if (goCol && knight.offsetTop > ceil.offsetTop) { //вверх
                     knight.style.top = (knight.offsetTop - knight.offsetHeight)+'px'; 
                     isReach();
                 } 
-                else if (knight.offsetLeft < ceil.offsetLeft) {
+                else if (goRow && knight.offsetLeft < ceil.offsetLeft) { //вправо
                     knight.style.left = (knight.offsetLeft + knight.offsetWidth)+'px'; 
                     isReach();
                 }
-                else if (knight.offsetLeft > ceil.offsetLeft) {
+                else if (goRow && knight.offsetLeft > ceil.offsetLeft) { //влево
                     knight.style.left = (knight.offsetLeft - knight.offsetWidth)+'px'; 
                     isReach();
                 }
                 if (result[i]) {
-                    step(i,newCeil);
+                    step(i,newCeil,goRow,goCol);
                 }
-            }, 500)
+            }, 1000)
         }
         
         //Рисует путь коня по шахматной доске
