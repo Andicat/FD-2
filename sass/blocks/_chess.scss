@@ -76,13 +76,13 @@
 @include tablet {
     .chess {
         &__board {
-            width: 200px;
-            height: 200px;
+            width: 280px;
+            height: 280px;
         }
         &__ceil {
-            font-size: 12px;
-            width: 25px;
-            height: 25px;
+            font-size: 14px;
+            width: 35px;
+            height: 35px;
         }
     }
 }
