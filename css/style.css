@@ -265,4 +265,105 @@ button:hover, button:focus {
     height: 35px;
   }
 }
+
+.picture__container {
+  position: relative;
+  width: 1000px;
+  height: 500px;
+  border: 1px solid #698139;
+}
+
+.picture__title {
+  display: block;
+  font-size: 24px;
+  line-height: normal;
+  font-weight: 600;
+  margin: 10px;
+}
+
+.picture__image {
+  position: absolute;
+  width: 400px;
+  height: 200px;
+  top: 20%;
+  left: 50%;
+  background-image: url("../img/shiba.jpg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 1px solid #698139;
+}
+
+.picture__image:hover {
+  cursor: pointer;
+}
+
+.picture__control {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background-color: #698139;
+  position: absolute;
+}
+
+.picture__control:hover {
+  width: 20px;
+  height: 20px;
+}
+
+.picture__control--left-top {
+  top: 0;
+  left: 0;
+  -webkit-transform: translate(-40%, -40%);
+          transform: translate(-40%, -40%);
+}
+
+.picture__control--top {
+  top: 0;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+
+.picture__control--right-top {
+  top: 0;
+  right: 0;
+  -webkit-transform: translate(50%, -50%);
+          transform: translate(50%, -50%);
+}
+
+.picture__control--right {
+  top: 50%;
+  right: 0;
+  -webkit-transform: translate(50%, -50%);
+          transform: translate(50%, -50%);
+}
+
+.picture__control--right-bottom {
+  bottom: 0;
+  right: 0;
+  -webkit-transform: translate(50%, 50%);
+          transform: translate(50%, 50%);
+}
+
+.picture__control--bottom {
+  bottom: 0;
+  left: 50%;
+  -webkit-transform: translate(-50%, 50%);
+          transform: translate(-50%, 50%);
+}
+
+.picture__control--left-bottom {
+  bottom: 0;
+  left: 0;
+  -webkit-transform: translate(-50%, 50%);
+          transform: translate(-50%, 50%);
+}
+
+.picture__control--left {
+  top: 50%;
+  left: 0;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
 /*# sourceMappingURL=style.css.map */

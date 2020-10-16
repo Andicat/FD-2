@@ -1,0 +1,99 @@
+.picture {
+
+    &__container {
+        position: relative;
+        width: 1000px;
+        height: 500px;
+        border: 1px solid rgb(105, 129, 57);
+    }
+
+    &__title {
+        display: block;
+		font-size: 24px;
+		line-height: normal;
+		font-weight: 600;
+		margin: 10px;
+    }
+
+    &__image {
+        position: absolute;
+        width: 400px;
+        height: 200px;
+        top: 20%;
+        left: 50%;
+        background-image: url("../img/shiba.jpg");
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+        border: 1px solid rgb(105, 129, 57);
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+
+    &__control {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        background-color: rgb(105, 129, 57);
+        position: absolute;
+
+        &:hover {
+            width: 20px;
+            height: 20px;
+        }
+
+        &--left-top {
+            top: 0;
+            left: 0;
+            transform: translate(-40%,-40%);
+        }
+
+        &--top {
+            top: 0;
+            left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        &--right-top {
+            top: 0;
+            right: 0;
+            transform: translate(50%,-50%);
+        }
+
+        &--right {
+            top: 50%;
+            right: 0;
+            transform: translate(50%,-50%);
+        }
+
+        &--right-bottom {
+            bottom: 0;
+            right: 0;
+            transform: translate(50%,50%);
+        }
+
+        &--bottom {
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%,50%);
+        }
+
+        &--left-bottom {
+            bottom: 0;
+            left: 0;
+            transform: translate(-50%,50%);
+        }
+
+        &--left {
+            top: 50%;
+            left: 0;
+            transform: translate(-50%,-50%);
+        }
+    }
+}
+
+@include tablet {
+    
+}
