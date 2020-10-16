@@ -46,65 +46,64 @@
             }
         }
 
-        function step(direction) {
-            if (direction==="row-right") {
-                knight.style.left = (knight.offsetLeft + knight.offsetWidth)+'px';
-            }
-            if (direction==="row-left") {
-                knight.style.left = (knight.offsetLeft - knight.offsetWidth)+'px';
-            }
-            if (direction==="col-down") {
-                knight.style.top = (knight.offsetTop + knight.offsetHeight)+'px';
-            }
-            if (direction==="col-up") {
-                knight.style.top = (knight.offsetTop - knight.offsetHeight)+'px';
-            }
-            setTimeout(step, 1000, direction);
-        }
-
-        //код коня
-        function showStep(index,indexPrev) {
-            var ceil = chessCeils[result[index]-1];
-            while (knight.offsetLeft!==ceil.offsetLeft) {
-                step("row" + ((knight.offsetLeft<ceil.offsetLeft)?"-right":"-left"));
-            }
-            while (knight.offsetTop!==ceil.offsetTop) {
-                step("col" + ((knight.offsetTop<ceil.offsetTop)?"-down":"-up"));
-            }
-            /*if (indexPrev!==undefined) {
-                var ceilPrev = chessCeils[result[indexPrev]-1];
-                var ceil = chessCeils[result[index]-1];
-                //ceilPrev.classList.remove("chess__knight");
-                ceil.classList.add("chess__ceil--red");
-                var topStart = ceilPrev.offsetTop;
-                var leftStart = ceilPrev.offsetLeft;
-                var topEnd = ceil.offsetTop;
-                var leftEnd = ceil.offsetLeft;
-                var step = 50;
-                while (topStart!==topEnd) {
-                    setTimeout()                       
-                    }, timeout);green.style.left=(red.offsetLeft-green.offsetWidth)+'px';
+        //отображает один шаг коня
+        function step (i,newCeil) {
+            clearTimeout(timerId);
+            timerId = setTimeout(function () {
+                var ceil = chessCeils[result[i]-1];
+                
+                function isReach () {
+                    if (knight.offsetTop === ceil.offsetTop && knight.offsetLeft === ceil.offsetLeft) {
+                        newCeil = true;
+                        i++;
+                    }
+                    if (!result[i]) {
+                        ceil.classList.add("chess__ceil--red");
+                    }
                 }
-            }*/
-            //chessCeils[result[index]-1].classList.add("chess__knight");
-            if (index+1>=CHESS_SIZE*CHESS_SIZE) {
-                ceil.classList.add("chess__ceil--red");
-                return;
-            }
-            setTimeout(showStep, 3000, index+1);
+                
+                if (newCeil) {
+                    chessCeils[result[i-1]-1].style.fontSize = "";
+                    chessCeils[result[i-1]-1].classList.add("chess__ceil--red");
+                }
+                newCeil = false;
+
+                if (knight.offsetTop < ceil.offsetTop) {
+                    knight.style.top = (knight.offsetTop + knight.offsetHeight)+'px'; 
+                    isReach();
+                } 
+                else if (knight.offsetTop > ceil.offsetTop) {
+                    knight.style.top = (knight.offsetTop - knight.offsetHeight)+'px'; 
+                    isReach();
+                } 
+                else if (knight.offsetLeft < ceil.offsetLeft) {
+                    knight.style.left = (knight.offsetLeft + knight.offsetWidth)+'px'; 
+                    isReach();
+                }
+                else if (knight.offsetLeft > ceil.offsetLeft) {
+                    knight.style.left = (knight.offsetLeft - knight.offsetWidth)+'px'; 
+                    isReach();
+                }
+                if (result[i]) {
+                    step(i,newCeil);
+                }
+            }, 500)
         }
         
-        //Рисует ходы коня по шахматной доске
-        function showKnightWalk() {  
+        //Рисует путь коня по шахматной доске
+        function showKnightWalk() {
+            knight.style.left = ""; 
+            knight.style.top = ""; 
             knight.classList.remove("hidden");
             chessCeils.forEach(function(e) {
                 e.classList.remove("chess__ceil--red");
+                e.style.fontSize = "0px";
             })  
             clearTimeout(timerId);
-            showStep(0);                
+            step(1,true); 
         };
 
-        //создает шахматную доску
+        //создает шахматную доску и коня
         function initBoard() {
             var board = [];
             var divBoard = document.createElement('div');
@@ -131,7 +130,7 @@
             return board;
         }
 
-        //поиск возможных ходов для коня
+        //поиск возможных ходов для коня из данной клетки
         function nextSteps(ceil) {
             var steps = [];
             var next;

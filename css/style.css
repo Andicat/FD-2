@@ -232,8 +232,6 @@ button:hover, button:focus {
   background-position: center;
   font-size: 0;
   position: absolute;
-  z-index: 5;
-  background-color: yellowgreen;
 }
 
 .chess__result {
