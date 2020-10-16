@@ -37,7 +37,7 @@
         function showResult(result) {
             if (result.length) {
                 btnChess.classList.add("hidden");
-                textChessResult.innerHTML = "Найдена комбинация!"; 
+                textChessResult.innerHTML = "Путь найден!"; 
                 resultChess.classList.remove("hidden");
                 result.forEach(function (ceil,i) {
                     chessCeils[ceil-1].innerHTML = i+1;
@@ -104,7 +104,7 @@
                 if (result[i]) {
                     step(i,newCeil,goRow,goCol);
                 }
-            }, 100)
+            }, 500)
         }
         
         //Рисует путь коня по шахматной доске
