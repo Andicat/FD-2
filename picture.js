@@ -81,20 +81,20 @@ D1+
             y: moveEvt.clientY
         };
 
-        var leftShift = Math.max(image.offsetLeft + (((image.offsetHeight===bottomMin || image.offsetTop===0) && mouseShift.x <= 0)?0:mouseShift.x),0);
-        var rightShift = image.offsetWidth + (((image.offsetHeight===bottomMin || image.offsetTop===0) && mouseShift.x > 0)?0:mouseShift.x);
+        var leftShift = Math.max(image.offsetLeft + mouseShift.x,0);
+        var rightShift = image.offsetWidth + mouseShift.x;
         var topShift = Math.max(image.offsetTop + mouseShift.y,0);
         var bottomShift = image.offsetHeight + mouseShift.y;
         var leftTopShift = Math.max(image.offsetTop + (((image.offsetLeft===0 && mouseShift.x <= 0)?0:mouseShift.x) / (propWidth/propHeight)),0);
         var rightTopShift = Math.max(image.offsetTop - (((image.offsetWidth===rightMin && mouseShift.x > 0)?0:mouseShift.x) / (propWidth/propHeight)),0);
         
         switch(action) {
-            //перемещение самой картинки по экрану - done
+            //перемещение самой картинки по экрану
             case "image":
                 image.style.top = Math.min(topShift, limits.bottom) + "px";
                 image.style.left = Math.min(leftShift, limits.right) + "px";
                 break;
-            //ресайз картинки слева - done
+            //ресайз картинки слева
             case "left":
                 image.style.left = leftShift + "px";
                 image.style.width = (leftMax - leftShift) + "px";
@@ -106,7 +106,7 @@ D1+
                     image.classList.toggle("picture__image--mirrorX");
                 }
                 break;
-            //ресайз картинки справа - done
+            //ресайз картинки справа
             case "right":
                 image.style.width = Math.min(rightShift,rightMin) + "px";
                 if (rightShift <= 0) {
@@ -117,7 +117,7 @@ D1+
                     image.classList.toggle("picture__image--mirrorX");
                 }
                 break;
-            //ресайз картинки сверху - done
+            //ресайз картинки сверху
             case "top":
                 image.style.top = topShift + "px";
                 image.style.height = (topMax - topShift) + "px";
@@ -128,7 +128,7 @@ D1+
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
-            //ресайз картинки снизу - done
+            //ресайз картинки снизу
             case "bottom":
                 image.style.height = Math.min(bottomShift,bottomMin) + "px";
                 if (bottomShift <= 0) {
@@ -139,10 +139,11 @@ D1+
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
-            //ресайз картинки слева сверху -done
+            //ресайз картинки слева сверху
             case "left-top":
-                console.log("leftshift " + leftShift + " lefttopshift " + leftTopShift);
-                console.log((((image.offsetTop===0 && mouseShift.x <= 0)?0:mouseShift.x) ));
+                if (image.offsetTop===0 && mouseShift.x <= 0) {
+                    leftShift = Math.max(image.offsetLeft,0);
+                }
                 image.style.left = leftShift + "px";
                 image.style.width = (leftMax - leftShift) + "px";
                 image.style.top = leftTopShift + "px";
@@ -159,8 +160,11 @@ D1+
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
-            //ресайз картинки справа снизу - done
+            //ресайз картинки справа снизу
             case "right-bottom":
+                if (image.offsetHeight===bottomMin && mouseShift.x > 0) {
+                    rightShift = image.offsetWidth;
+                }
                 image.style.width = Math.min(rightShift,rightMin) + "px";
                 image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),bottomMin) + "px";
                 //console.log("top max " + topMax + " left max" + leftMax);
@@ -177,6 +181,9 @@ D1+
                 break;
             //ресайз картинки справа сверху
             case "right-top":
+                if (image.offsetTop===0 && mouseShift.x > 0) {
+                    rightShift = image.offsetWidth;
+                }
                 image.style.width = Math.min(rightShift,rightMin) + "px";
                 image.style.top = rightTopShift + "px";
                 image.style.height = (topMax - rightTopShift) + "px";
@@ -193,6 +200,9 @@ D1+
                 break;
             //ресайз картинки слева снизу
             case "left-bottom":
+                if (image.offsetHeight===bottomMin && mouseShift.x <= 0) {
+                    leftShift = Math.max(image.offsetLeft,0);
+                }
                 image.style.left = leftShift + "px";
                 image.style.width = (leftMax - leftShift) + "px";
                 image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),bottomMin) + "px";
