@@ -29,12 +29,13 @@ D1+
 
     var action;
     var mouseStart;
-    var limitRight;
-    var limitBottom;
-    var limitY;
+    var mouseShift;
+    var rightMin;
+    var bottomMin;
+    var topMax;
     var limits;
-    var limitX;
-    var limitY;
+    var leftMax;
+    var topMax;
     var propWidth;
     var propHeight;
 
@@ -53,10 +54,10 @@ D1+
                 y: evt.clientY
             };
             //пределы
-            limitX = image.offsetLeft + image.offsetWidth;
-            limitY = image.offsetTop + image.offsetHeight;
-            limitRight = cntImage.offsetWidth - image.offsetLeft;
-            limitBottom = cntImage.offsetHeight - image.offsetTop;
+            leftMax = image.offsetLeft + image.offsetWidth;
+            topMax = image.offsetTop + image.offsetHeight;
+            rightMin = cntImage.offsetWidth - image.offsetLeft;
+            bottomMin = cntImage.offsetHeight - image.offsetTop;
             limits = {
                 bottom: cntImage.offsetHeight - image.offsetHeight,
                 right: cntImage.offsetWidth - image.offsetWidth,
@@ -70,91 +71,142 @@ D1+
     function onMouseMove(moveEvt) {
         moveEvt.preventDefault();
         //смещение мышки относительно начальных координат
-        var shift = {
-            x: mouseStart.x - moveEvt.clientX,
-            y: mouseStart.y - moveEvt.clientY
+        mouseShift = {
+            x: moveEvt.clientX - mouseStart.x,
+            y: moveEvt.clientY - mouseStart.y 
         };
         //новые стартовые координаты мышки
         mouseStart = {
             x: moveEvt.clientX,
             y: moveEvt.clientY
         };
+
+        var leftShift = Math.max(image.offsetLeft + (((image.offsetHeight===bottomMin || image.offsetTop===0) && mouseShift.x <= 0)?0:mouseShift.x),0);
+        var rightShift = image.offsetWidth + (((image.offsetHeight===bottomMin || image.offsetTop===0) && mouseShift.x > 0)?0:mouseShift.x);
+        var topShift = Math.max(image.offsetTop + mouseShift.y,0);
+        var bottomShift = image.offsetHeight + mouseShift.y;
+        var leftTopShift = Math.max(image.offsetTop + (((image.offsetLeft===0 && mouseShift.x <= 0)?0:mouseShift.x) / (propWidth/propHeight)),0);
+        var rightTopShift = Math.max(image.offsetTop - (((image.offsetWidth===rightMin && mouseShift.x > 0)?0:mouseShift.x) / (propWidth/propHeight)),0);
+        
         switch(action) {
             //перемещение самой картинки по экрану - done
             case "image":
-                image.style.top = Math.min(Math.max((image.offsetTop - shift.y), 0), limits.bottom) + "px";
-                image.style.left = Math.min(Math.max((image.offsetLeft - shift.x), 0), limits.right) + "px";
+                image.style.top = Math.min(topShift, limits.bottom) + "px";
+                image.style.left = Math.min(leftShift, limits.right) + "px";
                 break;
             //ресайз картинки слева - done
             case "left":
-                image.style.left = Math.max(Math.min((image.offsetLeft - shift.x), limitX),0) + "px";
-                image.style.width = (limitX - image.offsetLeft) + "px";
-                if ((image.offsetLeft-shift.x)>=limitX) {
-                    image.style.left = limitX + "px";
-                    limitRight = cntImage.offsetWidth - image.offsetLeft;
+                image.style.left = leftShift + "px";
+                image.style.width = (leftMax - leftShift) + "px";
+                if (leftShift >= leftMax) {
+                    image.style.left = leftMax + "px";
+                    rightMin = cntImage.offsetWidth - image.offsetLeft;
                     action = "right";
+                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
                     image.classList.toggle("picture__image--mirrorX");
                 }
                 break;
             //ресайз картинки справа - done
             case "right":
-                image.style.width = Math.min((image.offsetWidth - shift.x),limitRight) + "px";
-                if ((image.offsetWidth - shift.x)<=0) {
+                image.style.width = Math.min(rightShift,rightMin) + "px";
+                if (rightShift <= 0) {
                     image.style.width = "0px";
-                    limitX = image.offsetLeft;
+                    leftMax = image.offsetLeft;
                     action = "left";
+                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
                     image.classList.toggle("picture__image--mirrorX");
                 }
                 break;
             //ресайз картинки сверху - done
             case "top":
-                console.log("action " + action);
-                console.log(" height " + image.offsetHeight + " top " + image.offsetTop + " limitY " + limitY);
-                image.style.top = Math.max(Math.min((image.offsetTop - shift.y),limitY),0) + "px";
-                image.style.height = (limitY - image.offsetTop) + "px";
-                if ((image.offsetTop - shift.y)>=limitY) {
-                    image.style.top = limitY + "px";
-                    limitBottom = cntImage.offsetHeight - image.offsetTop;;
+                image.style.top = topShift + "px";
+                image.style.height = (topMax - topShift) + "px";
+                if (topShift >= topMax) {
+                    image.style.top = topMax + "px";
+                    bottomMin = cntImage.offsetHeight - image.offsetTop;;
                     action = "bottom";
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
             //ресайз картинки снизу - done
             case "bottom":
-                console.log("action " + action);
-                image.style.height = Math.min((image.offsetHeight - shift.y),limitBottom) + "px";
-                if ((image.offsetHeight - shift.y)<=0) {
-                    console.log("change from bottom to top. height " + image.offsetHeight + " top " + image.offsetTop + " limitY " + limitY);
+                image.style.height = Math.min(bottomShift,bottomMin) + "px";
+                if (bottomShift <= 0) {
                     image.style.height = "0px";
-                    limitY = image.offsetTop;
-                    console.log("height " + image.offsetHeight + " top " + image.offsetTop + " limitY " + limitY);
+                    topMax = image.offsetTop;
                     action = "top";
+                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
-            //ресайз картинки слева сверху
+            //ресайз картинки слева сверху -done
             case "left-top":
-                image.style.left = Math.max(Math.min((image.offsetLeft - ((image.offsetTop===0&&shift.x>0)?0:shift.x)),limitX),0) + "px";
-                image.style.width = (limitX - image.offsetLeft) + "px";
-                image.style.top = Math.max(Math.min((image.offsetTop - ((image.offsetLeft===0&&shift.x>0)?0:shift.x/(propWidth/propHeight))),limitY),0) + "px";
-                image.style.height = (limitY - image.offsetTop) + "px";
+                console.log("leftshift " + leftShift + " lefttopshift " + leftTopShift);
+                console.log((((image.offsetTop===0 && mouseShift.x <= 0)?0:mouseShift.x) ));
+                image.style.left = leftShift + "px";
+                image.style.width = (leftMax - leftShift) + "px";
+                image.style.top = leftTopShift + "px";
+                image.style.height = (topMax - leftTopShift) + "px";
+                                
+                if (leftShift >= leftMax) {
+                    image.style.left = leftMax + "px";
+                    image.style.top = topMax + "px";
+                    rightMin = cntImage.offsetWidth - image.offsetLeft;
+                    bottomMin = cntImage.offsetHeight - image.offsetTop;
+                    action = "right-bottom";
+                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    image.classList.toggle("picture__image--mirrorX");
+                    image.classList.toggle("picture__image--mirrorY");
+                }
+                break;
+            //ресайз картинки справа снизу - done
+            case "right-bottom":
+                image.style.width = Math.min(rightShift,rightMin) + "px";
+                image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),bottomMin) + "px";
+                //console.log("top max " + topMax + " left max" + leftMax);
+                if (rightShift <= 0) {
+                    image.style.width = "0px";
+                    image.style.height = "0px";
+                    topMax = image.offsetTop;
+                    leftMax = image.offsetLeft;
+                    action = "left-top";
+                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    image.classList.toggle("picture__image--mirrorX");
+                    image.classList.toggle("picture__image--mirrorY");
+                }
                 break;
             //ресайз картинки справа сверху
             case "right-top":
-                image.style.width = Math.min((image.offsetWidth - ((image.offsetTop===0&&shift.x<0)?0:shift.x)),limitRight) + "px";
-                image.style.top = Math.max(Math.min((image.offsetTop + ((image.offsetWidth===limitRight&&shift.x<0)?0:shift.x/(propWidth/propHeight))),limitY),0) + "px";
-                image.style.height = (limitY - image.offsetTop) + "px";
+                image.style.width = Math.min(rightShift,rightMin) + "px";
+                image.style.top = rightTopShift + "px";
+                image.style.height = (topMax - rightTopShift) + "px";
+                if (rightShift <= 0) {
+                    image.style.width = "0px";
+                    image.style.top = topMax + "px";
+                    leftMax = image.offsetLeft;
+                    bottomMin = cntImage.offsetHeight - image.offsetTop;
+                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    action = "left-bottom";
+                    image.classList.toggle("picture__image--mirrorX");
+                    image.classList.toggle("picture__image--mirrorY");
+                }
                 break;
             //ресайз картинки слева снизу
             case "left-bottom":
-                image.style.left = Math.max(Math.min((image.offsetLeft - ((image.offsetHeight===limitBottom&&shift.x>0)?0:shift.x)),limitX),0) + "px";
-                image.style.width = (limitX - image.offsetLeft) + "px";
-                image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),limitBottom) + "px";
-                break;
-            //ресайз картинки справа снизу
-            case "right-bottom":
-                image.style.width = Math.min((image.offsetWidth - ((image.offsetHeight===limitBottom&&shift.x)<0?0:shift.x)),limitRight) + "px";
-                image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),limitBottom) + "px";
+                image.style.left = leftShift + "px";
+                image.style.width = (leftMax - leftShift) + "px";
+                image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),bottomMin) + "px";
+                if (leftShift >= leftMax) {
+                    image.style.left = leftMax + "px";
+                    image.style.width = "0px";
+                    image.style.height = "0px";
+                    rightMin = cntImage.offsetWidth - image.offsetLeft;
+                    topMax = image.offsetTop;
+                    action = "right-top";
+                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    image.classList.toggle("picture__image--mirrorX");
+                    image.classList.toggle("picture__image--mirrorY");
+                }
                 break;
             default:
                 break;

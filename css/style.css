@@ -321,6 +321,11 @@ button:hover, button:focus {
           transform: scaleY(-1);
 }
 
+.picture__image--mirrorX.picture__image--mirrorY::before {
+  -webkit-transform: scale(-1, -1);
+          transform: scale(-1, -1);
+}
+
 .picture__control {
   width: 12px;
   height: 12px;
