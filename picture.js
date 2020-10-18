@@ -104,6 +104,7 @@ D1+
                     action = "right";
                     console.log("top " + image.offsetTop + " left " + image.offsetLeft);
                     image.classList.toggle("picture__image--mirrorX");
+                    
                 }
                 break;
             //ресайз картинки справа

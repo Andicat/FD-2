@@ -349,13 +349,22 @@ button:hover, button:focus {
           transform: translate(-50%, -50%);
 }
 
-.picture__control:hover, .picture__control:active {
+.picture__control:hover, .picture__control:active, .picture__control--active {
   width: 0;
   height: 0;
 }
 
-.picture__control:hover::before, .picture__control:active::before {
+.picture__control:hover::before, .picture__control:active::before, .picture__control--active::before {
   display: block;
+}
+
+.picture__control:hover--non-active, .picture__control:active--non-active, .picture__control--active--non-active {
+  width: 12px;
+  height: 12px;
+}
+
+.picture__control:hover--non-active::before, .picture__control:active--non-active::before, .picture__control--active--non-active::before {
+  display: none;
 }
 
 .picture__control--left-top {
