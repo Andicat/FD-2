@@ -266,13 +266,25 @@ button:hover, button:focus {
   }
 }
 
-.picture__container {
-  position: relative;
+.picture {
   width: 1000px;
-  height: 500px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin: 0 50px;
+}
+
+.picture__container {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  border: 1px solid #698139;
+  position: relative;
+  height: 700px;
+  box-sizing: border-box;
+  outline: 1px solid #698139;
 }
 
 .picture__title {
@@ -291,7 +303,7 @@ button:hover, button:focus {
   height: 300px;
   top: 100px;
   left: 300px;
-  border: 1px solid #698139;
+  outline: 1px solid #698139;
 }
 
 .picture__image::before {
@@ -358,12 +370,12 @@ button:hover, button:focus {
   display: block;
 }
 
-.picture__control:hover--non-active, .picture__control:active--non-active, .picture__control--active--non-active {
+.picture__control--non-active:active, .picture__control--non-active:hover {
   width: 12px;
   height: 12px;
 }
 
-.picture__control:hover--non-active::before, .picture__control:active--non-active::before, .picture__control--active--non-active::before {
+.picture__control--non-active:active::before, .picture__control--non-active:hover::before {
   display: none;
 }
 
@@ -451,5 +463,17 @@ button:hover, button:focus {
   left: 0;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
+}
+
+@media (max-width: 1023px) {
+  .picture {
+    height: 600px;
+  }
+  .picture__image {
+    width: 200px;
+    height: 150px;
+    top: 50px;
+    left: 150px;
+  }
 }
 /*# sourceMappingURL=style.css.map */

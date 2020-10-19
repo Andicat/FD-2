@@ -1,11 +1,15 @@
 .picture {
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 50px;
 
     &__container {
-        position: relative;
-        width: 1000px;
-        height: 500px;
         box-sizing: border-box;
-        border: 1px solid rgb(105, 129, 57);
+        position: relative;
+        height: 700px;
+        box-sizing: border-box;
+        outline: 1px solid rgb(105, 129, 57);
     }
 
     &__title {
@@ -23,7 +27,7 @@
         height: 300px;
         top: 100px;
         left: 300px;
-        border: 1px solid rgb(105, 129, 57);
+        outline: 1px solid rgb(105, 129, 57);
 
         &::before {
             content: "";
@@ -90,15 +94,15 @@
             &::before {
                 display: block;
             }
-        
-        &--non-active {
+        }
+
+        &--non-active:active,
+        &--non-active:hover {
             width: 12px;
             height: 12px;
             &::before {
                 display: none;
             }
-        };
-
         }
 
         &--left-top {
@@ -170,5 +174,13 @@
 }
 
 @include tablet {
-    
+    .picture {
+        height: 600px;
+        &__image {
+            width: 200px;
+            height: 150px;
+            top: 50px;
+            left: 150px;
+        }
+    }
 }

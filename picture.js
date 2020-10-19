@@ -23,6 +23,7 @@ D1+
         var blockPicture = document.querySelector('.picture');
         var cntImage = blockPicture.querySelector('.picture__container');
         var image = blockPicture.querySelector('.picture__image');
+        var controlList = blockPicture.querySelectorAll('.picture__control');
     } catch {
         return;
     }
@@ -38,13 +39,29 @@ D1+
     var topMax;
     var propWidth;
     var propHeight;
+    
+    //устанавливаем активность управляющих элементов
+    function setAction(direction) {
+        action = direction;
+        controlList.forEach( function(control) {
+            control.classList.remove("picture__control--active");
+            control.classList.remove("picture__control--non-active");
+            if (action) {
+                control.classList.add("picture__control--non-active");
+            }
+            if (control.getAttribute("data-action")===action) {
+                control.classList.remove("picture__control--non-active");
+                control.classList.add("picture__control--active");
+            }
+        })
+    }
 
     //вешаем обработчики мышки на странице
     document.addEventListener('mousedown', onMouseDown);
 
     function onMouseDown(evt) { 
         evt.preventDefault();
-        action = evt.target.getAttribute("data-action");
+        setAction(evt.target.getAttribute("data-action"));
         if (action) {
             document.addEventListener('mousemove', onMouseMove);
             document.addEventListener('mouseup', onMouseUp);
@@ -81,13 +98,12 @@ D1+
             y: moveEvt.clientY
         };
 
+        //показатели смещения
         var leftShift = Math.max(image.offsetLeft + mouseShift.x,0);
         var rightShift = image.offsetWidth + mouseShift.x;
         var topShift = Math.max(image.offsetTop + mouseShift.y,0);
         var bottomShift = image.offsetHeight + mouseShift.y;
-        var leftTopShift = Math.max(image.offsetTop + (((image.offsetLeft===0 && mouseShift.x <= 0)?0:mouseShift.x) / (propWidth/propHeight)),0);
-        var rightTopShift = Math.max(image.offsetTop - (((image.offsetWidth===rightMin && mouseShift.x > 0)?0:mouseShift.x) / (propWidth/propHeight)),0);
-        
+
         switch(action) {
             //перемещение самой картинки по экрану
             case "image":
@@ -101,10 +117,8 @@ D1+
                 if (leftShift >= leftMax) {
                     image.style.left = leftMax + "px";
                     rightMin = cntImage.offsetWidth - image.offsetLeft;
-                    action = "right";
-                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    setAction("right");
                     image.classList.toggle("picture__image--mirrorX");
-                    
                 }
                 break;
             //ресайз картинки справа
@@ -113,8 +127,7 @@ D1+
                 if (rightShift <= 0) {
                     image.style.width = "0px";
                     leftMax = image.offsetLeft;
-                    action = "left";
-                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    setAction("left");
                     image.classList.toggle("picture__image--mirrorX");
                 }
                 break;
@@ -125,7 +138,7 @@ D1+
                 if (topShift >= topMax) {
                     image.style.top = topMax + "px";
                     bottomMin = cntImage.offsetHeight - image.offsetTop;;
-                    action = "bottom";
+                    setAction("bottom");
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
@@ -135,86 +148,80 @@ D1+
                 if (bottomShift <= 0) {
                     image.style.height = "0px";
                     topMax = image.offsetTop;
-                    action = "top";
-                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    setAction("top");
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
             //ресайз картинки слева сверху
             case "left-top":
-                if (image.offsetTop===0 && mouseShift.x <= 0) {
+                if (image.offsetTop<=0 && mouseShift.x <= 0) {
                     leftShift = Math.max(image.offsetLeft,0);
                 }
-                image.style.left = leftShift + "px";
-                image.style.width = (leftMax - leftShift) + "px";
-                image.style.top = leftTopShift + "px";
-                image.style.height = (topMax - leftTopShift) + "px";
-                                
+                image.style.width = Math.min(topMax /(propHeight/propWidth),(leftMax - leftShift)) + "px";
+                image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),topMax) + "px";
+                image.style.top = (topMax - image.offsetHeight) + "px";
+                image.style.left = (leftMax - image.offsetWidth) + "px";
                 if (leftShift >= leftMax) {
                     image.style.left = leftMax + "px";
                     image.style.top = topMax + "px";
                     rightMin = cntImage.offsetWidth - image.offsetLeft;
                     bottomMin = cntImage.offsetHeight - image.offsetTop;
-                    action = "right-bottom";
-                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    setAction("right-bottom");
                     image.classList.toggle("picture__image--mirrorX");
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
             //ресайз картинки справа снизу
             case "right-bottom":
-                if (image.offsetHeight===bottomMin && mouseShift.x > 0) {
+                if (image.offsetHeight>=bottomMin && mouseShift.x > 0) {
                     rightShift = image.offsetWidth;
                 }
-                image.style.width = Math.min(rightShift,rightMin) + "px";
+                image.style.width = Math.min(bottomMin /(propHeight/propWidth),Math.min(rightShift,rightMin)) + "px";
                 image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),bottomMin) + "px";
-                //console.log("top max " + topMax + " left max" + leftMax);
                 if (rightShift <= 0) {
                     image.style.width = "0px";
                     image.style.height = "0px";
                     topMax = image.offsetTop;
                     leftMax = image.offsetLeft;
-                    action = "left-top";
-                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    
+                    setAction("left-top");
                     image.classList.toggle("picture__image--mirrorX");
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
             //ресайз картинки справа сверху
             case "right-top":
-                if (image.offsetTop===0 && mouseShift.x > 0) {
+                if (image.offsetTop<=0 && mouseShift.x > 0) {
                     rightShift = image.offsetWidth;
                 }
-                image.style.width = Math.min(rightShift,rightMin) + "px";
-                image.style.top = rightTopShift + "px";
-                image.style.height = (topMax - rightTopShift) + "px";
+                image.style.width = Math.min(topMax/(propHeight/propWidth),Math.min(rightShift,rightMin)) + "px";
+                image.style.height = Math.min((image.offsetWidth/(propWidth/propHeight)),topMax) + "px";
+                image.style.top = (topMax - image.offsetHeight) + "px";
                 if (rightShift <= 0) {
                     image.style.width = "0px";
                     image.style.top = topMax + "px";
                     leftMax = image.offsetLeft;
                     bottomMin = cntImage.offsetHeight - image.offsetTop;
-                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
-                    action = "left-bottom";
+                    setAction("left-bottom");
                     image.classList.toggle("picture__image--mirrorX");
                     image.classList.toggle("picture__image--mirrorY");
                 }
                 break;
             //ресайз картинки слева снизу
             case "left-bottom":
-                if (image.offsetHeight===bottomMin && mouseShift.x <= 0) {
+                if (image.offsetHeight>=bottomMin && mouseShift.x <= 0) {
                     leftShift = Math.max(image.offsetLeft,0);
                 }
-                image.style.left = leftShift + "px";
-                image.style.width = (leftMax - leftShift) + "px";
+                image.style.width = Math.min(bottomMin /(propHeight/propWidth),(leftMax - leftShift)) + "px";
                 image.style.height = Math.min((image.offsetWidth / (propWidth/propHeight)),bottomMin) + "px";
+                image.style.left = (leftMax - image.offsetWidth) + "px";
                 if (leftShift >= leftMax) {
                     image.style.left = leftMax + "px";
                     image.style.width = "0px";
                     image.style.height = "0px";
                     rightMin = cntImage.offsetWidth - image.offsetLeft;
                     topMax = image.offsetTop;
-                    action = "right-top";
-                    console.log("top " + image.offsetTop + " left " + image.offsetLeft);
+                    setAction("right-top");
                     image.classList.toggle("picture__image--mirrorX");
                     image.classList.toggle("picture__image--mirrorY");
                 }
@@ -227,6 +234,7 @@ D1+
     function onMouseUp(upEvt) {
         upEvt.preventDefault();
         document.removeEventListener('mousemove', onMouseMove);
+        setAction(null);
         document.removeEventListener('mouseup', onMouseUp);
     }
 
