@@ -1,4 +1,10 @@
 .popup-menu {
+    
+    &__container {
+        display: flex;
+        justify-content: center;
+    }
+
     &__list {
         @include transition(all);
         list-style: none;

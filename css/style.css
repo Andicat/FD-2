@@ -561,6 +561,15 @@ form .shorttext {
   width: 35%;
 }
 
+.popup-menu__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
 .popup-menu__list {
   -webkit-transition-property: all;
   transition-property: all;
