@@ -587,7 +587,7 @@ form .shorttext {
 }
 
 .popup-menu__list--sub .popup-menu__list--sub {
-  top: 50%;
+  top: 5px;
   left: calc(100% - 5px);
 }
 
