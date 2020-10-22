@@ -51,22 +51,23 @@ http://fe.it-academy.by/Examples/popup_menu.png
 
     class Menu {
 
-      constructor(arr,cnt) {
+      constructor(arr,cnt,cls) {
         this.arr = arr;
         this.cnt = cnt;
+        this.cls = cls;
       };
       
       createMenu = function () {
 
-        function create (menuElemArr,cnt,isSubmenu) {
+        function create (menuElemArr,cnt,clsName,isSubmenu) {
           var ul = document.createElement("ul");
-          ul.classList.add("popup-menu__list");
+          ul.classList.add(clsName + "__list");
           if (isSubmenu) {
-              ul.classList.add("popup-menu__list--sub"); 
+            ul.classList.add(clsName + "__list--sub");
           }
           menuElemArr.forEach( function(el) {
             var li = document.createElement("li");
-            li.classList.add("popup-menu__item");
+            li.classList.add(clsName + "__item");
             if (el.url) {
                 var link = document.createElement("a");
                 link.setAttribute("href",el.url);
@@ -75,16 +76,24 @@ http://fe.it-academy.by/Examples/popup_menu.png
             }
             if (el.submenu) {
                 li.textContent = el.name;
-                create(el.submenu,li,true);
-                li.addEventListener("mousedown", function(el) {
+                var submenu = create(el.submenu,li,clsName,true);
+                li.appendChild(submenu);
+                if (isSubmenu) {
+                  submenu.classList.add(clsName + "__list--sub-second");
+                }   
+                li.addEventListener("mouseover", function(el) {
+                  submenu.classList.add(clsName + "__list--show");
+                });
+                li.addEventListener("mouseleave", function(el) {
+                  submenu.classList.remove(clsName + "__list--show");
                 });
             }
             ul.appendChild(li);
           });
-          cnt.appendChild(ul);
+          return ul;
         };
 
-        create(this.arr,this.cnt);
+        this.cnt.appendChild(create(this.arr,this.cnt,this.cls));
       }
     }
 
@@ -119,7 +128,7 @@ http://fe.it-academy.by/Examples/popup_menu.png
         ];
 
         cntMenu.innerHTML = "";
-        var newMenu = new Menu(menu,cntMenu);
+        var newMenu = new Menu(menu,cntMenu,"popup-menu");
         newMenu.createMenu();
 
     });

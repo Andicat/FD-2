@@ -589,31 +589,32 @@ form .shorttext {
 
 .popup-menu__list--sub {
   display: none;
+  top: calc(100% - 5px);
+  left: 5px;
+  display: none;
   position: absolute;
   z-index: 1;
-  top: 100%;
-  left: 5px;
+  min-width: 250px;
 }
 
-.popup-menu__list--sub .popup-menu__list--sub {
+.popup-menu__list--sub-second {
   top: 5px;
   left: calc(100% - 5px);
 }
 
+.popup-menu__list--show {
+  display: block;
+}
+
 .popup-menu__item {
   display: block;
+  position: relative;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   padding: 10px 20px;
   background-color: #9fb0b1;
   border: 1px solid gray;
   cursor: pointer;
-  position: relative;
-}
-
-.popup-menu__item:hover > .popup-menu__list {
-  display: block;
-  min-width: 250px;
 }
 
 .popup-menu__item a {
