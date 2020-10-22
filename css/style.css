@@ -560,4 +560,30 @@ form .shorttext {
   min-width: 150px;
   width: 35%;
 }
+
+.popup-menu__list {
+  -webkit-transition-property: all;
+  transition-property: all;
+  -webkit-transition-duration: 0.3s;
+          transition-duration: 0.3s;
+  list-style: none;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 18px;
+  font-style: normal;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 0;
+}
+
+.popup-menu__list--hidden {
+  display: none;
+}
+
+.popup-menu__item {
+  padding: 10px 20px;
+  background-color: #9fb0b1;
+  border: 1px solid gray;
+}
 /*# sourceMappingURL=style.css.map */
