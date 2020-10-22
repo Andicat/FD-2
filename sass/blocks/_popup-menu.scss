@@ -5,18 +5,41 @@
         display: flex;
         font-size: 18px;
         font-style: normal;
+        font-weight: bold;
 	    text-transform: uppercase;
 	    margin: 0;
         padding: 0;
-        //min-width: 200px;
-        &--hidden {
+        &--sub {
             display: none;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 5px;
+            & .popup-menu__list--sub {
+                top: 50%;
+                left: calc(100% - 5px);
+            }
         }
     }
     
     &__item {
+        display: block;
+        box-sizing: border-box;
         padding: 10px 20px;
         background-color: rgb(159, 176, 177);
         border: 1px solid gray;
+        cursor: pointer;
+        position: relative;
+
+        &:hover {
+            &>.popup-menu__list {
+                display: block;
+                min-width: 250px;
+            }
+        }
+
+        a {
+            display: block;
+        }
     }
 }
