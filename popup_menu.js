@@ -120,7 +120,7 @@ http://fe.it-academy.by/Examples/popup_menu.png
 
         cntMenu.innerHTML = "";
         var newMenu = new Menu(menu,cntMenu);
-        newMenu.createMenu(menu,cntMenu);
+        newMenu.createMenu();
 
     });
 })();

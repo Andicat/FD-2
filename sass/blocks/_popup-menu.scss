@@ -40,6 +40,11 @@
 
         a {
             display: block;
+            color: black;
+            &:hover,
+            &:focus {
+                color: brown;
+            }
         }
     }
 }

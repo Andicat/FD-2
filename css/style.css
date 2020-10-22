@@ -609,5 +609,10 @@ form .shorttext {
 
 .popup-menu__item a {
   display: block;
+  color: black;
+}
+
+.popup-menu__item a:hover, .popup-menu__item a:focus {
+  color: brown;
 }
 /*# sourceMappingURL=style.css.map */
