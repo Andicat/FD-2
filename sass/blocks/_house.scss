@@ -156,6 +156,14 @@
             }
         }
     }
+
+    &__person {
+        height: 40px;
+        width: 25px;
+        background-image: url("../img/man.svg");
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
 }
 
 @keyframes open-door {

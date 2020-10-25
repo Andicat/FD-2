@@ -839,6 +839,14 @@ form .shorttext {
   background-color: #d34141;
 }
 
+.house__person {
+  height: 40px;
+  width: 25px;
+  background-image: url("../img/man.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 @-webkit-keyframes open-door {
   0% {
     width: 50%;

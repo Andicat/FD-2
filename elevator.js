@@ -42,6 +42,7 @@ G+
 
     var newHouse;
     var FLATS = 5;
+    var PERSONS = 10;
 
     class House {
 
@@ -183,6 +184,7 @@ G+
                 for (var i = flatsCount; i >= 1; i--) {
                     var flat = document.createElement("div");
                     flat.classList.add("house__flat");
+                    flat.setAttribute("id","flat-" + i);
                     var flatNumber = document.createElement("span");
                     flatNumber.classList.add("house__flat-number");
                     flatNumber.textContent = i;
@@ -226,13 +228,26 @@ G+
                 return Math.floor(Math.random()*(m-n+1))+n;
             }
 
-            for (var i = 0; i<=10; i++) {
+            var personCount = 0;
+
+            function createPerson(flat) {   
                 setTimeout( function() {
-                    var person = randomDiap(1,FLATS);
-                    console.log("person on flat " + person);
-                }, 2000);
-            }    
+                    var flatNmb = randomDiap(1,FLATS);
+                    console.log("person on flat " + flatNmb);
+                    var person = document.createElement("div");
+                    person.classList.add("house__person");
+                    var flat = document.getElementById("flat-" + flatNmb);
+                    //console.log(flat);
+                    flat.appendChild(person);
+                    personCount++;
+                    if (personCount < PERSONS) {
+                        createPerson(personCount);
+                    }
+                }, 500);
            
+            }
+            
+            createPerson(personCount,this.cnt);
         }
     }
 
