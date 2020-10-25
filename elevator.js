@@ -46,6 +46,8 @@ G+
 
     class House {
 
+        _flats;
+
         constructor(flatsCount,cnt) {
             this.flatsCount = flatsCount;
             this.cnt = cnt;
@@ -65,8 +67,9 @@ G+
             var closed = true;
 
             //остановка лифта
-            function openElevator(flat,nextFlats) {
+            function openElevator(flat) {
                 speed = 1000;
+                var persons = flat.flatCnt.querySelectorAll(".house__person");
                 if (closed) {
                     elevator.classList.add("house__elevator--open");
                     setTimeout(() => {
@@ -74,7 +77,16 @@ G+
                     }, speed);
                     closed = false;
                 }
+                setTimeout(() => {
+                    persons.forEach(p => {
+                        if (flat.direction===p.getAttribute("direction")) {
+                            flat.flatCnt.removeChild(p);
+                        }
+                    } )
+                    
+                }, speed/2);
                 flat.btn.classList.remove("active");
+                
                 activeFlats = activeFlats.filter(v => v.btn!==flat.btn);
             }
            
@@ -127,7 +139,7 @@ G+
                     };
                     //проверяем, надо ли останавливаться на этом этаже
                     if (Number(nextFlat.flat)===flatCurr && nextFlat.direction===direction) {
-                        openElevator(nextFlat,nextFlats);
+                        openElevator(nextFlat);
                         moveElevator(); 
                         return;
                     };
@@ -145,9 +157,10 @@ G+
             function pushBtn(evt) {
                 if (!evt.target.classList.contains("active")) {
                     var btnFlat = Number(evt.target.getAttribute("data-number"));
+                    var flat = document.getElementById("flat-"+btnFlat);
                     var btnDirection = evt.target.getAttribute("data-mode");
                     btnDirection = btnDirection ? btnDirection : (btnFlat>flatCurr ? "up" : "down");
-                    var act = {btn:evt.target, flat:btnFlat, direction:btnDirection};
+                    var act = {btn:evt.target, flat:btnFlat, direction:btnDirection, flatCnt:flat};
                     activeFlats.push(act);
                     evt.target.classList.add("active");
                     if (direction==="") {
@@ -181,6 +194,7 @@ G+
                 //создаем этажи
                 flats = document.createElement("div");
                 flats.classList.add("house__flats");
+                //console.log(this._flats);
                 for (var i = flatsCount; i >= 1; i--) {
                     var flat = document.createElement("div");
                     flat.classList.add("house__flat");
@@ -221,6 +235,8 @@ G+
             };
 
             create(this.cnt,this.flatsCount);
+            this._flats = document.querySelectorAll(".house__flat");
+            console.log(this._flats);
         }
 
         goPeople = function () {
@@ -233,17 +249,20 @@ G+
             function createPerson(flat) {   
                 setTimeout( function() {
                     var flatNmb = randomDiap(1,FLATS);
-                    console.log("person on flat " + flatNmb);
                     var person = document.createElement("div");
                     person.classList.add("house__person");
                     var flat = document.getElementById("flat-" + flatNmb);
-                    //console.log(flat);
+                    var btns = flat.querySelectorAll(".house__button");
+                    var btnNmb = randomDiap(0,btns.length-1);
+                    console.log("person on flat " + flatNmb + " push " + btns[btnNmb].getAttribute("data-mode") + "");
+                    btns[btnNmb].click();
+                    person.setAttribute("direction",btns[btnNmb].getAttribute("data-mode"));
                     flat.appendChild(person);
                     personCount++;
                     if (personCount < PERSONS) {
                         createPerson(personCount);
                     }
-                }, 500);
+                }, 1500);
            
             }
             
