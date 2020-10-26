@@ -121,6 +121,7 @@
 
 
 .flat {
+    position: relative;
     box-sizing: border-box;
     display: flex;
     align-items: center;
@@ -204,7 +205,19 @@
         }
     }
 
-
+    &--leave:after {
+        content: "";
+        position: absolute;
+        z-index: 1;
+        height: 42px;
+        width: 20px;
+        right: -55px; 
+        top: 8px;
+        background-image: url("../img/man.svg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+    }
 }
 
 @keyframes elevator-doors {
@@ -224,12 +237,3 @@
         width: 50%;
     }
 }
-/*
-@keyframes elevator-passenger {
-    70% {
-        background-image: url("../img/man.svg");
-    }
-    100% {
-        background-image: url("../img/man.svg");
-    }
-}*/

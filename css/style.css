@@ -789,6 +789,7 @@ form .shorttext {
 }
 
 .flat {
+  position: relative;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   display: -webkit-box;
@@ -886,6 +887,20 @@ form .shorttext {
           transform: translateX(-50%);
 }
 
+.flat--leave:after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  height: 42px;
+  width: 20px;
+  right: -55px;
+  top: 8px;
+  background-image: url("../img/man.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
 @-webkit-keyframes elevator-doors {
   0% {
     width: 50%;
@@ -921,14 +936,4 @@ form .shorttext {
     width: 50%;
   }
 }
-
-/*
-@keyframes elevator-passenger {
-    70% {
-        background-image: url("../img/man.svg");
-    }
-    100% {
-        background-image: url("../img/man.svg");
-    }
-}*/
 /*# sourceMappingURL=style.css.map */
