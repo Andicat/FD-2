@@ -42,7 +42,7 @@ G+
 
     var newHouse;
     var FLATS = 9;
-    var PASSENGERS = 5;
+    var PASSENGERS = 15;
     
     class House {
 
@@ -55,7 +55,10 @@ G+
       
         createHouse = function () {
 
-            var activeFlats = [];
+            var activeButtons = [];
+            var activeFlats = {};
+            var nextFlats = [];
+            var nextFlat;
             var timerId;
             var direction = "";
             var flatCurr = 1;
@@ -65,39 +68,34 @@ G+
             var elevatorStep = elevatorHeight/10;
             var speedNormal = 50;
             var speedStop = 1000;
-            var closed = true;
+            var ttt = 0;
 
             //остановка лифта
             function openElevator(flat,changeDirection) {
+                if (ttt===flat) {
+                    debugger;
+                }
+                ttt = flat;
+                //console.log("open on" + flatCurr);
                 //открываем двери лифта
-                if (closed) {
-                    elevator.classList.add("house__elevator--open");
-                    //есть кого высаживать?
+                elevator.classList.add("house__elevator--open");
+                //есть кого высаживать?
+                if (elevator.classList.contains("house__elevator--passenger")) {
                     var toLeave = false;
                     var elevatorButtonsActive = document.getElementsByClassName("elevator__button active");
-                    if (elevator.classList.contains("house__elevator--passenger")) {
-                        for (var i = 0; i < elevatorButtonsActive.length; i++) {
-                            if (Number(elevatorButtonsActive[i].getAttribute("data-number"))===flatCurr) {
-                                toLeave = true;    
+                    for (var i = 0; i < elevatorButtonsActive.length; i++) {
+                        if (Number(elevatorButtonsActive[i].getAttribute("data-number"))===flatCurr) {
+                            toLeave = true;    
+                        }
+                    };
+                    if (toLeave) {
+                        setTimeout(() => {
+                            flat.flat.classList.add("flat--leave");
+                            if (elevatorButtonsActive.length===1) {
+                                elevator.classList.remove("house__elevator--passenger");
                             }
-                        };
-                        if (toLeave) {
-                            setTimeout(() => {
-                                flat.flat.classList.add("flat--leave");
-                                if (elevatorButtonsActive.length===1) {
-                                    elevator.classList.remove("house__elevator--passenger");
-                                }
-                            }, speedStop/3);
-                        }
+                        }, speedStop/3);
                     }
-                    //закрываем двери
-                    setTimeout(() => {
-                        elevator.classList.remove("house__elevator--open");
-                        if (toLeave) {
-                            flat.flat.classList.remove("flat--leave");
-                        }
-                    }, speedStop);
-                    closed = false;
                 }
                 //забираем пассажиров и везем их куда им нужно
                 var persons = flat.flat.querySelectorAll(".flat__person");
@@ -109,39 +107,70 @@ G+
                            changeDirection = false;
                         }
                         flat.flat.removeChild(p);
+                        //console.log("delete person");
+                        //console.log(p);
                         elevator.classList.add("house__elevator--passenger");
                     }
                 })
-                setTimeout(() => {
-                    flat.btn.classList.remove("active");
-                }, speedStop/2);
+                //setTimeout(() => {
+                flat.btn.classList.remove("active");
+                activeButtons = activeButtons.filter(v => v.btn!==flat.btn);
+                nextFlats = nextFlats.filter(v => v.btn!==flat.btn);
+                if (nextFlats.length===1) {
+                    if (nextFlats[0].flatNumber===flatCurr) {
+                        nextFlats[0].btn.classList.remove("active");
+                        activeButtons = activeButtons.filter(v => v.btn!==nextFlats[0].btn);
+                        nextFlats = nextFlats.filter(v => v.btn!==flat.btn);
+                    }
+                }
+                //}, speedStop/2);
                 
-                activeFlats = activeFlats.filter(v => v.btn!==flat.btn);
+                //закрываем двери
+                setTimeout(() => {
+                    //debugger;
+                    elevator.classList.remove("house__elevator--open");
+                    if (toLeave) {
+                        //console.log("------leave on " + flatCurr);
+                        flat.flat.classList.remove("flat--leave");
+                    }
+                }, speedStop);
                 if (changeDirection) {
                     direction = direction==="up"?"down":"up";
                 }
+                moveElevator(speedStop);
             }
            
             //движение лифта
             function moveElevator (speed) {
                 clearTimeout(timerId);
                 timerId = setTimeout(function () {
+                    //доезжаем до этажа
                     if (elevator.offsetTop!==nextStop) {
                         elevator.style.top = elevator.offsetTop + (direction==="up"?-elevatorStep:+elevatorStep) + "px";
                         moveElevator(speedNormal);
                         return;
                     }
-                    if (activeFlats.length===0) {
+                    console.log(activeFlats);
+                    //нужно ли останавливаться на этом этаже?
+                    if (!(nextFlat in activeFlats)) {
+                        
+                    }
+                    //если ли этажи дальше по пути
+                    if
+
+
+
+                    //если нажатых кнопок нет, останавливаемся
+                    if (activeButtons.length===0) {
                         direction = "";
-                        closed = true;
                         return;
                     }
-                    //если ли этажи по пути?
-                    var nextFlats = activeFlats.filter( function(fl) {
-                        if (direction==="up" && fl.flatNumber>=flatCurr) {
+                    //если ли этажи дальше по пути
+                    nextFlats = activeButtons.filter( function(fl) {
+                        if (direction==="up" && fl.flatNumber >= flatCurr) {
                             return true;
                         };
-                        if (direction==="down" && fl.flatNumber<=flatCurr) {
+                        if (direction==="down" && fl.flatNumber <= flatCurr) {
                             return true;
                         };
                         return false;
@@ -152,28 +181,28 @@ G+
                             return (direction==="up"?a.flatNumber-b.flatNumber:b.flatNumber-a.flatNumber);
                         }});
                 
+                    //проверяем, надо ли останавливаться на этом этаже
+                    if (Number(nextFlat.flatNumber)===flatCurr) {
+                        //console.log("---------------------open on " + flatCurr);
+                        openElevator(nextFlat);
+                        return;
+                    };
+                    
                     //если по пути нет этажей, меняем направление
-                    if (nextFlats.length === 0 && activeFlats.length>0) {
+                    if (nextFlats.length === 0) {
                         direction = direction==="up"?"down":"up";
                         moveElevator(speedNormal);
                         return;
-                    }
-
-                    var nextFlat = nextFlats[0];
+                    }  
                     //Если это последний этаж по пути, останавливаемся и меняем направление 
-                    if (Number(nextFlat.flatNumber)===flatCurr && nextFlats.length===1) {
+                    /*if (Number(nextFlat.flatNumber)===flatCurr && nextFlats.length===1) {
+                        direction = direction==="up"?"down":"up";
                         openElevator(nextFlat,true);
-                        moveElevator(speedStop);
                         return;
-                    };
-                    //проверяем, надо ли останавливаться на этом этаже
-                    if (Number(nextFlat.flatNumber)===flatCurr && nextFlat.direction===direction) {
-                        openElevator(nextFlat,false);
-                        moveElevator(speedStop); 
-                        return;
-                    };
+                    };*/
+                    
+                    var nextFlat = nextFlats[0];
                     flatCurr = flatCurr + ((direction==="up")?1:-1);
-                    closed = true;
                     nextStop = elevator.offsetTop + (direction==="up"?-elevatorHeight:+elevatorHeight);
                     moveElevator(speedNormal);
                 }, speed)
@@ -187,12 +216,16 @@ G+
                     var btnDirection = evt.target.getAttribute("data-mode");
                     btnDirection = btnDirection ? btnDirection : (btnFlatNumber>flatCurr ? "up" : "down");
                     var act = {flat:flat, btn:evt.target, flatNumber:btnFlatNumber, direction:btnDirection};
-                    activeFlats.push(act);
+                    activeButtons.push(act);
                     evt.target.classList.add("active");
+                    if (!(btnFlatNumber in activeFlats)) {
+                        activeFlats[btnFlatNumber] = true;
+                    }
                     //запускаем лифт, если он стоит
                     if (direction==="") {
                         direction = (btnFlatNumber===flatCurr ? btnDirection : (btnFlatNumber>flatCurr ? "up" : "down"));
-                        nextStop = elevator.offsetTop;
+                        nextStop = elevator.offsetTop + (direction==="up"?-elevatorHeight:+elevatorHeight);
+                        nextFlat = direction==="up"?flatCurr+1:flatCurr-1;
                         moveElevator(speedNormal); 
                     }
                 }
@@ -250,14 +283,14 @@ G+
                 //создаем кнопки в лифте
                 var elevatorButtons = document.createElement("div");
                 elevatorButtons.classList.add("elevator__buttons");
-                for (var i = 1; i <= flatsCount; i++) {
+                for (var i = flatsCount; i >= 1; i--) {
                     createButton(elevatorButtons,"elevator",i);  
                 }
                 shaft.appendChild(elevator);
-                cnt.appendChild(elevatorButtons);
                 house.appendChild(flats);
                 house.appendChild(shaft);
                 cnt.appendChild(house);
+                cnt.appendChild(elevatorButtons);
             };
 
             create(this.cnt,this.flatsCount);
@@ -295,13 +328,13 @@ G+
                     var dest = document.createElement("span");
                     dest.classList.add("flat__person--dest");
                     dest.textContent = flatDestination;
-                    console.log("person on " + (FLATS - flatNumber) + " go " + direction + " " + flatDestination);
+                    //console.log("person on " + (FLATS - flatNumber) + " go " + direction + " " + flatDestination);
                     person.appendChild(dest);
                     flat.appendChild(person);
                     personCount++;
                     btnCreatePassengers.textContent = (PASSENGERS - personCount) + " пассажиров";
                     if (personCount < PASSENGERS) {
-                        createPerson(3000,flats);
+                        createPerson(2700,flats);
                     }
                     if (personCount===PASSENGERS) {
                         btnCreatePassengers.textContent = PASSENGERS + " пассажиров";
@@ -329,7 +362,7 @@ G+
                     var dest = document.createElement("span");
                     dest.classList.add("flat__person--dest");
                     dest.textContent = flatDestination;
-                    console.log("person on " + (FLATS - flatNumber) + " go " + direction + " " + flatDestination);
+                    //console.log("person on " + (FLATS - flatNumber) + " go " + direction + " " + flatDestination);
                     person.appendChild(dest);
                     flat.appendChild(person);
                     personCount++;
