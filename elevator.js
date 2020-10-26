@@ -33,17 +33,17 @@ G+
 
     try {
         var blockElevator = document.querySelector('.elevator');
-        var btnCreate = blockElevator.querySelector('.elevator__button');
-        var btnPeople = blockElevator.querySelector('.elevator__people');
+        var btnCreateHouse = blockElevator.querySelector('.elevator__create-house');
+        var btnCreatePassengers = blockElevator.querySelector('.elevator__create-passengers');
         var cntHouse = blockElevator.querySelector('.elevator__container');
     } catch {
         return;
     }
 
     var newHouse;
-    var FLATS = 5;
-    var PERSONS = 10;
-
+    var FLATS = 9;
+    var PASSENGERS = 5;
+    
     class House {
 
         _flats;
@@ -63,41 +63,47 @@ G+
             var nextStop;
             var elevatorHeight = 50;
             var elevatorStep = elevatorHeight/10;
-            var speed = 50;
+            var speedNormal = 50;
+            var speedStop = 1000;
             var closed = true;
 
             //остановка лифта
             function openElevator(flat) {
-                speed = 1000;
-                var persons = flat.flatCnt.querySelectorAll(".house__person");
+                //открываем двери лифта
                 if (closed) {
                     elevator.classList.add("house__elevator--open");
                     setTimeout(() => {
                         elevator.classList.remove("house__elevator--open");
-                    }, speed);
+                    }, speedStop);
                     closed = false;
                 }
+                //забираем пассажиров и везем их куда им нужно
+                var persons = flat.flat.querySelectorAll(".flat__person");
                 setTimeout(() => {
+                    var elevatorButtonsActive = document.getElementsByClassName("elevator__button active");
+                    if (elevatorButtonsActive.length===0) {
+                        elevator.classList.remove("house__elevator--passenger");
+                    }
                     persons.forEach(p => {
                         if (flat.direction===p.getAttribute("direction")) {
-                            flat.flatCnt.removeChild(p);
+                            flat.flat.removeChild(p);
+                            var elevatorButton = document.getElementById("elevator-" + p.getAttribute("destination"));
+                            elevatorButton.click();
+                            elevator.classList.add("house__elevator--passenger");
                         }
                     } )
-                    
-                }, speed/2);
+                }, speedStop/2);
                 flat.btn.classList.remove("active");
-                
                 activeFlats = activeFlats.filter(v => v.btn!==flat.btn);
             }
            
             //движение лифта
-            function moveElevator (time) {
+            function moveElevator (speed) {
                 clearTimeout(timerId);
                 timerId = setTimeout(function () {
                     if (elevator.offsetTop!==nextStop) {
                         elevator.style.top = elevator.offsetTop + (direction==="up"?-elevatorStep:+elevatorStep) + "px";
-                        speed = 50;
-                        moveElevator();
+                        moveElevator(speedNormal);
                         return;
                     }
                     if (activeFlats.length===0) {
@@ -108,109 +114,108 @@ G+
                     
                     //если ли этажи по пути?
                     var nextFlats = activeFlats.filter( function(fl) {
-                        if (direction==="up" && fl.flat>=flatCurr) {
+                        if (direction==="up" && fl.flatNumber>=flatCurr) {
                             return true;
                         };
-                        if (direction==="down" && fl.flat<=flatCurr) {
+                        if (direction==="down" && fl.flatNumber<=flatCurr) {
                             return true;
                         };
                         return false;
                     }).sort( function(a,b) {
-                        if (a.flat===b.flat) {
-                            return (a.direction===direction?0:1)-(b.direction===direction?0:1);
-                        } else {
-                            return (direction==="up"?a.flat-b.flat:b.flat-a.flat);
-                        }});
                     
+                    if (a.flatNumber===b.flatNumber) {
+                        return (a.direction===direction?0:1)-(b.direction===direction?0:1);
+                    } else {
+                        return (direction==="up"?a.flatNumber-b.flatNumber:b.flatNumber-a.flatNumber);
+                    }});
+                
                     //если по пути нет этажей, меняем направление
                     if (nextFlats.length === 0 && activeFlats.length>0) {
                         direction = direction==="up"?"down":"up";
-                        speed = 50;
-                        moveElevator();
+                        moveElevator(speedNormal);
                         return;
                     }
+
                     var nextFlat = nextFlats[0];
                     //Если это последний этаж по пути, останавливаемся и меняем направление 
-                    if (Number(nextFlat.flat)===flatCurr && nextFlats.length===1) {
+                    if (Number(nextFlat.flatNumber)===flatCurr && nextFlats.length===1) {
                         direction = direction==="up"?"down":"up";
                         openElevator(nextFlat);
-                        moveElevator();
+                        moveElevator(speedStop);
                         return;
                     };
                     //проверяем, надо ли останавливаться на этом этаже
-                    if (Number(nextFlat.flat)===flatCurr && nextFlat.direction===direction) {
+                    if (Number(nextFlat.flatNumber)===flatCurr && nextFlat.direction===direction) {
                         openElevator(nextFlat);
-                        moveElevator(); 
+                        moveElevator(speedStop); 
                         return;
                     };
                     flatCurr = flatCurr + ((direction==="up")?1:-1);
-                    //console.log("before next stop - elevator top " + elevator.offsetTop + " height " + elevator.offsetHeight);
                     closed = true;
                     nextStop = elevator.offsetTop + (direction==="up"?-elevatorHeight:+elevatorHeight);
-                    //console.log(nextStop);
-                    speed = 50;
-                    moveElevator();
+                    moveElevator(speedNormal);
                 }, speed)
             }
 
             //нажатие кнопки
             function pushBtn(evt) {
                 if (!evt.target.classList.contains("active")) {
-                    var btnFlat = Number(evt.target.getAttribute("data-number"));
-                    var flat = document.getElementById("flat-"+btnFlat);
+                    var btnFlatNumber = Number(evt.target.getAttribute("data-number"));
+                    var flat = document.getElementById("flat-" + btnFlatNumber);
                     var btnDirection = evt.target.getAttribute("data-mode");
-                    btnDirection = btnDirection ? btnDirection : (btnFlat>flatCurr ? "up" : "down");
-                    var act = {btn:evt.target, flat:btnFlat, direction:btnDirection, flatCnt:flat};
+                    btnDirection = btnDirection ? btnDirection : (btnFlatNumber>flatCurr ? "up" : "down");
+                    var act = {flat:flat, btn:evt.target, flatNumber:btnFlatNumber, direction:btnDirection};
                     activeFlats.push(act);
                     evt.target.classList.add("active");
+                    //запускаем лифт, если он стоит
                     if (direction==="") {
-                        direction = (btnFlat===flatCurr ? btnDirection : (btnFlat>flatCurr ? "up" : "down"));
+                        direction = (btnFlatNumber===flatCurr ? btnDirection : (btnFlatNumber>flatCurr ? "up" : "down"));
                         nextStop = elevator.offsetTop;
-                        moveElevator(); 
+                        moveElevator(speedNormal); 
                     }
                 }
             }
 
             //создаем кнопку
-            function createButton(cnt,type,cls,nmb) {
+            function createButton(cnt,type,nmb) {
                 var button = document.createElement("div");
-                button.classList.add(cls);
-                button.setAttribute("data-number",nmb);
-                button.classList.add(cls + "--" + type);
                 if (type==="elevator") {
+                    button.classList.add("elevator__button");
+                    button.setAttribute("id","elevator-" + nmb);
                     button.textContent = nmb;
                 } else {
+                    button.classList.add("flat__button");
+                    button.classList.add("flat__button--" + type);
                     button.setAttribute("data-mode",type);
                 }
+                button.setAttribute("data-number",nmb);
                 button.addEventListener("click", pushBtn);
                 cnt.appendChild(button);
             };
 
             //создаем дом
             function create (cnt,flatsCount) {
-                var flats;
                 var house = document.createElement("div");
                 house.classList.add("house");
                 //создаем этажи
-                flats = document.createElement("div");
+                var flats = document.createElement("div");
                 flats.classList.add("house__flats");
-                //console.log(this._flats);
                 for (var i = flatsCount; i >= 1; i--) {
                     var flat = document.createElement("div");
-                    flat.classList.add("house__flat");
+                    flat.classList.add("flat");
                     flat.setAttribute("id","flat-" + i);
                     var flatNumber = document.createElement("span");
-                    flatNumber.classList.add("house__flat-number");
+                    flatNumber.classList.add("flat__number");
                     flatNumber.textContent = i;
                     flat.appendChild(flatNumber);
                     //создаем кнопки лифта на этаже
                     var flatButtons = document.createElement("div");
-                    flatButtons.classList.add("house__flat-buttons");
+                    flatButtons.classList.add("flat__buttons");
                     if (i<flatsCount) {
-                        createButton(flatButtons,"up","house__button",i);
+                        createButton(flatButtons,"up",i);
                     }
                     if (i>1) {
-                        createButton(flatButtons,"down","house__button",i);
+                        createButton(flatButtons,"down",i);
                     }
                     flat.appendChild(flatButtons);
                     flats.appendChild(flat);
@@ -219,13 +224,12 @@ G+
                 var shaft = document.createElement("div");
                 shaft.classList.add("house__shaft");
                 elevator = document.createElement("div");
-                //console.log(this._elevator);
                 elevator.classList.add("house__elevator");
                 //создаем кнопки в лифте
                 var elevatorButtons = document.createElement("div");
-                elevatorButtons.classList.add("house__elevator-buttons");
+                elevatorButtons.classList.add("elevator__buttons");
                 for (var i = 1; i <= flatsCount; i++) {
-                    createButton(elevatorButtons,"elevator","house__button",i);  
+                    createButton(elevatorButtons,"elevator",i);  
                 }
                 shaft.appendChild(elevator);
                 cnt.appendChild(elevatorButtons);
@@ -235,49 +239,64 @@ G+
             };
 
             create(this.cnt,this.flatsCount);
-            this._flats = document.querySelectorAll(".house__flat");
-            console.log(this._flats);
+            this._flats = this.cnt.querySelectorAll(".flat");
         }
 
         goPeople = function () {
+            
             function randomDiap(n,m) {
                 return Math.floor(Math.random()*(m-n+1))+n;
             }
 
             var personCount = 0;
+            btnCreatePassengers.setAttribute("disabled",true);
 
-            function createPerson(flat) {   
+            function createPerson(temp,flats) {   
                 setTimeout( function() {
-                    var flatNmb = randomDiap(1,FLATS);
                     var person = document.createElement("div");
-                    person.classList.add("house__person");
-                    var flat = document.getElementById("flat-" + flatNmb);
-                    var btns = flat.querySelectorAll(".house__button");
-                    var btnNmb = randomDiap(0,btns.length-1);
-                    console.log("person on flat " + flatNmb + " push " + btns[btnNmb].getAttribute("data-mode") + "");
-                    btns[btnNmb].click();
-                    person.setAttribute("direction",btns[btnNmb].getAttribute("data-mode"));
+                    person.classList.add("flat__person");
+                    //этаж для пассажира рандомно
+                    var flatNumber = randomDiap(0,FLATS-1);
+                    var flat = flats[flatNumber];
+                    //выбор кнопки на этаже для пассажира рандомно
+                    var flatButtons = flat.querySelectorAll(".flat__button");
+                    var flatButton = flatButtons[randomDiap(0,flatButtons.length-1)];
+                    flatButton.click();
+                    //направление и этаж назначения для пассажира
+                    var direction = flatButton.getAttribute("data-mode");
+                    person.setAttribute("direction",direction);
+                    var flatDestination = randomDiap(direction==="up"?((FLATS - flatNumber)+1):1,direction==="up"?FLATS:(FLATS - flatNumber)-1);
+                    person.setAttribute("destination",flatDestination);
+                    var dest = document.createElement("span");
+                    dest.classList.add("flat__person--dest");
+                    dest.textContent = flatDestination;
+                    person.appendChild(dest);
                     flat.appendChild(person);
                     personCount++;
-                    if (personCount < PERSONS) {
-                        createPerson(personCount);
+                    btnCreatePassengers.textContent = (PASSENGERS - personCount) + " пассажиров";
+                    if (personCount < PASSENGERS) {
+                        createPerson(2000,flats);
                     }
-                }, 1500);
-           
+                    if (personCount===PASSENGERS) {
+                        btnCreatePassengers.textContent = PASSENGERS + " пассажиров";
+                        btnCreatePassengers.removeAttribute("disabled");
+                    }
+                }, temp);
             }
-            
-            createPerson(personCount,this.cnt);
+            createPerson(0,this._flats);
         }
     }
 
-    btnCreate.addEventListener('click', (event) => {
+    btnCreateHouse.addEventListener('click', (event) => {
         cntHouse.innerHTML = "";
         newHouse = new House(FLATS,cntHouse);
         newHouse.createHouse();
+        btnCreatePassengers.removeAttribute("disabled");
+        btnCreatePassengers.textContent = PASSENGERS + " пассажиров";
 
     });
 
-    btnPeople.addEventListener("click", (event) => {
+    btnCreatePassengers.addEventListener("click", (event) => {
         newHouse.goPeople();
     });
 })();

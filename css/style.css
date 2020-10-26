@@ -642,6 +642,55 @@ form .shorttext {
           align-items: center;
 }
 
+.elevator__buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.elevator__button {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid gray;
+  font-size: 20px;
+  font-style: normal;
+  border-radius: 50%;
+  margin: 2px;
+  cursor: pointer;
+}
+
+.elevator__button:hover, .elevator__button:focus {
+  outline: none;
+  background-color: #ddc6c6;
+}
+
+.elevator__button.active {
+  background-color: #d34141;
+}
+
+.elevator__create-passengers:disabled {
+  background-color: gray;
+  cursor: wait;
+}
+
 .house {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -674,49 +723,6 @@ form .shorttext {
       -ms-flex-direction: column;
           flex-direction: column;
   border-right: 1px solid gray;
-}
-
-.house__flat {
-  -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  border-bottom: 1px solid gray;
-  height: 50px;
-  width: 300px;
-  padding: 0 5px 0 10px;
-}
-
-.house__flat:last-child {
-  border: none;
-}
-
-.house__flat-number {
-  font-size: 25px;
-  margin-right: 10px;
-}
-
-.house__flat-buttons {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  width: 50px;
-  height: auto;
-  background-color: #f2f2f2;
-  margin-right: auto;
 }
 
 .house__shaft {
@@ -765,27 +771,67 @@ form .shorttext {
   right: 0;
 }
 
-.house__elevator--open:before, .house__elevator--open:after {
-  -webkit-animation: open-door 1s;
-          animation: open-door 1s;
+.house__elevator--open {
+  -webkit-animation: elevator-passenger 1s;
+          animation: elevator-passenger 1s;
 }
 
-.house__elevator-buttons {
+.house__elevator--open:before, .house__elevator--open:after {
+  -webkit-animation: elevator-doors 1s;
+          animation: elevator-doors 1s;
+}
+
+.house__elevator--passenger {
+  background-repeat: no-repeat;
+  background-size: 42px;
+  background-position: center bottom;
+  background-image: url("../img/man.svg");
+}
+
+.flat {
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  border-bottom: 1px solid gray;
+  height: 50px;
+  width: 300px;
+  padding: 0 5px 0 10px;
+}
+
+.flat:last-child {
+  border: none;
+}
+
+.flat__number {
+  font-size: 25px;
+  margin-right: 10px;
+}
+
+.flat__buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  -ms-flex-wrap: wrap;
-      flex-wrap: wrap;
-  margin-bottom: 10px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 50px;
+  height: auto;
+  background-color: #f2f2f2;
+  margin-right: auto;
 }
 
-.house__button {
+.flat__button {
   display: inline-block;
   vertical-align: middle;
   width: 0;
@@ -798,60 +844,49 @@ form .shorttext {
   cursor: pointer;
 }
 
-.house__button:hover, .house__button:focus {
-  outline: 1px solid tomato;
+.flat__button:hover, .flat__button:focus {
+  outline: none;
+  border-bottom-color: #ddc6c6;
+  border-top-color: #ddc6c6;
 }
 
-.house__button--up {
+.flat__button--up {
   border-top-width: 0;
 }
 
-.house__button--up.active {
+.flat__button--up.active {
   border-bottom-color: #d34141;
 }
 
-.house__button--down {
+.flat__button--down {
   border-bottom-width: 0;
 }
 
-.house__button--down.active {
+.flat__button--down.active {
   border-top-color: #7162b4;
 }
 
-.house__button--elevator {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid gray;
-  font-size: 20px;
-  font-style: normal;
-  border-radius: 50%;
-  margin: 2px;
-}
-
-.house__button--elevator.active {
-  background-color: #d34141;
-}
-
-.house__person {
+.flat__person {
+  position: relative;
   height: 40px;
   width: 20px;
   background-image: url("../img/man.svg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
-@-webkit-keyframes open-door {
+.flat__person--dest {
+  font-size: 8px;
+  position: absolute;
+  top: -15px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+          transform: translateX(-50%);
+}
+
+@-webkit-keyframes elevator-doors {
   0% {
     width: 50%;
   }
@@ -869,7 +904,7 @@ form .shorttext {
   }
 }
 
-@keyframes open-door {
+@keyframes elevator-doors {
   0% {
     width: 50%;
   }
@@ -886,4 +921,14 @@ form .shorttext {
     width: 50%;
   }
 }
+
+/*
+@keyframes elevator-passenger {
+    70% {
+        background-image: url("../img/man.svg");
+    }
+    100% {
+        background-image: url("../img/man.svg");
+    }
+}*/
 /*# sourceMappingURL=style.css.map */

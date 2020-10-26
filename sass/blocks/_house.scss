@@ -1,9 +1,49 @@
-.elevator__container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+.elevator {
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    &__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-bottom: 10px;
+    }
+
+    &__button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border: 1px solid gray;
+        font-size: 20px;
+        font-style: normal;
+        border-radius: 50%;
+        margin: 2px;
+        cursor: pointer;
+
+        &:hover,
+        &:focus {
+            outline: none;
+            background-color: rgb(221, 198, 198);
+        }
+
+        &.active {
+            background-color: rgb(211, 65, 65);
+        }
+    }
+
+    &__create-passengers:disabled {
+        background-color: gray;
+        cursor: wait;
+    } 
 }
+
 
 .house {
     display: flex;
@@ -22,35 +62,6 @@
         border-right: 1px solid gray;
     }
     
-    &__flat {
-        box-sizing: border-box;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-bottom: 1px solid gray;
-        height: 50px;
-        width: 300px;
-        padding: 0 5px 0 10px;
-
-        &:last-child {
-            border: none;
-        }
-
-        &-number {
-            font-size: 25px;
-            margin-right: 10px;
-        }
-
-        &-buttons {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 50px;
-            height: auto;
-            background-color:#f2f2f2;
-            margin-right: auto;
-        }
-    }
 
     &__shaft {
         position: relative;
@@ -91,23 +102,51 @@
             right: 0;
         }
 
-
-        //background: linear-gradient(to right,#000 25%, #000 25%, #fff 50%, #000 75%);
-
         &--open {
+            animation: elevator-passenger 1s;
             &:before,
             &:after {
-                animation: open-door 1s;
+                animation: elevator-doors 1s;
             }
         }
 
-        &-buttons {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
+        &--passenger {
+            background-repeat: no-repeat;
+            background-size: 42px;
+            background-position: center bottom;
+            background-image: url("../img/man.svg");
         }
+    }
+}
+
+
+.flat {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid gray;
+    height: 50px;
+    width: 300px;
+    padding: 0 5px 0 10px;
+
+    &:last-child {
+        border: none;
+    }
+
+    &__number {
+        font-size: 25px;
+        margin-right: 10px;
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 50px;
+        height: auto;
+        background-color:#f2f2f2;
+        margin-right: auto;
     }
 
     &__button {
@@ -124,7 +163,9 @@
 
         &:hover,
         &:focus {
-            outline: 1px solid tomato;
+            outline: none;
+            border-bottom-color: rgb(221, 198, 198);
+            border-top-color: rgb(221, 198, 198);
         }
 
         &--up {
@@ -141,39 +182,54 @@
             }
         }
 
-        &--elevator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 40px;
-            height: 40px;
-            border: 1px solid gray;
-            font-size: 20px;
-            font-style: normal;
-            border-radius: 50%;
-            margin: 2px;
-
-            &.active {
-                background-color: rgb(211, 65, 65);
-            }
-        }
+        
     }
 
     &__person {
+        position: relative;
         height: 40px;
         width: 20px;
         background-image: url("../img/man.svg");
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center;
-        margin-top: 5px;
+        margin-top: 10px;
+
+        &--dest {
+            font-size: 8px;
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
     }
+
+
 }
 
-@keyframes open-door {
-    0% { width: 50%; }
-    25% { width: 25%; }
-    50% { width: 0%; }
-    75% { width: 25%; }
-    100% { width: 50%; }
+@keyframes elevator-doors {
+    0% { 
+        width: 50%;
+    }
+    25% {
+        width: 25%;
+    }
+    50% {
+        width: 0%;
+    }
+    75% {
+        width: 25%;
+    }
+    100% {
+        width: 50%;
+    }
 }
+/*
+@keyframes elevator-passenger {
+    70% {
+        background-image: url("../img/man.svg");
+    }
+    100% {
+        background-image: url("../img/man.svg");
+    }
+}*/
