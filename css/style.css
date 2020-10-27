@@ -654,7 +654,7 @@ form .shorttext {
           justify-content: center;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin-left: 50px;
+  margin-left: 20px;
 }
 
 .elevator__button {
@@ -763,6 +763,7 @@ form .shorttext {
   background-color: #cacaca;
   border: 1px solid gray;
   top: 0;
+  z-index: 1;
 }
 
 .house__elevator:before {
@@ -773,21 +774,9 @@ form .shorttext {
   right: 0;
 }
 
-.house__elevator--open {
-  -webkit-animation: elevator-passenger 1s;
-          animation: elevator-passenger 1s;
-}
-
 .house__elevator--open:before, .house__elevator--open:after {
   -webkit-animation: elevator-doors 1s;
           animation: elevator-doors 1s;
-}
-
-.house__elevator--passenger {
-  background-repeat: no-repeat;
-  background-size: 42px;
-  background-position: center bottom;
-  background-image: url("../img/man.svg");
 }
 
 .flat {
@@ -869,7 +858,7 @@ form .shorttext {
   border-top-color: #7162b4;
 }
 
-.flat__person {
+.person {
   position: relative;
   height: 40px;
   width: 20px;
@@ -880,27 +869,13 @@ form .shorttext {
   margin-top: 10px;
 }
 
-.flat__person--dest {
+.person__dest {
   font-size: 8px;
   position: absolute;
   top: -15px;
   left: 50%;
   -webkit-transform: translateX(-50%);
           transform: translateX(-50%);
-}
-
-.flat--leave:after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  height: 42px;
-  width: 20px;
-  right: -55px;
-  top: 8px;
-  background-image: url("../img/man.svg");
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center;
 }
 
 @-webkit-keyframes elevator-doors {

@@ -42,7 +42,7 @@ G+
 
     var newHouse;
     var FLATS = 9;
-    var PASSENGERS = 5;
+    var PASSENGERS = 10;
     
     class House {
 
@@ -54,10 +54,8 @@ G+
         createHouse = function () {
 
             var flats;
-            var activeButtons = [];
             var activeFlats = {};
             var nextFlats = [];
-            var nextFlat;
             var timerId;
             var direction = "";
             var flatCurr = 1;
@@ -65,64 +63,46 @@ G+
             var nextStop;
             var elevatorHeight = 50;
             var elevatorStep = elevatorHeight/10;
-            var speedNormal = 50;
-            var speedStop = 1000;
-            var ttt = 0;
 
             //остановка лифта
             function openElevator(flat) {
                 //открываем двери лифта
                 elevator.classList.add("house__elevator--open");
+                //после того как откроется лифт
+                setTimeout(() => {
+                    //есть кого высаживать?
+                    var personsElevator = elevator.querySelectorAll(".person");
+                    personsElevator.forEach(p => {
+                        var personDestination = p.getAttribute("data-destination");
+                        if (Number(personDestination)===flatCurr) {
+                            elevator.removeChild(p);
+                        }
+                    });
+                    //забираем пассажиров и нажимаем кнопки лифта (везем их куда им нужно)
+                    var persons = flat.querySelectorAll(".person");
+                    persons.forEach(p => {
+                        var personDirection = p.getAttribute("data-direction");
+                        var personDestination = p.getAttribute("data-destination");
+                        //забираем всех кому по пути или всех, если это
+                        if (direction===personDirection) {
+                            var elevatorButton = document.getElementById("elevator-" + personDestination);
+                            elevatorButton.click();
+                            flat.removeChild(p);
+                            elevator.appendChild(p);
+                        } else if (nextFlats.length===0) {
+                            var elevatorButton = document.getElementById("elevator-" + personDestination);
+                            elevatorButton.click();
+                            flat.removeChild(p);
+                            elevator.appendChild(p);
+                        }
+                    });
+                }, 500);
 
-                //забираем пассажиров и везем их куда им нужно
-                var persons = flat.querySelectorAll(".flat__person");
-                //debugger;
-                persons.forEach(p => {
-                    if (direction===p.getAttribute("direction")) {
-                        var elevatorButton = document.getElementById("elevator-" + p.getAttribute("destination"));
-                        elevatorButton.click();
-                        console.log("click elevator " + p.getAttribute("destination"));
-                        flat.removeChild(p);
-                        elevator.classList.add("house__elevator--passenger");
-                    }
-                })
-
-                //закрываем двери
+                //закрываем двери через секунду
                 setTimeout(() => {
                     elevator.classList.remove("house__elevator--open");
                     continueMove();
-                }, speedStop);
-                      
-
-
-                /*//есть кого высаживать?
-                if (elevator.classList.contains("house__elevator--passenger")) {
-                    var toLeave = false;
-                    var elevatorButtonsActive = document.getElementsByClassName("elevator__button active");
-                    for (var i = 0; i < elevatorButtonsActive.length; i++) {
-                        if (Number(elevatorButtonsActive[i].getAttribute("data-number"))===flatCurr) {
-                            toLeave = true;    
-                        }
-                    };
-                    if (toLeave) {
-                        setTimeout(() => {
-                            flat.flat.classList.add("flat--leave");
-                            if (elevatorButtonsActive.length===1) {
-                                elevator.classList.remove("house__elevator--passenger");
-                            }
-                        }, speedStop/3);
-                    }
-                }
-                */
-                //setTimeout(() => {
-                
-                //}, speedStop/2);
-                
-                
-                //if (changeDirection) {
-                    //direction = direction==="up"?"down":"up";
-                //}
-                //moveElevator(speedStop+1);
+                }, 1000);
             }
 
             //продолжение движения после остановки
@@ -142,7 +122,7 @@ G+
                 if (nextFlats.length > 0) {
                     nextStop = elevator.offsetTop + (direction==="up"?-elevatorHeight:+elevatorHeight);
                     flatCurr = direction==="up"?flatCurr+1:flatCurr-1;
-                    moveElevator(speedNormal); 
+                    moveElevator(50); 
                     return;
                 }
                 //меняем направление и едем в другую сторону
@@ -150,7 +130,7 @@ G+
                     direction = direction==="up"?"down":"up";
                     nextStop = elevator.offsetTop + (direction==="up"?-elevatorHeight:+elevatorHeight);
                     flatCurr = direction==="up"?flatCurr+1:flatCurr-1;
-                    moveElevator(speedNormal);
+                    moveElevator(50);
                     return;
                 }
                 //останавливаемся
@@ -167,12 +147,9 @@ G+
                     //доезжаем до этажа
                     if (elevator.offsetTop!==nextStop) {
                         elevator.style.top = elevator.offsetTop + (direction==="up"?-elevatorStep:+elevatorStep) + "px";
-                        moveElevator(speedNormal);
+                        moveElevator(50);
                         return;
                     }
-                    //текущий этаж
-                    //console.log(flatCurr);
-                    
                     //этажи впереди по направлению
                     nextFlats = Object.keys(activeFlats).filter( function(f) {
                             if (direction==="up" && f > flatCurr) {
@@ -218,97 +195,17 @@ G+
                     if (!(flatCurr in activeFlats)) {
                         nextStop = elevator.offsetTop + (direction==="up"?-elevatorHeight:+elevatorHeight);
                         flatCurr = direction==="up"?flatCurr+1:flatCurr-1;
-                        moveElevator(speedNormal);        
+                        moveElevator(50);        
                     }
-
-
-
-
-                    
-                    //нужно ли останавливаться на этом этаже?
-                    /*if (nextFlat in activeFlats) {
-                        var flatButtons = document.querySelectorAll(".button-" + nextFlat);
-                        var activeButtons = [];
-                        flatButtons.forEach (b => {
-                            var isActive = b.classList.contains("active");
-                            var mode = b.getAttribute("data-mode");
-                            if (isActive && (mode===direction)) {
-                                activeButtons.push(b);
-                            }
-                            if (isActive && !mode) {
-                                activeButtons.push(b);
-                            }
-                        });
-                        if (activeButtons.length > 0) {
-                            openElevator(flats[FLATS-nextFlat],activeButtons);
-                            return;
-                        }
-                    }*/
-                    //moveElevator(speedNormal);
-                    //если ли этажи дальше по пути
-                    
-
-
-
-                    //если нажатых кнопок нет, останавливаемся
-                    /*if (activeButtons.length===0) {
-                        direction = "";
-                        return;
-                    }*/
-                    //если ли этажи дальше по пути
-                    /*nextFlats = activeButtons.filter( function(fl) {
-                        if (direction==="up" && fl.flatNumber >= flatCurr) {
-                            return true;
-                        };
-                        if (direction==="down" && fl.flatNumber <= flatCurr) {
-                            return true;
-                        };
-                        return false;
-                    }).sort( function(a,b) {
-                        if (a.flatNumber===b.flatNumber) {
-                            return (a.direction===direction?0:1)-(b.direction===direction?0:1);
-                        } else {
-                            return (direction==="up"?a.flatNumber-b.flatNumber:b.flatNumber-a.flatNumber);
-                        }});
-                
-                    //проверяем, надо ли останавливаться на этом этаже
-                    if (Number(nextFlat.flatNumber)===flatCurr) {
-                        //console.log("---------------------open on " + flatCurr);
-                        openElevator(nextFlat);
-                        return;
-                    };
-                    
-                    //если по пути нет этажей, меняем направление
-                    if (nextFlats.length === 0) {
-                        direction = direction==="up"?"down":"up";
-                        moveElevator(speedNormal);
-                        return;
-                    }  */
-                    //Если это последний этаж по пути, останавливаемся и меняем направление 
-                    /*if (Number(nextFlat.flatNumber)===flatCurr && nextFlats.length===1) {
-                        direction = direction==="up"?"down":"up";
-                        openElevator(nextFlat,true);
-                        return;
-                    };*/
-                    
-                    //var nextFlat = nextFlats[0];
-                    //flatCurr = flatCurr + ((direction==="up")?1:-1);
-                    //nextStop = elevator.offsetTop + (direction==="up"?-elevatorHeight:+elevatorHeight);
-                    //nextFlat = direction==="up"?flatCurr+1:flatCurr-1;
-                    //nextFlat = nextFlat + (direction==="up"?+1:-1);
-                    //moveElevator(speedNormal);
                 }, speed)
             }
 
-            //нажатие кнопки
+            //нажимаем кнопку
             function pushBtn(evt) {
                 if (!evt.target.classList.contains("active")) {
                     var btnFlatNumber = Number(evt.target.getAttribute("data-number"));
-                    var flat = document.getElementById("flat-" + btnFlatNumber);
                     var btnDirection = evt.target.getAttribute("data-mode");
                     btnDirection = btnDirection ? btnDirection : (btnFlatNumber>flatCurr ? "up" : "down");
-                    var act = {flat:flat, btn:evt.target, flatNumber:btnFlatNumber, direction:btnDirection};
-                    activeButtons.push(act);
                     evt.target.classList.add("active");
                     if (!(btnFlatNumber in activeFlats)) {
                         activeFlats[btnFlatNumber] = true;
@@ -317,8 +214,7 @@ G+
                     if (direction==="") {
                         direction = (btnFlatNumber===flatCurr ? btnDirection : (btnFlatNumber>flatCurr ? "up" : "down"));
                         nextStop = elevator.offsetTop;
-                        //nextFlat = direction==="up"?flatCurr+1:flatCurr-1;
-                        moveElevator(speedNormal); 
+                        moveElevator(50); 
                     }
                 }
             }
@@ -393,21 +289,21 @@ G+
         goPeople = function () {
 
             var timerPerson;
+            var personCount = 0;
             var flats = this.cnt.querySelectorAll(".flat");
-            //console.log(flats);
             
             function randomDiap(n,m) {
                 return Math.floor(Math.random()*(m-n+1))+n;
             }
 
-            var personCount = 0;
             btnCreatePassengers.setAttribute("disabled",true);
 
+            //создаем пассажира
             function createPerson(temp,flats) {
                 clearTimeout(timerPerson);
                 timerPerson = setTimeout( function() {
                     var person = document.createElement("div");
-                    person.classList.add("flat__person");
+                    person.classList.add("person");
                     //этаж для пассажира рандомно
                     var flatNumber = randomDiap(1,FLATS);
                     var flat = flats[FLATS - flatNumber];
@@ -417,11 +313,11 @@ G+
                     flatButton.click();
                     //этаж назначения для пассажира рамдомно
                     var direction = flatButton.getAttribute("data-mode");
-                    person.setAttribute("direction",direction);
+                    person.setAttribute("data-direction",direction);
                     var flatDestination = randomDiap(direction==="up"?(flatNumber+1):1,direction==="up"?FLATS:(flatNumber-1));
-                    person.setAttribute("destination",flatDestination);
+                    person.setAttribute("data-destination",flatDestination);
                     var dest = document.createElement("span");
-                    dest.classList.add("flat__person--dest");
+                    dest.classList.add("person__dest");
                     dest.textContent = flatDestination;
                     //console.log("person on " + flatNumber + " go " + direction + " " + flatDestination);
                     person.appendChild(dest);
@@ -429,7 +325,7 @@ G+
                     personCount++;
                     btnCreatePassengers.textContent = (PASSENGERS - personCount) + " пассажиров";
                     if (personCount < PASSENGERS) {
-                        createPerson(2700,flats);
+                        createPerson(3000,flats);
                     }
                     if (personCount===PASSENGERS) {
                         btnCreatePassengers.textContent = PASSENGERS + " пассажиров";
@@ -438,36 +334,34 @@ G+
                 }, temp);
             }
 
-            function createPersonTest(temp,flats,start,end) {
+            //создаем пассажира для тестов
+            function createPersonTest(temp,flats,start,end,dir) {
                 setTimeout( function() {
                     var person = document.createElement("div");
-                    person.classList.add("flat__person");
+                    person.classList.add("person");
                     //этаж для пассажира рандомно
                     var flatNumber = start;
-                    //debugger;
-                    var flat = flats[flatNumber];
-                    //выбор кнопки на этаже для пассажира рандомно
-                    var flatButton = flat.querySelector(".flat__button--up");
+                    var flat = flats[FLATS - flatNumber];
+                    //выбор кнопки на этаже для пассажира
+                    var flatButton = flat.querySelector(".flat__button--" + dir);
                     flatButton.click();
-                    //этаж назначения для пассажира рамдомно
+                    //этаж назначения для пассажира
                     var direction = flatButton.getAttribute("data-mode");
-                    person.setAttribute("direction",direction);
+                    person.setAttribute("data-direction",direction);
                     var flatDestination = end;
-                    person.setAttribute("destination",flatDestination);
+                    person.setAttribute("data-destination",flatDestination);
                     var dest = document.createElement("span");
-                    dest.classList.add("flat__person--dest");
+                    dest.classList.add("person__dest");
                     dest.textContent = flatDestination;
                     //console.log("person on " + (FLATS - flatNumber) + " go " + direction + " " + flatDestination);
                     person.appendChild(dest);
                     flat.appendChild(person);
-                    personCount++;
-                    btnCreatePassengers.textContent = (PASSENGERS - personCount) + " пассажиров";
-                    
                 }, temp);
             }
             createPerson(0,flats);
-            //createPersonTest(0,this._flats,5,6);
-            //createPersonTest(1000,this._flats,8,9);
+            //createPersonTest(0,flats,1,7,"up");
+            //createPersonTest(0,flats,1,3,"up");
+            //createPersonTest(1000,flats,8,4,"down");
         }
     }
 

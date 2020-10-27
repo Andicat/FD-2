@@ -11,7 +11,7 @@
         align-items: center;
         justify-content: center;
         flex-wrap: wrap;
-        margin-left: 50px;
+        margin-left: 20px;
     }
 
     &__button {
@@ -93,6 +93,7 @@
             background-color: #cacaca;
             border: 1px solid gray;
             top: 0;
+            z-index: 1;
         }
 
         &:before {
@@ -104,18 +105,10 @@
         }
 
         &--open {
-            animation: elevator-passenger 1s;
             &:before,
             &:after {
                 animation: elevator-doors 1s;
             }
-        }
-
-        &--passenger {
-            background-repeat: no-repeat;
-            background-size: 42px;
-            background-position: center bottom;
-            background-image: url("../img/man.svg");
         }
     }
 }
@@ -182,42 +175,26 @@
             &.active {
                 border-top-color: rgb(113, 98, 180);
             }
-        }
-
-        
+        }   
     }
+}
 
-    &__person {
-        position: relative;
-        height: 40px;
-        width: 20px;
-        background-image: url("../img/man.svg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
-        margin-top: 10px;
+.person {
+    position: relative;
+    height: 40px;
+    width: 20px;
+    background-image: url("../img/man.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    margin-top: 10px;
 
-        &--dest {
-            font-size: 8px;
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-    }
-
-    &--leave:after {
-        content: "";
+    &__dest {
+        font-size: 8px;
         position: absolute;
-        z-index: 1;
-        height: 42px;
-        width: 20px;
-        right: -55px; 
-        top: 8px;
-        background-image: url("../img/man.svg");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-position: center;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
     }
 }
 
