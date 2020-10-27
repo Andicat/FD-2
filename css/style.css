@@ -688,6 +688,10 @@ form .shorttext {
   background-color: #d34141;
 }
 
+.elevator__create-house, .elevator__create-passengers {
+  min-width: 250px;
+}
+
 .elevator__create-passengers:disabled {
   background-color: gray;
   cursor: wait;

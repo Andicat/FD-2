@@ -39,6 +39,11 @@
         }
     }
 
+    &__create-house,
+    &__create-passengers {
+        min-width: 250px;
+    }
+
     &__create-passengers:disabled {
         background-color: gray;
         cursor: wait;
