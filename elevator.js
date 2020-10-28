@@ -46,12 +46,16 @@ G+
     
     class House {
 
+        _flats = [1,2,3];
+
         constructor(flatsCount,cnt) {
             this.flatsCount = flatsCount;
             this.cnt = cnt;
         };
       
         createHouse = function () {
+
+            console.log(this._flats);
 
             var flats;
             var activeFlats = {};
@@ -239,6 +243,7 @@ G+
 
             //создаем дом
             function create (cnt,flatsCount) {
+                console.log(this._flats);
                 var house = document.createElement("div");
                 house.classList.add("house");
                 //создаем этажи
