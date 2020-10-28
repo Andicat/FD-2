@@ -70,7 +70,6 @@ G+
 
             //остановка лифта
             function openElevator(flat) {
-                console.log(this._flats);
                 //открываем двери лифта
                 elevator.classList.add("house__elevator--open");
                 //после того как откроется лифт
