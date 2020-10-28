@@ -561,6 +561,18 @@ form .shorttext {
   width: 35%;
 }
 
+.valid-form__title {
+  display: block;
+  font-size: 24px;
+  line-height: normal;
+  font-weight: 600;
+  margin: 10px;
+}
+
+.valid-form button {
+  margin: 15px auto;
+}
+
 .popup-menu__container {
   display: -webkit-box;
   display: -ms-flexbox;

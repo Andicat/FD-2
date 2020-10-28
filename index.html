@@ -143,17 +143,74 @@
               <div class="popup-menu__container"></div>
             </div>
           </li>
-          <li class="tasks__item">
+          <li class="tasks__item tasks__item--done">
             <div class="elevator">
               <button class="elevator__create-house">построить дом</button>
               <button class="elevator__create-passengers" disabled>Пассажиры</button>
               <div class="elevator__container"></div>
             </div>
           </li>
+          <li class="tasks__item">
+            <div class="valid-form">
+              <span class="valid-form__title">Valid form</span>
+              <form name="form" action="https://fe.it-academy.by/TestForm.php" method="post">
+                <fieldset>
+                  <label for="develope">Разработчики:</label>
+                  <input type="text" name="develope" id="develope">
+                </fieldset>
+                <fieldset>
+                  <label for="sitename">Название сайта:</label>
+                  <input type="text" name="sitename" id="sitename">
+                </fieldset>
+                <fieldset>
+                  <label for="siteurl">URL сайта:</label>
+                  <input type="text" name="siteurl" id="siteurl">
+                </fieldset>
+                <fieldset>
+                  <label for="date-start">Дата запуска сайта:</label>
+                  <input type="date" name="date-start" id="date-start">
+                </fieldset>
+                <fieldset>
+                  <label for="visitors">Посетителей в сутки:</label>
+                  <input type="number" name="visitors" id="visitors">
+                </fieldset>
+                <fieldset>
+                  <label for="email">E-mail для связи:</label>
+                  <input type="text" name="email" id="email" class="shorttext">
+                </fieldset>
+                <fieldset>
+                  <label for="division">Рубрика каталога:</label>
+                  <select name="division" id="division">
+                    <option value="1">здоровье</option>
+                    <option value="2">домашний уют</option>
+                    <option value="3">бытовая техника</option>
+                  </select>
+                </fieldset>
+                <fieldset>
+                  <legend>Размещение:</legend>
+                  <input type="radio" name="payment" id="1" value="1">
+                  <label for="1">бесплатное</label>
+                  <input type="radio" name="payment" id="2" value="2">
+                  <label for="2">платное</label>
+                  <input type="radio" name="payment" id="3" value="3">
+                  <label for="3">VIP</label>
+                </fieldset>
+                <fieldset>
+                  <label for="votes">Разрешить отзывы:</label>
+                  <input type="checkbox" name="votes" id="votes">
+                </fieldset>
+                <fieldset>
+                  <label for="description">Описание сайта:</label>
+                  <textarea name="description" id="description" rows="5"></textarea>
+                </fieldset>
+                <button type="submit">Опубликовать</button>
+              </form>
+            </div>
+          </li>
         </ul>
       </section>
     </main>
-    <script src="elevator.js"></script>
+    <script src="valid_form.js"></script>
     <!--<script src="tests.js"></script>-->
   </body>
 </html>
