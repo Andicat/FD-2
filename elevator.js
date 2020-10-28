@@ -70,6 +70,7 @@ G+
 
             //остановка лифта
             function openElevator(flat) {
+                console.log(this._flats);
                 //открываем двери лифта
                 elevator.classList.add("house__elevator--open");
                 //после того как откроется лифт
@@ -243,7 +244,6 @@ G+
 
             //создаем дом
             function create (cnt,flatsCount) {
-                console.log(this._flats);
                 var house = document.createElement("div");
                 house.classList.add("house");
                 //создаем этажи
