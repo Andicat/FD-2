@@ -1,0 +1,25 @@
+{shop_url}
+
+Здравствуйте, {firstname} {lastname},
+
+Спасибо за заказ в {shop_name}!
+
+Наши менеджеры скоро свяжутся с вами для подтверждения заказа.
+
+Заказ: {order_name}
+
+
+Артикула Товар	Цена	Кол-во	Сумма  {products_txt}
+Товары	{total_products}
+Доставка	{total_shipping}
+Итого к оплате	{total_paid}
+
+Адрес доставки:
+
+{delivery_block_txt}
+
+Способ оплаты:
+
+{payment}
+
+[{shop_name}]({shop_url})
