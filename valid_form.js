@@ -17,66 +17,110 @@ N.27 Домашнее задание VALID_FORM
         if (formValid) {
             formValid.setAttribute("novalidate", "novalidate");
             formValid.addEventListener('submit', onSubmitFormValid);
+            var requiredInputs = formValid.querySelectorAll('[required]');
+            var paymentRadio = formValid.elements.payment;
           }
     } catch {
         return;
     }
 
-    //валидация формы
+    //валидация при уходе с текстового поля
+    requiredInputs.forEach (function(field) {
+        var event = (field.nodeName==="SELECT" || field.type==="checkbox") ? "change" : "blur";
+        field.addEventListener(event, f => checkInput(f.target));
+    });
+
+    //валидация радио-кнопок оплаты
+    paymentRadio.forEach(function(v) {
+        v.addEventListener("change", f => setError(v, true));
+    });
+
+    //валидация формы при отправке
     function onSubmitFormValid(evt) {
         var valid = checkValidityForm(evt.target);
         if (!valid) {
           evt.preventDefault();
-          setInputCheckvalue(evt.target);
           var firstError = evt.target.querySelector('.form__error');
           if (firstError) {
             firstError.scrollIntoView({ behavior: "smooth" });
+            var input = firstError.querySelector('[required]');
+            if (input) {
+                input.focus();
+            }
           }
         }
       };
 
       function checkValidityForm(form) {
         var res = true;
-        var inputs = form.querySelectorAll('[required]');
-        //requiredInputs.forEach(function(input) {
-        for(var i = 0; i < form.elements.length; i++) {
-          if (!checkInput(form.elements[i], form)) {
+        //проверим обязательные текстовые поля
+        var requiredInputs = form.querySelectorAll('[required]');
+        requiredInputs.forEach(function(input) {
+            if (!checkInput(input, form)) {
             res = false;
-          }
-        }
+            }
+        });
+        
+        //проверим радио-кнопки оплаты
+        if (!checkRadio(paymentRadio)) {
+            res = false;
+        };
         return res;
       }
 
-      function checkInput(field, form) {
-        console.log(field);
+      //проверка радио-кнопки
+      function checkRadio(field) {
+        var paymentIsChecked = false;
+        field.forEach(function(v) {
+            if (v.checked) {
+                paymentIsChecked = true;
+            }
+        });
+        setError(field[0], paymentIsChecked);
+        return paymentIsChecked;
+      }
+
+      //проверка текстового поля на валидность
+      function checkInput(field) {
         var val = field.value;
         var res;
         switch (field.name) {
-          case 'password-ver':
-            var fieldPass = form.querySelector('[name=password]');
-            if (fieldPass) {
-              if (fieldPass.validity.valid) {
-                res = (fieldPass.value === val) ? true : false;
-              } else {
-                res = true;
-              }
-            }
+          case 'develop':
+            res = (val.length === 0) ? false : true;  
             break;
-          case 'agr':
+        case 'sitename':
+            res = (val.length === 0) ? false : true;  
+            break;
+        case 'siteurl':
+            res = (val.length === 0) ? false : true;  
+            break;
+        case 'date-start':
+            res = field.validity.valid;  
+            break;
+        case 'visitors':
+            res = (Number(val) <= 0) ? false : true;  
+            break;
+        case 'email':
+            res = (val.length === 0) ? false : true;  
+            break;
+        case 'division':
+            res = (val === "1") ? false : true;  
+            break;
+        case 'votes':
             res = field.checked;
             break;
-          case 'tel':
-            res = (val.length < field.getAttribute('minlength')) ? false : field.validity.valid;
+          case 'description':
+            res = (val.length === 0 ) ? false : true;
             break;
           default:
-            res = field.validity.valid;
+            true;
         }
         setError(field, res);
         return res;
       }
     
+      //устанавливаем или убираем ошибку
       function setError(evt, result) {
-        var error = evt.parentNode.querySelector('.form__error-text');
         if (result) {
           evt.parentNode.classList.remove('form__error');
         } else {
