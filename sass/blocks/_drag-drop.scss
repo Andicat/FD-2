@@ -1,0 +1,49 @@
+.drag-drop {
+    width: 1000px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 50px;
+
+    &__container {
+        box-sizing: border-box;
+        position: relative;
+        height: 700px;
+        box-sizing: border-box;
+        outline: 1px solid rgb(105, 129, 57);
+    }
+
+    &__title {
+        display: block;
+		font-size: 24px;
+		line-height: normal;
+		font-weight: 600;
+		margin: 10px;
+    }
+
+    &__image {
+        box-sizing: border-box;
+        position: absolute;
+        width: 400px;
+        height: 300px;
+        top: 100px;
+        left: 300px;
+        outline: 1px solid rgb(105, 129, 57);
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}
+/*
+@include tablet {
+    .picture {
+        height: 600px;
+        &__image {
+            width: 200px;
+            height: 150px;
+            top: 50px;
+            left: 150px;
+        }
+    }
+}
+*/
