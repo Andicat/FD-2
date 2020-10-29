@@ -13,188 +13,75 @@ N.27 Домашнее задание VALID_FORM
 (function () {
 
     try {
-        var blockDynForms = document.querySelector('.dyn-form');
-        var btnCreate = blockDynForms.querySelector('.dyn-form__button');
-        var cntForm = blockDynForms.querySelector('.dyn-form__container');
+        var formValid = document.forms.formValid;
+        if (formValid) {
+            formValid.setAttribute("novalidate", "novalidate");
+            formValid.addEventListener('submit', onSubmitFormValid);
+          }
     } catch {
         return;
     }
 
-    //строим форму динамически
-    function createForm(form,elemArr, formName) {
-        form.setAttribute("name",formName);
-        form.setAttribute("action","https://fe.it-academy.by/TestForm.php");
-        form.setAttribute("method","post");
-               
-        elemArr.forEach( function(el) {
-            switch(el.kind) {
-                case "longtext":
-                    var fieldset = document.createElement("fieldset");
-                    
-                    var label = document.createElement("label");
-                    label.textContent = el.label;
-                    label.setAttribute("for",el.name);
-                    fieldset.appendChild(label);
+    //валидация формы
+    function onSubmitFormValid(evt) {
+        var valid = checkValidityForm(evt.target);
+        if (!valid) {
+          evt.preventDefault();
+          setInputCheckvalue(evt.target);
+          var firstError = evt.target.querySelector('.form__error');
+          if (firstError) {
+            firstError.scrollIntoView({ behavior: "smooth" });
+          }
+        }
+      };
 
-                    var input = document.createElement("input");
-                    input.setAttribute("type","text");
-                    input.setAttribute("name",el.name);
-                    input.setAttribute("id",el.name);
-                    fieldset.appendChild(input);
-                    
-                    form.appendChild(fieldset);
-                    break;
-                case "shorttext":
-                    var fieldset = document.createElement("fieldset");
-                    
-                    var label = document.createElement("label");
-                    label.textContent = el.label;
-                    label.setAttribute("for",el.name);
-                    fieldset.appendChild(label);
+      function checkValidityForm(form) {
+        var res = true;
+        var inputs = form.querySelectorAll('[required]');
+        //requiredInputs.forEach(function(input) {
+        for(var i = 0; i < form.elements.length; i++) {
+          if (!checkInput(form.elements[i], form)) {
+            res = false;
+          }
+        }
+        return res;
+      }
 
-                    var input = document.createElement("input");
-                    input.setAttribute("type","text");
-                    input.setAttribute("name",el.name);
-                    input.setAttribute("id",el.name);
-                    input.setAttribute("class",el.kind);
-                    fieldset.appendChild(input);
-                    
-                    form.appendChild(fieldset);
-                    break;
-                case "number":
-                    var fieldset = document.createElement("fieldset");
-
-                    var label = document.createElement("label");
-                    label.textContent = el.label;
-                    label.setAttribute("for",el.name);
-                    fieldset.appendChild(label);
-
-                    var input = document.createElement("input");
-                    input.setAttribute("type","number");
-                    input.setAttribute("name",el.name);
-                    input.setAttribute("id",el.name);
-                    fieldset.appendChild(input);
-                    
-                    form.appendChild(fieldset);
-                    break;
-                case "combo":
-                    var fieldset = document.createElement("fieldset");
-                    
-                    var label = document.createElement("label");
-                    label.textContent = el.label;
-                    label.setAttribute("for",el.name);
-                    fieldset.appendChild(label);
-
-                    var select = document.createElement("select");
-                    select.setAttribute("name",el.name);
-                    select.setAttribute("id",el.name);
-                    el.variants.forEach( function(v) {
-                        var option = document.createElement("option");
-                        option.textContent = v.text;
-                        option.setAttribute("value",v.value);
-                        select.appendChild(option);
-                    });
-                    fieldset.appendChild(select);
-
-                    form.appendChild(fieldset);
-                    break;
-                case "radio":
-                    var fieldset = document.createElement("fieldset");
-
-                    var legend = document.createElement("legend");
-                    legend.textContent = el.label;
-                    fieldset.appendChild(legend);
-                    
-                    el.variants.forEach( function(v) {
-                        var radio = document.createElement("input");
-                        radio.setAttribute("type","radio");
-                        radio.setAttribute("name",el.name);
-                        radio.setAttribute("id",v.value);
-                        radio.setAttribute("value",v.value);
-                        fieldset.appendChild(radio);
-                        
-                        var label = document.createElement("label");
-                        label.textContent = v.text;
-                        label.setAttribute("for",v.value);
-                        fieldset.appendChild(label);
-                    });
-
-                    form.appendChild(fieldset);
-                    break;
-                case "check":
-                    var fieldset = document.createElement("fieldset");
-                    
-                    var label = document.createElement("label");
-                    label.textContent = el.label;
-                    label.setAttribute("for",el.name);
-                    fieldset.appendChild(label);
-                    
-                    var check = document.createElement("input");
-                    check.setAttribute("type","checkbox");
-                    check.setAttribute("name",el.name);
-                    check.setAttribute("id",el.name);
-                    fieldset.appendChild(check);
-
-                    form.appendChild(fieldset);
-                    break;
-                case "memo":
-                    var fieldset = document.createElement("fieldset");
-                    
-                    var label = document.createElement("label");
-                    label.textContent = el.label;
-                    label.setAttribute("for",el.name);
-                    fieldset.appendChild(label);
-                    
-                    var textarea = document.createElement("textarea");
-                    textarea.setAttribute("name",el.name);
-                    textarea.setAttribute("id",el.name);
-                    textarea.setAttribute("rows","5");
-                    fieldset.appendChild(textarea);
-
-                    form.appendChild(fieldset);
-                    break;
-                case "submit":
-                    var button = document.createElement("button");
-                    button.setAttribute("type","submit");
-                    button.textContent = el.label;
-                    form.appendChild(button);
-                    break;
-                default:
-                    break;
+      function checkInput(field, form) {
+        console.log(field);
+        var val = field.value;
+        var res;
+        switch (field.name) {
+          case 'password-ver':
+            var fieldPass = form.querySelector('[name=password]');
+            if (fieldPass) {
+              if (fieldPass.validity.valid) {
+                res = (fieldPass.value === val) ? true : false;
+              } else {
+                res = true;
+              }
             }
-        });
-        cntForm.appendChild(form);
-    }
-
-    btnCreate.addEventListener('click', (event) => {
-        var formDef1 = [
-            {label:'Название сайта:',kind:'longtext',name:'sitename'},
-            {label:'URL сайта:',kind:'longtext',name:'siteurl'},
-            {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
-            {label:'E-mail для связи:',kind:'shorttext',name:'email'},
-            {label:'Рубрика каталога:',kind:'combo',name:'division',
-            variants:[{text:'здоровье',value:1},{text:'домашний уют',value:2},{text:'бытовая техника',value:3}]},
-            {label:'Размещение:',kind:'radio',name:'payment',
-            variants:[{text:'бесплатное',value:1},{text:'платное',value:2},{text:'VIP',value:3}]},
-            {label:'Разрешить отзывы:',kind:'check',name:'votes'},
-            {label:'Описание сайта:',kind:'memo',name:'description'},
-            {label:'Опубликовать',kind:'submit'},
-        ];
-        var formDef2 = [
-            {label:'Фамилия:',kind:'longtext',name:'lastname'},
-            {label:'Имя:',kind:'longtext',name:'firstname'},
-            {label:'Отчество:',kind:'longtext',name:'secondname'},
-            {label:'Возраст:',kind:'number',name:'age'},
-            {label:'Зарегистрироваться',kind:'submit'},
-        ];
-        cntForm.innerHTML = "";
-        
-        var form1 = document.createElement("form");
-        createForm(form1,formDef1,"form1");
-        console.log(cntForm.innerHTML);
-
-        var form2 = document.createElement("form");
-        createForm(form2,formDef2,"form2");
-    });
+            break;
+          case 'agr':
+            res = field.checked;
+            break;
+          case 'tel':
+            res = (val.length < field.getAttribute('minlength')) ? false : field.validity.valid;
+            break;
+          default:
+            res = field.validity.valid;
+        }
+        setError(field, res);
+        return res;
+      }
+    
+      function setError(evt, result) {
+        var error = evt.parentNode.querySelector('.form__error-text');
+        if (result) {
+          evt.parentNode.classList.remove('form__error');
+        } else {
+          evt.parentNode.classList.add('form__error');
+        }
+      }
 
 })();
