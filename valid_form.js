@@ -24,7 +24,7 @@ N.27 Домашнее задание VALID_FORM
         return;
     }
 
-    //валидация при уходе с текстового поля
+    //валидация при уходе с поля
     requiredInputs.forEach (function(field) {
         var event = (field.nodeName==="SELECT" || field.type==="checkbox") ? "change" : "blur";
         field.addEventListener(event, f => checkInput(f.target));
