@@ -1068,7 +1068,7 @@ form .shorttext {
 @media (max-width: 767px) {
   .drag-drop {
     width: calc(100vw - 40px);
-    min-height: calc(100vh - 50px);
+    min-height: calc(100vh - 100px);
   }
   .drag-drop__image {
     width: 80px;

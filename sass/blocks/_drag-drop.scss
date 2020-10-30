@@ -42,7 +42,7 @@
 @include mobile {
     .drag-drop {
         width: calc(100vw - 40px);
-        min-height: calc(100vh - 50px);
+        min-height: calc(100vh - 100px);
         &__image {
             width: 80px;
             height: 55px;
