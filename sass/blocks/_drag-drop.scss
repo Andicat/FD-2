@@ -1,8 +1,9 @@
 .drag-drop {
-    width: 1000px;
+    width: calc(100vw - 100px);
+    min-height: calc(100vh - 150px);
     display: flex;
     flex-direction: column;
-    margin: 0 50px;
+    align-content: flex-start;
 
     &__container {
         display: flex;
@@ -10,8 +11,7 @@
         align-content: flex-start;
         box-sizing: border-box;
         position: relative;
-        height: 700px;
-        box-sizing: border-box;
+        flex-grow: 1;
         outline: 1px solid rgb(105, 129, 57);
     }
 
@@ -35,6 +35,17 @@
             &:active {
                 cursor: grabbing;
             }
+        }
+    }
+}
+
+@include mobile {
+    .drag-drop {
+        width: calc(100vw - 40px);
+        min-height: calc(100vh - 50px);
+        &__image {
+            width: 80px;
+            height: 55px;
         }
     }
 }
