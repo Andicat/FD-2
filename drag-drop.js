@@ -16,47 +16,84 @@
 
     try {
         var blockDragDrop = document.querySelector('.drag-drop');
-        var cntDragDrop = blockDragDrop.querySelector('.drag-drop__container');
+        var cntImages = blockDragDrop.querySelector('.drag-drop__container');
+        var imageList = cntImages.querySelectorAll('.drag-drop__image');
     } catch {
         return;
     }
 
-    const PIC_COUNT = 5;
-    var picArr = [];
+    var mouseStart;
+    var mouseShift;
+    var rightMin;
+    var bottomMin;
+    var topMax;
+    var limits;
+    var leftMax;
+    var topMax;
+    var image;
+    var zInd = 0;
 
-    class Pic {
+    window.addEventListener('DOMContentLoaded', onLoadDoc);
 
-        constructor(image,cnt) {
-            this.cnt = cnt;
-            console.log(image);
-            this.elem = document.createElement("div");
-            this.elem.classList.add("drag-drop__pic");
-            this.cnt.appendChild(this.elem);
+    function onLoadDoc() {
+        for (var i = imageList.length-1; i >= 0; i--) {
+            imageList[i].style.top = imageList[i].offsetTop + "px";
+            imageList[i].style.left = imageList[i].offsetLeft + "px";
+            imageList[i].style.position = "absolute";
+            imageList[i].classList.add("drag-drop__image--drag");
+            imageList[i].addEventListener("mousedown", onMouseDown);
+        }    
+    }
+    
+    function onMouseDown(evt) {
+        evt.preventDefault();
+        if (image!==evt.target) {
+            image = evt.target;
+            zInd++;
+            image.style.zIndex = zInd;    
         };
-        
-        addValue = function (key,value) {
-            this._storage[key] = value;
-            return this;
-        }
-
-        getValue = function (key) {
-            return this._storage[key];
-        }
-
-        deleteValue = function (key) {
-            if (key in this._storage) {
-                delete this._storage[key];
-                return true;
-            };
-            return false;
-        }
-
-        getKeys = function () {
-            return Object.keys(this._storage);
-        }
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+        //начальные координаты мышки
+        mouseStart = {
+            x: evt.clientX,
+            y: evt.clientY
+        };
+        //пределы
+        leftMax = image.offsetLeft + image.offsetWidth;
+        topMax = image.offsetTop + image.offsetHeight;
+        rightMin = cntImages.offsetWidth - image.offsetLeft;
+        bottomMin = cntImages.offsetHeight - image.offsetTop;
+        limits = {
+            bottom: cntImages.offsetHeight - image.offsetHeight,
+            right: cntImages.offsetWidth - image.offsetWidth,
+        };
     }
 
-    for (var i = 0; i < PIC_COUNT-1; i++) {
-        picArr[i] = new Pic("pic-"+i,cntDragDrop);
+    function onMouseMove(evt) {
+        evt.preventDefault();
+        //смещение мышки относительно начальных координат
+        mouseShift = {
+            x: evt.clientX - mouseStart.x,
+            y: evt.clientY - mouseStart.y 
+        };
+        //новые стартовые координаты мышки
+        mouseStart = {
+            x: evt.clientX,
+            y: evt.clientY
+        };
+        //показатели смещения
+        var leftShift = Math.max(image.offsetLeft + mouseShift.x,0);
+        var topShift = Math.max(image.offsetTop + mouseShift.y,0);
+        //перемещаем объект
+        image.style.top = Math.min(topShift, limits.bottom) + "px";
+        image.style.left = Math.min(leftShift, limits.right) + "px";
     }
+
+    function onMouseUp(evt) {
+        evt.preventDefault();
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+    }
+
 })();
