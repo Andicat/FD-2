@@ -33,7 +33,7 @@
     var image;
     var zInd = 0;
 
-    window.addEventListener('DOMContentLoaded', onLoadDoc);
+    window.addEventListener('load', onLoadDoc);
 
     function onLoadDoc() {
         for (var i = imageList.length-1; i >= 0; i--) {
