@@ -42,7 +42,7 @@
             imageList[i].style.position = "absolute";
             imageList[i].classList.add("drag-drop__image--drag");
             imageList[i].addEventListener("mousedown", onMouseDown);
-            imageList[i].addEventListener('dragstart',onMouseDown);
+            imageList[i].addEventListener('touchstart',onMouseDown);
         }    
     }
     
@@ -55,9 +55,9 @@
             cntImages.appendChild(image);
         };
         window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('drag', onMouseMove);
+        window.addEventListener('touchmove', onMouseMove);
         window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('dragend', onMouseUp);
+        window.addEventListener('touchend', onMouseUp);
         //начальные координаты мышки
         mouseStart = {
             x: evt.clientX,
@@ -97,9 +97,9 @@
     function onMouseUp(evt) {
         evt.preventDefault();
         window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('drag', onMouseMove);
+        window.removeEventListener('touchmove', onMouseMove);
         window.removeEventListener('mouseup', onMouseUp);
-        window.removeEventListener('dragend', onMouseUp);
+        window.removeEventListener('touchend', onMouseUp);
     }
 
 })();
