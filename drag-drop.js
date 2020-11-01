@@ -31,7 +31,7 @@
     var leftMax;
     var topMax;
     var image;
-    var zInd = 0;
+    //var zInd = 0;
 
     window.addEventListener('load', onLoadDoc);
 
@@ -49,11 +49,12 @@
         evt.preventDefault();
         if (image!==evt.target) {
             image = evt.target;
-            zInd++;
-            image.style.zIndex = zInd;    
+            //zInd++;
+            //image.style.zIndex = zInd;    
+            cntImages.appendChild(image);
         };
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
         //начальные координаты мышки
         mouseStart = {
             x: evt.clientX,
@@ -92,8 +93,8 @@
 
     function onMouseUp(evt) {
         evt.preventDefault();
-        document.removeEventListener('mousemove', onMouseMove);
-        document.removeEventListener('mouseup', onMouseUp);
+        window.removeEventListener('mousemove', onMouseMove);
+        window.removeEventListener('mouseup', onMouseUp);
     }
 
 })();
