@@ -52,26 +52,25 @@
 
 
         render(cnt) {
-
-            function renderNode(renderFunc,node) {
-                var nodeElem  = renderFunc(node);
+            function renderNode(renderFunc,node,index) {
+                var nodeElem  = renderFunc(node,index);
                 var children = node['children'];
                 if (!children) {
                     return nodeElem;
                 }
-                children.forEach(child => {
-                    var childElem = renderNode(renderFunc,child);
+                children.forEach((child,i) => {
+                    var childElem = renderNode(renderFunc,child,index+(i+1));
                     nodeElem.appendChild(childElem);
                 });
                 return nodeElem;
             };
 
-            var domTree  = renderNode(this.func,this.tree);
+            var domTree  = renderNode(this.func,this.tree,"1");
             cnt.appendChild(domTree);
         }
     }
 
-    btnTree.addEventListener('click', function() {
+    //btnTree.addEventListener('click', function() {
         var treeData = { name: "tree", type:"FOLDER", children: [
                         { name: "folder1", type:"FOLDER", children: [] },
                         { name: "folder2", type:"FOLDER", children: [
@@ -87,16 +86,35 @@
                         ] },
                     ] };
 
-        var renderFunc = function (node) {
-            var elem =  document.createElement(node.type==="FOLDER"?"div":"span");
-            elem.style.width = "100px";
-            elem.style.height = "10px";
-            elem.style.backgroundColor = "red";
-            return elem;
+        var renderFunc = function (node,index) {
+            if (node.type==="FOLDER") {
+                var elem =  document.createElement("ul");
+                var input = document.createElement("input");
+                input.setAttribute("type","checkbox");
+                input.setAttribute("name",node.name);
+                input.setAttribute("id",index);
+                elem.appendChild(input);
+                var label = document.createElement("label");
+                label.setAttribute("for",index);
+                label.textContent = node.name;
+                elem.appendChild(label);
+                elem.classList.add("tree__node");
+                elem.classList.add("tree__folder");
+                return elem;
+            };
+
+            if (node.type==="FILE") {
+                var elem =  document.createElement("li");
+                elem.textContent = node.name;
+                elem.classList.add("tree__node");
+                elem.classList.add("tree__file");
+                return elem;
+            }
+            
         };
         
         var tree = new Tree(treeData,renderFunc);
         tree.render(cntTree);
-    });
+    //});
 
 })();

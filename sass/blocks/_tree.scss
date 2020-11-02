@@ -1,0 +1,61 @@
+.tree {
+    &__container {
+        //position: relative;
+    }
+
+	&__node {
+        position: relative;
+        @include transition(all);
+	    margin-left: 15px;
+        padding: 0;
+        list-style: none;
+
+        input {
+            @include visually-hidden;
+        }
+
+        label {
+            display: block;
+            position: relative;
+            font-size: 20px;
+            height: 25px;
+            text-align: left;
+            cursor: pointer;
+            padding-left: 30px;
+            background-image: url("../img/folder.svg");
+            background-repeat: no-repeat;
+            background-position: left top;
+            background-size: 25px 25px;
+
+            &:before {
+                content: "";
+                position: absolute;
+                width: 10px;
+                height: 10px;
+                left: -18px;
+                top: 50%;
+                background-image: url("../img/up-arrow.svg");
+                background-repeat: no-repeat;
+                transform: translateY(-50%) rotate(90deg);
+            }
+        }
+
+        input:checked {
+            &+label:before {
+                transform: translateY(-50%) rotate(180deg);
+            }
+        }
+    }
+
+    &__folder {
+        label:before {
+            //background-image: url("../img/folder.svg");
+        }
+    }
+
+    &__file {
+        label:before {
+            background-image: url("../img/file.svg");
+        }
+    }
+}
