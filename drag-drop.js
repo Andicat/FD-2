@@ -10,6 +10,9 @@
 Когда начинается перетаскивание какой-либо картинки, остальные картинки не должны сдвигаться.
 Картинка, перетаскивание которой началось, должна оказываться выше (ближе к глазам), чем остальные.
 На время перетаскивания менять форму курсора на подходящую.
+E2+
+В дополнительном задании DRAG&DROP (перетаскивание картинок на странице) реализуйте логику работы таким образом, 
+чтобы на сами изображения никаких обработчиков событий не назначалось.
 */
 
 (function () {
@@ -41,44 +44,50 @@
             imageList[i].style.left = imageList[i].offsetLeft + "px";
             imageList[i].style.position = "absolute";
             imageList[i].classList.add("drag-drop__image--drag");
-            imageList[i].addEventListener("mousedown", onMouseDown);
-            imageList[i].addEventListener('touchstart',onMouseDown);
-        }    
+            imageList[i].setAttribute("data-dragged",true);
+        }
+        //вешаем обработчики событий на контэйнер
+        cntImages.addEventListener("mousedown", startMove);
+        cntImages.addEventListener('touchstart',startMove);
     }
     
-    function onMouseDown(evt) {
-        evt.preventDefault();
-        if (evt instanceof TouchEvent) {
-            evt = evt.changedTouches[0];
+    function startMove(evt) {
+        //если эта одна из картинок, то начинаем перетаскивание
+        if (evt.target.getAttribute("data-dragged")) {
+            evt.preventDefault();
+            if (evt instanceof TouchEvent) {
+                evt = evt.changedTouches[0];
+            }
+            //помещаем каринку поверх
+            if (image!==evt.target) {
+                image = evt.target;
+                //zInd++;
+                //image.style.zIndex = zInd;    
+                cntImages.appendChild(image);
+            };
+            window.addEventListener('mousemove', move);
+            window.addEventListener('touchmove', move,{ passive: false });
+            window.addEventListener('mouseup', endMove);
+            window.addEventListener('touchend', endMove);
+            //начальные координаты мышки/пальца
+            
+            mouseStart = {
+                x: evt.clientX,
+                y: evt.clientY
+            };
+            //пределы
+            leftMax = image.offsetLeft + image.offsetWidth;
+            topMax = image.offsetTop + image.offsetHeight;
+            rightMin = cntImages.offsetWidth - image.offsetLeft;
+            bottomMin = cntImages.offsetHeight - image.offsetTop;
+            limits = {
+                bottom: cntImages.offsetHeight - image.offsetHeight,
+                right: cntImages.offsetWidth - image.offsetWidth,
+            };
         }
-        if (image!==evt.target) {
-            image = evt.target;
-            //zInd++;
-            //image.style.zIndex = zInd;    
-            cntImages.appendChild(image);
-        };
-        window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('touchmove', onMouseMove,{ passive: false });
-        window.addEventListener('mouseup', onMouseUp);
-        window.addEventListener('touchend', onMouseUp);
-        //начальные координаты мышки/пальца
-        
-        mouseStart = {
-            x: evt.clientX,
-            y: evt.clientY
-        };
-        //пределы
-        leftMax = image.offsetLeft + image.offsetWidth;
-        topMax = image.offsetTop + image.offsetHeight;
-        rightMin = cntImages.offsetWidth - image.offsetLeft;
-        bottomMin = cntImages.offsetHeight - image.offsetTop;
-        limits = {
-            bottom: cntImages.offsetHeight - image.offsetHeight,
-            right: cntImages.offsetWidth - image.offsetWidth,
-        };
     }
 
-    function onMouseMove(evt) {
+    function move(evt) {
         evt.preventDefault();
         if (evt instanceof TouchEvent) {
             evt = evt.changedTouches[0];
@@ -101,12 +110,12 @@
         image.style.left = Math.min(leftShift, limits.right) + "px";
     }
 
-    function onMouseUp(evt) {
+    function endMove(evt) {
         evt.preventDefault();
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('touchmove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-        window.removeEventListener('touchend', onMouseUp);
+        window.removeEventListener('mousemove', move);
+        window.removeEventListener('touchmove', move);
+        window.removeEventListener('mouseup', endMove);
+        window.removeEventListener('touchend', endMove);
     }
 
 })();
