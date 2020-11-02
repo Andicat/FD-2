@@ -1084,7 +1084,7 @@ form .shorttext {
   list-style: none;
 }
 
-.tree__node input {
+.tree__folder input {
   position: absolute;
   clip: rect(0 0 0 0);
   width: 1px;
@@ -1094,7 +1094,7 @@ form .shorttext {
   padding: 0px;
 }
 
-.tree__node label {
+.tree__folder label {
   display: block;
   position: relative;
   font-size: 20px;
@@ -1108,7 +1108,7 @@ form .shorttext {
   background-size: 25px 25px;
 }
 
-.tree__node label:before {
+.tree__folder label:before {
   content: "";
   position: absolute;
   width: 10px;
@@ -1121,9 +1121,13 @@ form .shorttext {
           transform: translateY(-50%) rotate(90deg);
 }
 
-.tree__node input:checked + label:before {
+.tree__folder--open > label:before {
   -webkit-transform: translateY(-50%) rotate(180deg);
           transform: translateY(-50%) rotate(180deg);
+}
+
+.tree__folder--open > ul {
+  display: block;
 }
 
 .tree__file label:before {

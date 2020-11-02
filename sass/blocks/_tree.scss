@@ -9,7 +9,9 @@
 	    margin-left: 15px;
         padding: 0;
         list-style: none;
+    }
 
+    &__folder {
         input {
             @include visually-hidden;
         }
@@ -40,16 +42,20 @@
             }
         }
 
-        input:checked {
-            &+label:before {
-                transform: translateY(-50%) rotate(180deg);
+        ul {
+            //display: none;
+            & > li {
+                //display: none;
             }
         }
-    }
 
-    &__folder {
-        label:before {
-            //background-image: url("../img/folder.svg");
+        &--open {
+            & > label:before {
+                transform: translateY(-50%) rotate(180deg);
+            }
+            & > ul {
+                display: block;
+            }
         }
     }
 

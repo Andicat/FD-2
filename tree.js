@@ -53,8 +53,9 @@
 
         render(cnt) {
             function renderNode(renderFunc,node,index) {
-                var nodeElem  = renderFunc(node,index);
                 var children = node['children'];
+                var isParent = !children ? false : !!children.length;
+                var nodeElem  = renderFunc(node,index,isParent);
                 if (!children) {
                     return nodeElem;
                 }
@@ -86,16 +87,17 @@
                         ] },
                     ] };
 
-        var renderFunc = function (node,index) {
+        var renderFunc = function (node,index,isParent) {
             if (node.type==="FOLDER") {
-                var elem =  document.createElement("ul");
+                var elem =  document.createElement((index==="1")?"div":"ul");
                 var input = document.createElement("input");
                 input.setAttribute("type","checkbox");
                 input.setAttribute("name",node.name);
-                input.setAttribute("id",index);
+                input.setAttribute("id","tree-" + index);
                 elem.appendChild(input);
+                input.addEventListener("change",toggleFolder);
                 var label = document.createElement("label");
-                label.setAttribute("for",index);
+                label.setAttribute("for","tree-" + index);
                 label.textContent = node.name;
                 elem.appendChild(label);
                 elem.classList.add("tree__node");
@@ -112,6 +114,11 @@
             }
             
         };
+
+        function toggleFolder(evt) {
+            console.log(evt.target);
+            evt.target.parentNode.classList.toggle("tree__folder--open");
+        }
         
         var tree = new Tree(treeData,renderFunc);
         tree.render(cntTree);
