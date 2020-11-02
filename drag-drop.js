@@ -48,6 +48,9 @@
     
     function onMouseDown(evt) {
         evt.preventDefault();
+        if (evt instanceof TouchEvent) {
+            evt = evt.changedTouches[0];
+        }
         if (image!==evt.target) {
             image = evt.target;
             //zInd++;
@@ -55,10 +58,11 @@
             cntImages.appendChild(image);
         };
         window.addEventListener('mousemove', onMouseMove);
-        window.addEventListener('touchmove', onMouseMove);
+        window.addEventListener('touchmove', onMouseMove,{ passive: false });
         window.addEventListener('mouseup', onMouseUp);
         window.addEventListener('touchend', onMouseUp);
-        //начальные координаты мышки
+        //начальные координаты мышки/пальца
+        
         mouseStart = {
             x: evt.clientX,
             y: evt.clientY
@@ -76,6 +80,9 @@
 
     function onMouseMove(evt) {
         evt.preventDefault();
+        if (evt instanceof TouchEvent) {
+            evt = evt.changedTouches[0];
+        }
         //смещение мышки относительно начальных координат
         mouseShift = {
             x: evt.clientX - mouseStart.x,
