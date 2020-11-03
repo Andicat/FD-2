@@ -38,36 +38,50 @@
     try {
         var blockTree = document.querySelector('.tree');
         var btnTree = blockTree.querySelector('.tree__button');
-        var cntTree = blockTree.querySelector('.tree__container');
+        var cntTreeFolders = blockTree.querySelector('.tree__folders');
+        var cntTreeFiles = blockTree.querySelector('.tree__files');
     } catch {
         return;
     }
 
     class Tree {
 
-        constructor(tree,func) {
+        constructor(tree,cntFolders,cntFiles,func) {
             this.tree = tree;
+            this.cntFolders = cntFolders;
+            this.cntFiles = cntFiles;
             this.func = func;
         }
 
 
-        render(cnt) {
-            function renderNode(renderFunc,node,index) {
+        render() {
+            var cntFolders = this.cntFolders;
+            var cntFiles = this.cntFiles;
+
+            function renderNode(renderFunc,node,indexParent,index,isChild,cnt) {
+                var cntParent = (node.type==="FOLDER")?(isChild?cnt:cntFolders):cntFiles;
+                var dataIndex = (node.type==="FOLDER")?(indexParent + index):indexParent;
                 var children = node['children'];
-                var isParent = !children ? false : !!children.length;
-                var nodeElem  = renderFunc(node,index,isParent);
                 if (!children) {
-                    return nodeElem;
+                    var nodeElem  = renderFunc(node,dataIndex,isChild,false);
+                    cntParent.appendChild(nodeElem);
+                    return;
                 }
+                var isParent = false;
                 children.forEach((child,i) => {
-                    var childElem = renderNode(renderFunc,child,index+(i+1));
-                    nodeElem.appendChild(childElem);
+                    if (child.type==="FOLDER") {
+                        isParent = true;
+                    }
                 });
-                return nodeElem;
+                var nodeElem  = renderFunc(node,dataIndex,isChild,isParent);
+                cntParent.appendChild(nodeElem);
+                children.forEach((child,i) => {
+                    renderNode(renderFunc,child,dataIndex,i+1,true,nodeElem.lastChild);
+                });
+                return;
             };
 
-            var domTree  = renderNode(this.func,this.tree,"1");
-            cnt.appendChild(domTree);
+            renderNode(this.func,this.tree,"","1",false);
         }
     }
 
@@ -87,41 +101,116 @@
                         ] },
                     ] };
 
-        var renderFunc = function (node,index,isParent) {
+        var renderFunc = function (node,index,isChild,isParent) {
             if (node.type==="FOLDER") {
-                var elem =  document.createElement((index==="1")?"div":"ul");
-                var input = document.createElement("input");
-                input.setAttribute("type","checkbox");
-                input.setAttribute("name",node.name);
-                input.setAttribute("id","tree-" + index);
-                elem.appendChild(input);
-                input.addEventListener("change",toggleFolder);
-                var label = document.createElement("label");
-                label.setAttribute("for","tree-" + index);
-                label.textContent = node.name;
-                elem.appendChild(label);
+                var elem =  document.createElement(isChild ? "li" : "div");
+                elem.addEventListener("click",clickNode);
                 elem.classList.add("tree__node");
                 elem.classList.add("tree__folder");
-                return elem;
+                elem.setAttribute("data-parent","tree-" + index);
+
+                if (isParent) {
+                    //строка с картинкой, названием и упр.элементом
+                    var nodeCnt = document.createElement("div");
+                    nodeCnt.classList.add("tree__node-name");
+
+                    var input = document.createElement("input");
+                    input.setAttribute("type","checkbox");
+                    input.setAttribute("name",node.name);
+                    input.setAttribute("id","tree-" + index);
+                    input.addEventListener("change",toggleFolder);
+                    nodeCnt.appendChild(input);
+                                        
+                    var label = document.createElement("label");
+                    label.setAttribute("for","tree-" + index);
+                    nodeCnt.appendChild(label);
+                    
+                    var folderName = document.createElement("span");
+                    folderName.textContent = node.name;
+                    folderName.addEventListener("click",activateFolder);
+                    nodeCnt.appendChild(folderName); 
+                    
+                    elem.appendChild(nodeCnt);
+                    
+                    //список для дочерних элементов
+                    var ul = document.createElement("ul");
+                    ul.classList.add("tree__node-children");
+                    elem.appendChild(ul);    
+                } else {
+                    var folderName = document.createElement("span");
+                    folderName.textContent = node.name;
+                    folderName.addEventListener("click",activateFolder);
+                    elem.appendChild(folderName);        
+                }
             };
 
             if (node.type==="FILE") {
-                var elem =  document.createElement("li");
-                elem.textContent = node.name;
-                elem.classList.add("tree__node");
+                var elem = document.createElement("span");
                 elem.classList.add("tree__file");
-                return elem;
+                elem.setAttribute("data-parent","tree-" + index);
+                elem.textContent = node.name;
             }
-            
+            return elem;
         };
 
         function toggleFolder(evt) {
-            console.log(evt.target);
-            evt.target.parentNode.classList.toggle("tree__folder--open");
+            var folderNode = evt.target.closest(".tree__folder");
+            if (folderNode.classList.contains("tree__folder--open")) {
+                folderNode.classList.remove("tree__folder--open");
+                var openFolders = folderNode.querySelectorAll(".tree__folder--open");
+                openFolders.forEach( f => {f.classList.remove("tree__folder--open")});
+            } else {
+                folderNode.classList.add("tree__folder--open");
+            }
         }
+
+        function activateFolder(evt) {
+            var activeFolder = cntTreeFolders.querySelector(".tree__folder--active");
+            if (activeFolder) {
+                activeFolder.classList.remove("tree__folder--active");
+                var folderIndex = activeFolder.getAttribute("data-parent");
+                var files = cntTreeFiles.querySelectorAll('span[data-parent=\"' + folderIndex + '\"]');
+                files.forEach( f => {f.style.display = ""});
+            }
+            activeFolder = evt.target.closest(".tree__folder");
+            activeFolder.classList.add("tree__folder--active");
+            var folderIndex = activeFolder.getAttribute("data-parent");
+            var files = cntTreeFiles.querySelectorAll('span[data-parent=\"' + folderIndex + '\"]');
+            files.forEach( f => {f.style.display = "block"});
+        }
+
+        function clickNode(evt) {
+            //console.log("click on " + evt.target.nodeName);
+            //console.log(evt.target);
+            if (evt.target.nodeName==="LABEL") {
+                var folderNode = evt.target.closest(".tree__folder");
+                //console.log(folderNode);
+                //activateFolder(folderNode);
+                //folderNode.classList.toggle("tree__folder--open");
+            }
+
+            
+        }
+
+        function clickLabel(evt) {
+            console.log("click on " + evt.target.nodeName);
+            console.log(evt.target);
+            if (evt.target.nodeName==="LABEL") {
+                var folderNode = evt.target.closest(".tree__folder");
+                console.log(folderNode);
+                //activateFolder(folderNode);
+                folderNode.classList.toggle("tree__folder--open");
+            }
+
+            //var folders = cntTreeFolders.querySelectorAll(".tree__folder--active");
+            //folders.forEach( f => {f.classList.remove("tree__folder--active");});
+            //evt.target.classList.add("tree__folder--active");
+        }
+
         
-        var tree = new Tree(treeData,renderFunc);
-        tree.render(cntTree);
+        
+        var tree = new Tree(treeData,cntTreeFolders,cntTreeFiles,renderFunc);
+        tree.render();
     //});
 
 })();

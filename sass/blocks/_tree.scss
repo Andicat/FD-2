@@ -1,67 +1,133 @@
 .tree {
     &__container {
-        //position: relative;
+        display: flex;
+        border: 1px solid gray;
+    }
+
+    &__folders {
+        height: 400px;
+        width: 400px;
+        border-right: 1px solid gray;
+        padding: 10px;
+        overflow: auto;
+    }
+
+    &__files {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        height: 400px;
+        width: 400px;
+        padding: 10px;
+        overflow: auto;
     }
 
 	&__node {
-        position: relative;
         @include transition(all);
-	    margin-left: 15px;
         padding: 0;
         list-style: none;
-    }
+        text-align: left;
 
-    &__folder {
         input {
             @include visually-hidden;
+            display: none;
+            visibility: hidden;
         }
 
         label {
             display: block;
-            position: relative;
-            font-size: 20px;
-            height: 25px;
-            text-align: left;
-            cursor: pointer;
-            padding-left: 30px;
-            background-image: url("../img/folder.svg");
+            height: 30px;
+            width: 30px;
+            background-image: url("../img/up-arrow.svg");
             background-repeat: no-repeat;
-            background-position: left top;
-            background-size: 25px 25px;
+            background-size: 10px;
+            background-position: center;
+            transform: rotate(90deg);
+            cursor: pointer;
 
-            &:before {
-                content: "";
-                position: absolute;
-                width: 10px;
-                height: 10px;
-                left: -18px;
-                top: 50%;
-                background-image: url("../img/up-arrow.svg");
-                background-repeat: no-repeat;
-                transform: translateY(-50%) rotate(90deg);
+            &:focus,
+            &:hover {
+                background-size: 12px;
             }
         }
 
-        ul {
-            //display: none;
-            & > li {
-                //display: none;
+        span {
+            display: inline-block;
+            position: relative;
+            font-size: 20px;
+            margin-left: 20px;
+            line-height: 30px;
+            padding: 0 5px;
+            cursor: pointer;
+
+            &::before {
+                content: "";
+                position: absolute;
+                width: 20px;
+                height: 20px;
+                left: -20px;
+                top: 5px;
+                background-image: url("../img/folder.svg");
+                background-repeat: no-repeat;
             }
+        }
+
+        &-name {
+            display: flex;
+        }
+
+        &-children {
+            padding: 0;
+            margin-left: 10px;
+        }
+    }
+
+   
+
+    &__folder {
+        & > span {
+            margin-left: 50px;
+        }
+        ul {
+            display: none;
         }
 
         &--open {
-            & > label:before {
-                transform: translateY(-50%) rotate(180deg);
+            & > .tree__node-name label {
+                transform: rotate(180deg);
             }
             & > ul {
                 display: block;
             }
         }
+
+        &--active {
+            & > .tree__node-name span,
+            & > span {
+                background-color: lightblue;
+                border-radius: 4px;
+            }
+            
+        }
     }
 
     &__file {
-        label:before {
+        display: none;
+        position: relative;
+        font-size: 20px;
+        margin-left: 20px;
+        line-height: 30px;
+        padding: 0 5px;
+        
+        &::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: -20px;
+            top: 5px;
             background-image: url("../img/file.svg");
+            background-repeat: no-repeat;
         }
     }
 }
