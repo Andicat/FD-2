@@ -1,13 +1,14 @@
 .tree {
     &__container {
         display: flex;
-        border: 1px solid gray;
+        border: 3px solid gray;
+        background-color: white;
     }
 
     &__folders {
         height: 400px;
-        width: 400px;
-        border-right: 1px solid gray;
+        width: 300px;
+        border-right: 3px solid gray;
         padding: 10px;
         overflow: auto;
     }
@@ -17,7 +18,7 @@
         flex-direction: column;
         align-items: flex-start;
         height: 400px;
-        width: 400px;
+        width: 300px;
         padding: 10px;
         overflow: auto;
     }
@@ -55,7 +56,7 @@
             display: inline-block;
             position: relative;
             font-size: 20px;
-            margin-left: 20px;
+            margin-left: 23px;
             line-height: 30px;
             padding: 0 5px;
             cursor: pointer;
@@ -65,7 +66,7 @@
                 position: absolute;
                 width: 20px;
                 height: 20px;
-                left: -20px;
+                left: -23px;
                 top: 5px;
                 background-image: url("../img/folder.svg");
                 background-repeat: no-repeat;
@@ -82,11 +83,9 @@
         }
     }
 
-   
-
     &__folder {
         & > span {
-            margin-left: 50px;
+            margin-left: 53px;
         }
         ul {
             display: none;
@@ -117,7 +116,10 @@
         font-size: 20px;
         margin-left: 20px;
         line-height: 30px;
+        height: 30px;
+        text-align: left;
         padding: 0 5px;
+        cursor: pointer;
         
         &::before {
             content: "";

@@ -46,20 +46,18 @@
 
     class Tree {
 
-        constructor(tree,cntFolders,cntFiles,func) {
+        constructor(tree,func) {
             this.tree = tree;
-            this.cntFolders = cntFolders;
-            this.cntFiles = cntFiles;
             this.func = func;
         }
 
-
         render() {
-            var cntFolders = this.cntFolders;
-            var cntFiles = this.cntFiles;
+
+            cntTreeFolders.innerHTML = "";
+            cntTreeFiles.innerHTML = "";
 
             function renderNode(renderFunc,node,indexParent,index,isChild,cnt) {
-                var cntParent = (node.type==="FOLDER")?(isChild?cnt:cntFolders):cntFiles;
+                var cntParent = (node.type==="FOLDER")?(isChild?cnt:cntTreeFolders):cntTreeFiles;
                 var dataIndex = (node.type==="FOLDER")?(indexParent + index):indexParent;
                 var children = node['children'];
                 if (!children) {
@@ -85,7 +83,7 @@
         }
     }
 
-    //btnTree.addEventListener('click', function() {
+    btnTree.addEventListener('click', function() {
         var treeData = { name: "tree", type:"FOLDER", children: [
                         { name: "folder1", type:"FOLDER", children: [] },
                         { name: "folder2", type:"FOLDER", children: [
@@ -104,10 +102,9 @@
         var renderFunc = function (node,index,isChild,isParent) {
             if (node.type==="FOLDER") {
                 var elem =  document.createElement(isChild ? "li" : "div");
-                elem.addEventListener("click",clickNode);
                 elem.classList.add("tree__node");
                 elem.classList.add("tree__folder");
-                elem.setAttribute("data-parent","tree-" + index);
+                elem.setAttribute("data-id","tree-" + index);
 
                 if (isParent) {
                     //строка с картинкой, названием и упр.элементом
@@ -147,7 +144,7 @@
             if (node.type==="FILE") {
                 var elem = document.createElement("span");
                 elem.classList.add("tree__file");
-                elem.setAttribute("data-parent","tree-" + index);
+                elem.setAttribute("data-id","tree-" + index);
                 elem.textContent = node.name;
             }
             return elem;
@@ -162,55 +159,26 @@
             } else {
                 folderNode.classList.add("tree__folder--open");
             }
+            activateFolder(evt);
         }
 
         function activateFolder(evt) {
             var activeFolder = cntTreeFolders.querySelector(".tree__folder--active");
             if (activeFolder) {
                 activeFolder.classList.remove("tree__folder--active");
-                var folderIndex = activeFolder.getAttribute("data-parent");
-                var files = cntTreeFiles.querySelectorAll('span[data-parent=\"' + folderIndex + '\"]');
+                var folderIndex = activeFolder.getAttribute("data-id");
+                var files = cntTreeFiles.querySelectorAll('span[data-id=\"' + folderIndex + '\"]');
                 files.forEach( f => {f.style.display = ""});
             }
             activeFolder = evt.target.closest(".tree__folder");
             activeFolder.classList.add("tree__folder--active");
-            var folderIndex = activeFolder.getAttribute("data-parent");
-            var files = cntTreeFiles.querySelectorAll('span[data-parent=\"' + folderIndex + '\"]');
+            var folderIndex = activeFolder.getAttribute("data-id");
+            var files = cntTreeFiles.querySelectorAll('span[data-id=\"' + folderIndex + '\"]');
             files.forEach( f => {f.style.display = "block"});
         }
 
-        function clickNode(evt) {
-            //console.log("click on " + evt.target.nodeName);
-            //console.log(evt.target);
-            if (evt.target.nodeName==="LABEL") {
-                var folderNode = evt.target.closest(".tree__folder");
-                //console.log(folderNode);
-                //activateFolder(folderNode);
-                //folderNode.classList.toggle("tree__folder--open");
-            }
-
-            
-        }
-
-        function clickLabel(evt) {
-            console.log("click on " + evt.target.nodeName);
-            console.log(evt.target);
-            if (evt.target.nodeName==="LABEL") {
-                var folderNode = evt.target.closest(".tree__folder");
-                console.log(folderNode);
-                //activateFolder(folderNode);
-                folderNode.classList.toggle("tree__folder--open");
-            }
-
-            //var folders = cntTreeFolders.querySelectorAll(".tree__folder--active");
-            //folders.forEach( f => {f.classList.remove("tree__folder--active");});
-            //evt.target.classList.add("tree__folder--active");
-        }
-
-        
-        
-        var tree = new Tree(treeData,cntTreeFolders,cntTreeFiles,renderFunc);
+        var tree = new Tree(treeData,renderFunc);
         tree.render();
-    //});
+    });
 
 })();
