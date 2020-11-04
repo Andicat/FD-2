@@ -180,7 +180,12 @@ console.log(+null)
 
 
     function test () {
-    
+     /*Переверните каждое слово в строке. Например, строка 
+    "Welcome to this Javascript Guide!" должна стать "emocleW ot siht tpircsavaJ !ediuG".*/
+
+    var str = "Welcome to this Javascript Guide!";
+    var str1 = str.split(" ").map( v => { return v.split("").reverse().join("")}).join(" ");
+    console.log(str1);
     }
         
     var btnTest = document.querySelector('.Test');
