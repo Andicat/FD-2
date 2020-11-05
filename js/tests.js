@@ -175,18 +175,21 @@ console.log(+null)
 унарный плюс - преобразует к числу. результат будет 0 1 0
 */
 
+/*Переверните каждое слово в строке. Например, строка 
+    "Welcome to this Javascript Guide!" должна стать "emocleW ot siht tpircsavaJ !ediuG".*/
+
+/*    var str = "Welcome to this Javascript Guide!";
+    var str1 = str.split(" ").map( v => { return v.split("").reverse().join("")}).join(" ");
+    console.log(str1);*/
+
+
 
 (function () {
 
 
     function test () {
-     /*Переверните каждое слово в строке. Например, строка 
-    "Welcome to this Javascript Guide!" должна стать "emocleW ot siht tpircsavaJ !ediuG".*/
+     
 
-    var str = "Welcome to this Javascript Guide!";
-    var str1 = str.split(" ").map( v => { return v.split("").reverse().join("")}).join(" ");
-    console.log(str1);
-    }
         
     var btnTest = document.querySelector('.Test');
 
