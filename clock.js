@@ -175,10 +175,10 @@
             var nmbCenterX = clockCenterX + radius*Math.sin(angle);
             var nmbCenterY = clockCenterY - radius*Math.cos(angle);
 
-            var nmbSizes = clock.getBoundingClientRect();
+            var nmbSizes = nmb.getBoundingClientRect();
 
-            nmb.setAttribute("cx", Math.round(nmbCenterX));
-            nmb.setAttribute("cy", Math.round(nmbCenterY));
+            nmb.setAttribute("x", Math.round(nmbCenterX - nmbSizes.width/2));
+            nmb.setAttribute("y", Math.round(nmbCenterY - nmbSizes.height/2 ));
         }
 
         //позиционирование стрелки
@@ -193,6 +193,11 @@
 
         //создание стрелки
         function createArrow (arrowWidth, arrowHeight) {
+            var center = document.createElementNS("http://www.w3.org/2000/svg","line");
+            center.setAttribute("cx",CLOCK_SIZE/2);
+            center.setAttribute("cy",CLOCK_SIZE/2);
+            center.setAttribute("r",CLOCK_SIZE/200);
+            center.setAttribute("fill","brown");
             var arrow = document.createElement("div");
             arrow.classList.add("clock__arrow");
             arrow.style.width = arrowWidth + "px";
@@ -219,36 +224,40 @@
         
         //создаем циферблат
         for (var i = 1; i <= 12; i++) {
-            var nmbGroup = document.createElementNS("http://www.w3.org/2000/svg","g");
+            var nmbGroup = document.createElementNS("http://www.w3.org/2000/svg","svg");
             nmbGroup.classList.add("clock__number");
+            nmbGroup.setAttribute("width",CLOCK_SIZE/10);
+            nmbGroup.setAttribute("height",CLOCK_SIZE/10);
             var nmbCircle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+            nmbCircle.setAttribute("cx",CLOCK_SIZE/20);
+            nmbCircle.setAttribute("cy",CLOCK_SIZE/20);
             nmbCircle.setAttribute("r",CLOCK_SIZE/20);
             var nmbText = document.createElementNS("http://www.w3.org/2000/svg","text");
+            nmbText.setAttribute("x",CLOCK_SIZE/20);
+            nmbText.setAttribute("y",CLOCK_SIZE/20*1.3);
+            nmbText.setAttribute("text-anchor","middle");
+            nmbText.setAttribute("font-size",CLOCK_SIZE/20);
+            nmbText.setAttribute("fill","black");
             nmbText.textContent = i;
             nmbGroup.appendChild(nmbCircle);
             nmbGroup.appendChild(nmbText);
             clockSvg.appendChild(nmbGroup);
-            posNmb(clock,nmbCircle,i);
-            posNmb(clock,nmbText,i);
+            posNmb(clock,nmbGroup,i);
         }
         
-        /*//создаем центр
-        var center = document.createElement("div");
-        center.style.width = "4px";
-        center.style.height = "4px";
-        center.style.backgroundColor = "brown";
-        center.style.zIndex = "10";
-        center.style.position = "absolute";
-        center.style.borderRadius = "50%";
-        center.style.top = (clock.offsetHeight/2 - 2) + "px";
-        center.style.left = (clock.offsetWidth/2 - 2) + "px";
-        clock.appendChild(center);
+        //создаем центр
+        var center = document.createElementNS("http://www.w3.org/2000/svg","circle");
+        center.setAttribute("cx",CLOCK_SIZE/2);
+        center.setAttribute("cy",CLOCK_SIZE/2);
+        center.setAttribute("r",CLOCK_SIZE/200);
+        center.setAttribute("fill","brown");
+        clockSvg.appendChild(center);
         
         //создаем стрелки
         var arrowHour = createArrow(CLOCK_SIZE/10/4,CLOCK_SIZE/2*0.7);
-        clock.appendChild(arrowHour);
-        posArrow(clock,arrowHour);
-        var arrowMin = createArrow(CLOCK_SIZE/10/6,CLOCK_SIZE/2*0.75);
+        clockSvg.appendChild(arrowHour);
+        posArrow(clockSvg,arrowHour);
+        /*var arrowMin = createArrow(CLOCK_SIZE/10/6,CLOCK_SIZE/2*0.75);
         clock.appendChild(arrowMin);
         posArrow(clock,arrowMin);
         var arrowSec = createArrow(CLOCK_SIZE/10/9,CLOCK_SIZE/2*0.8);
