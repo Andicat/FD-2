@@ -238,7 +238,7 @@
               </div>
             </div>
           </li>
-          <li class="tasks__item">
+          <li class="tasks__item tasks__item--done">
             <div class="tree">
               <button class="tree__button">render tree</button>
               <div class="tree__container">
@@ -247,11 +247,20 @@
               </div>
             </div>
           </li>
+          <li class="tasks__item">
+            <div class="clock">
+              <div class="clock__bittons">
+                <button class="clock__button-dom">Render Clock DOM</button>
+                <button class="clock__button-svg">Render Clock SVG</button>
+              </div>
+              <div class="clock__container"></div>
+            </div>
+          </li>
         </ul>
       </section>
     </main>
     <footer></footer>
-    <script src="tree.js"></script>
+    <script src="clock.js"></script>
     <!--<script src="tests.js"></script>-->
   </body>
 </html>
