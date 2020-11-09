@@ -22,7 +22,7 @@
     }
 
     var timer;
-    const CLOCK_SIZE = 500;
+    const CLOCK_SIZE = window.matchMedia("(max-width: 768px)").matches?300:500;
     const ARROW_SEC_LENGHT = CLOCK_SIZE*0.4;
     const ARROW_MIN_LENGHT = CLOCK_SIZE*0.35;
     const ARROW_HOUR_LENGHT = CLOCK_SIZE*0.3;
