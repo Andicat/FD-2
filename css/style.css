@@ -1222,4 +1222,48 @@ form .shorttext {
   background-image: url("../img/file.svg");
   background-repeat: no-repeat;
 }
+
+.clock__container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  margin: 0 auto;
+}
+
+.clock__figure {
+  position: relative;
+  background-color: palegoldenrod;
+  fill: palegoldenrod;
+  border-radius: 50%;
+}
+
+.clock__number {
+  background-color: #e2c337;
+  fill: #e2c337;
+  border-radius: 50%;
+  position: absolute;
+  font-style: normal;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.clock__arrow {
+  position: absolute;
+  background-color: black;
+}
+
+.clock__digital {
+  position: absolute;
+  font-size: 24px;
+}
 /*# sourceMappingURL=style.css.map */
