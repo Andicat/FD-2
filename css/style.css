@@ -1236,13 +1236,13 @@ form .shorttext {
 .clock__figure {
   position: relative;
   background-color: palegoldenrod;
-  fill: palegoldenrod;
+  fill: #acbbd3;
   border-radius: 50%;
 }
 
 .clock__number {
   background-color: #e2c337;
-  fill: #e2c337;
+  fill: #5d55a5;
   border-radius: 50%;
   position: absolute;
   font-style: normal;
