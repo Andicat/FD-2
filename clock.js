@@ -108,6 +108,17 @@
             posNmb(clock,nmb,i);
         }
         
+        //создаем стрелки
+        var arrowHour = createArrow(CLOCK_SIZE/10/4,CLOCK_SIZE/2*0.7);
+        clock.appendChild(arrowHour);
+        posArrow(clock,arrowHour);
+        var arrowMin = createArrow(CLOCK_SIZE/10/6,CLOCK_SIZE/2*0.75);
+        clock.appendChild(arrowMin);
+        posArrow(clock,arrowMin);
+        var arrowSec = createArrow(CLOCK_SIZE/10/9,CLOCK_SIZE/2*0.8);
+        clock.appendChild(arrowSec);
+        posArrow(clock,arrowSec);
+
         //создаем центр
         var center = document.createElement("div");
         center.style.width = "4px";
@@ -119,17 +130,6 @@
         center.style.top = (clock.offsetHeight/2 - 2) + "px";
         center.style.left = (clock.offsetWidth/2 - 2) + "px";
         clock.appendChild(center);
-        
-        //создаем стрелки
-        var arrowHour = createArrow(CLOCK_SIZE/10/4,CLOCK_SIZE/2*0.7);
-        clock.appendChild(arrowHour);
-        posArrow(clock,arrowHour);
-        var arrowMin = createArrow(CLOCK_SIZE/10/6,CLOCK_SIZE/2*0.75);
-        clock.appendChild(arrowMin);
-        posArrow(clock,arrowMin);
-        var arrowSec = createArrow(CLOCK_SIZE/10/9,CLOCK_SIZE/2*0.8);
-        clock.appendChild(arrowSec);
-        posArrow(clock,arrowSec);
 
         //создаем цифровые часы
         var digital = document.createElement("div");
@@ -181,29 +181,16 @@
             nmb.setAttribute("y", Math.round(nmbCenterY - nmbSizes.height/2 ));
         }
 
-        //позиционирование стрелки
-        function posArrow (clock,arrow) {
-
-            var clockCenterX = clock.offsetWidth/2;
-            var clockCenterY = clock.offsetHeight/2;
-
-            arrow.style.left = Math.round(clockCenterX - arrow.offsetWidth/2)+'px';
-            arrow.style.top = Math.round(clockCenterY - arrow.offsetHeight + 10)+'px';
-        }
-
         //создание стрелки
         function createArrow (arrowWidth, arrowHeight) {
-            var center = document.createElementNS("http://www.w3.org/2000/svg","line");
-            center.setAttribute("cx",CLOCK_SIZE/2);
-            center.setAttribute("cy",CLOCK_SIZE/2);
-            center.setAttribute("r",CLOCK_SIZE/200);
-            center.setAttribute("fill","brown");
-            var arrow = document.createElement("div");
-            arrow.classList.add("clock__arrow");
-            arrow.style.width = arrowWidth + "px";
-            arrow.style.borderRadius = arrowWidth + "px";
-            arrow.style.height = arrowHeight + "px";
-            arrow.style.transformOrigin = Math.round(arrowWidth/2) + "px " + (arrowHeight-10) + "px";
+            var arrow = document.createElementNS("http://www.w3.org/2000/svg","line");
+            arrow.setAttribute("x1",CLOCK_SIZE/2);
+            arrow.setAttribute("y1",CLOCK_SIZE/2);
+            arrow.setAttribute("x2",CLOCK_SIZE/2);
+            arrow.setAttribute("y2",CLOCK_SIZE/2 - arrowHeight);
+            arrow.setAttribute("stroke-width",arrowWidth);
+            arrow.setAttribute("stroke-linecap","round");
+            arrow.setAttribute("stroke","black");
             return arrow;
         }
 
@@ -245,6 +232,14 @@
             posNmb(clock,nmbGroup,i);
         }
         
+        //создаем стрелки
+        var arrowHour = createArrow(CLOCK_SIZE/10/4,CLOCK_SIZE/2*0.7);
+        clockSvg.appendChild(arrowHour);
+        var arrowMin = createArrow(CLOCK_SIZE/10/6,CLOCK_SIZE/2*0.75);
+        clockSvg.appendChild(arrowMin);
+        var arrowSec = createArrow(CLOCK_SIZE/10/9,CLOCK_SIZE/2*0.8);
+        clockSvg.appendChild(arrowSec);
+
         //создаем центр
         var center = document.createElementNS("http://www.w3.org/2000/svg","circle");
         center.setAttribute("cx",CLOCK_SIZE/2);
@@ -252,17 +247,7 @@
         center.setAttribute("r",CLOCK_SIZE/200);
         center.setAttribute("fill","brown");
         clockSvg.appendChild(center);
-        
-        //создаем стрелки
-        var arrowHour = createArrow(CLOCK_SIZE/10/4,CLOCK_SIZE/2*0.7);
-        clockSvg.appendChild(arrowHour);
-        posArrow(clockSvg,arrowHour);
-        /*var arrowMin = createArrow(CLOCK_SIZE/10/6,CLOCK_SIZE/2*0.75);
-        clock.appendChild(arrowMin);
-        posArrow(clock,arrowMin);
-        var arrowSec = createArrow(CLOCK_SIZE/10/9,CLOCK_SIZE/2*0.8);
-        clock.appendChild(arrowSec);
-        posArrow(clock,arrowSec);
+        /*
 
         //создаем цифровые часы
         var digital = document.createElement("div");
