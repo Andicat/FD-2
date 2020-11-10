@@ -298,4 +298,50 @@
         renderClockSVG(cntClock);
     });
 
+    /*Array.prototype.map2 = function(f) { 
+        var ar1 = this;
+        var ar2 = [];
+        for (var i = 0; i < ar1.length; i++) {
+            ar2.push(f(ar1[i],i,ar1));
+        }
+        return ar2;
+    };
+    var aaa = [1,2,3,4,5];
+    var bbb = aaa.map2(v=>v*2);
+    var f = function(v,i,a) { return "" + v + "" + i + "" + a};
+    console.log(aaa);
+    var ccc = aaa.map2(f);
+    console.log(bbb);
+    console.log(ccc);
+
+    var o = {"4":true};
+
+    console.log(o.hasOwnProperty("4"));
+    console.log(o);
+
+    eval("var x = 1;"); 
+    console.log(x);
+
+    var NaN = NaN
+    var undefined = undefined
+    var Infinity = "1"
+    var o = "ggg"
+    console.log(o);
+    var b;
+    
+    function ttt(a,a,a) {
+        var res = b = 3;
+    }
+    ttt();
+    console.log(res);*/
+
+    /*var a = "5";
+    var b = 2;
+    var c = a+++b;
+    console.log(c); //а+++b эквивалентно записи (a++)+b Значение - a равно "5", а значение - a++ равно 5 (так как это постфиксный инкремент) Следовательно а+++b = 5 + 2 = 7*/
+
+    //Оператор ~ равносилен - (n + 1) то есть - (2 + 1) = -3
+
+    console.log(typeof null);
+
 })();
