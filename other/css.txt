@@ -1,0 +1,101 @@
+#footer-widgets { padding: 3% 0 0; } .et_pb_gutters3 .footer-widget { margin: 0 5.5% 0.5% 0; }
+
+.et_pb_row {
+    position: relative;
+    width: 93%!important;
+    max-width: 1080px;
+    margin: auto;
+}
+
+#top-header, #top-header .container, #top-header #et-info, #top-header .et-social-icon a {
+    line-height: 1em;
+    font-size: 16px;
+}
+
+@media (max-width: 767px) {
+    #top-header #et-info-phone,  #top-header #et-info-email {
+        line-height: normal;
+        margin: 0;
+    }
+    h5, h3 {
+        line-height: normal;
+    }
+    .et_pb_section {
+        padding: 0;  
+    }
+    .et_pb_section .et_pb_column .et_pb_module {
+        margin-bottom: 20px;  
+    }
+    .et_pb_text_2 {
+        font-size: 1em;
+    }
+}
+
+
+/*SEO OVERRIDE*/
+
+.visuallyhidden {
+    position: absolute;
+    clip: rect(1px, 1px, 1px, 1px);
+    -webkit-clip-path: inset(0px 0px 99.9% 99.9%);
+    clip-path: inset(0px 0px 99.9% 99.9%);
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    padding: 0;
+    border: 0;
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    margin-bottom: 10px;
+    color: #333;
+    font-weight: 500;
+    line-height: 1em;
+    display: inline-block;
+}
+
+.h6 {
+ font-size: 1em;
+}
+
+.h5 {
+ font-size: 1.15em;
+}
+
+.h4 {
+ font-size: 1.3em;
+}
+
+.h3 {
+ font-size: 1.6em;
+}
+
+.h2 {
+ font-size: 1.85em;
+}
+
+.h1 {
+ font-size: 2.15em;
+  margin-bottom: 14px;
+}
+
+.et_pb_slide_title a {
+  color: #176f90;
+}
+
+.et_pb_contact_main_title {
+  margin-bottom: 0.7em;
+  padding: 0;
+}
+
+.et_pb_number_counter_text {
+  text-align: center;
+}
+.et_pb_number_counter_text .h4 {
+  color: #1b3240;
+}
