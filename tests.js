@@ -184,12 +184,9 @@ console.log(+null)
 
 
 
-(function () {
+( function () {
 
-
-    function test () {
-
-        /*Array.prototype.map2 = function(f) { 
+    /*Array.prototype.map2 = function(f) { 
         var ar1 = this;
         var ar2 = [];
         for (var i = 0; i < ar1.length; i++) {
@@ -197,6 +194,7 @@ console.log(+null)
         }
         return ar2;
     };
+
     var aaa = [1,2,3,4,5];
     var bbb = aaa.map2(v=>v*2);
     var f = function(v,i,a) { return "" + v + "" + i + "" + a};
@@ -296,7 +294,6 @@ console.log(+null)
     Пример:
     fibonacci(3)  // --> 2
     */
-
     function fibonacci(index) {
         var res = [];
         for (var i=0; i<=index; i++) {
@@ -306,25 +303,25 @@ console.log(+null)
         console.log(c);
         return c;
     }
-
     //fibonacci(9);
 
     //console.log( 20e-1['toString'](2) ); //20e-1 - это 20 * 10(в степени-1) = 20*0,1 = 2. ['toString'](2) - преобразовать в строку в двоичной системе исчесления - 2 в этой системе = 10
-    f.call(f);
+    
+    /*f.call(f);
+    function f() {
+        alert( this );
+    }*/
 
-function f() {
-  alert( this );
-}
+    /*function add(...nums) { //через спрэд-оператор
+        return nums.reduce((r,v) => r + v);
+    }*/
+
+    function add(num) { //через рекурсию. каррирование
+        //return nums.reduce((r,v) => r + v);
     }
-     
 
-        
-    var btnTest = document.querySelector('.Test');
-
-    if (btnTest) {
-        btnTest.addEventListener('click', (event) => {
-            test();
-        });
-    }
+    //console.log(add(10)(20)(30));
+    console.time("FFF");
+    console.timeEnd("FFF");
 
 })();

@@ -79,7 +79,6 @@
 
             var clockCenterX = clock.offsetWidth/2;
             var clockCenterY = clock.offsetHeight/2;
-            console.log(arrow.offsetHeight);
 
             arrow.style.left = Math.round(clockCenterX - arrow.offsetWidth/2)+'px';
             arrow.style.top = Math.round(clockCenterY - arrow.offsetHeight*0.95)+'px';
@@ -297,5 +296,10 @@
         cntClock.innerHTML = "";
         renderClockSVG(cntClock);
     });
+
+    /*
+    Точность часов!!!!
+    запускаем как SetTimeout(1000-getmiliseconds)
+    */
 
 })();
