@@ -14,7 +14,7 @@ B6+
   // в консоль выводится строка "<P>Однажды в &lt;студёную&gt; зимнюю пору</P>"
   var wrapH1=buildWrapper("H1"); // строим функцию для оборачивания текста в тег H1
   console.log( wrapH1("СТИХИ",{align:"center",title:"M&M's"}) );
-  // в консоль выводится строка "<H1 align='center' title='M&amp;M&apos;s'>СТИХИ</H1>"
+  // в консоль m строка "<H1 align='center' title='M&amp;M&apos;s'>СТИХИ</H1>"
 */
 
 (function () {
