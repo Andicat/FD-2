@@ -140,12 +140,12 @@
         //создаем цифровые часы
         var digital = document.createElement("div");
         digital.classList.add("clock__digital");
-        digital.style.top = (CLOCK_SIZE - CLOCK_SIZE/10*3) + "px";
+        digital.style.top = Math.round(CLOCK_SIZE/1.3) + "px";
         digital.style.left = CLOCK_SIZE/2 + "px";
         digital.style.fontSize = CLOCK_SIZE/20 + "px";
-        digital.style.transform = "translateX(-50%)";
+        digital.style.transform = "translate(-50%,-100%)";
         clock.appendChild(digital);
-        
+
         //запускаем часы
         runTime();
     }
@@ -275,7 +275,7 @@
         //создаем цифровые часы
         var digital = document.createElementNS("http://www.w3.org/2000/svg","text");
         digital.setAttribute("x",CLOCK_SIZE/2);
-        digital.setAttribute("y",CLOCK_SIZE/1.35);
+        digital.setAttribute("y",Math.round(CLOCK_SIZE/1.3));
         digital.setAttribute("text-anchor","middle");
         digital.setAttribute("font-size",CLOCK_SIZE/20);
         digital.setAttribute("fill","black");

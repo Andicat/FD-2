@@ -321,7 +321,7 @@ console.log(+null)
     }
 
     //console.log(add(10)(20)(30));
-    console.time("FFF");
-    console.timeEnd("FFF");
+    //console.time("FFF");
+    //console.timeEnd("FFF");
 
 })();
