@@ -131,7 +131,7 @@
             var textWidth = textMeasures.width;
             context.fillText(timeDigital, SIZES.clock/2 - textWidth/2, Math.round(SIZES.clock/1.3));
 
-            timer = setTimeout(drawClockCanvas,1000 - (new Date().getMilliseconds()));
+            timer = setTimeout(drawClockCanvas,1020 - (new Date().getMilliseconds()));
         }
 
         drawClockCanvas();
