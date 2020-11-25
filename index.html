@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.min.css">
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
@@ -247,7 +247,7 @@
               </div>
             </div>
           </li>
-          <li class="tasks__item">
+          <li class="tasks__item tasks__item--done">
             <div class="clock">
               <div class="clock__buttons">
                 <button class="clock__button-dom">Render Clock DOM</button>
@@ -257,12 +257,22 @@
               <div class="clock__container"></div>
             </div>
           </li>
+          <li class="tasks__item">
+            <div class="tennis">
+              <div class="tennis__buttons">
+                <button class="tennis__button-dom">Render Tennis DOM</button>
+                <button class="tennis__button-svg">Render Tennis SVG</button>
+                <button class="tennis__button-canvas">Render Tennis Canvas</button>
+              </div>
+              <div class="tennis__container"></div>
+            </div>
+          </li>
         </ul>
       </section>
     </main>
     <footer></footer>
-    <script src="clock.js"></script>
-    <script src="clock-canvas.js"></script>
+    <script src="tennis-dom.js"></script>
+    <!--<script src="clock-canvas.js"></script>-->
     <!--<script src="tests.js"></script>-->
   </body>
 </html>

@@ -33,7 +33,7 @@
         number: "#e7723c",
         arrow: "black",
         center: "brown",
-    }
+    };
 
     // дополняет строку слева нулями до нужной длины len 
     function str0l(val,len) {
