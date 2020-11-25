@@ -2,6 +2,7 @@
     
     &__container {
         display: flex;
+        flex-direction: column;
         justify-content: center;
         margin: 0 auto;
     }
@@ -11,11 +12,17 @@
     }
 
     &__playground {
-        border: 2px solid #333;
+        outline: 2px solid #333;
         position: relative;
         margin: 0 auto;
     }
+
+    &__scoreboard {
+        margin-bottom: 10px;
+    }
+
+    &__start {
+        margin: 10px auto;
+    }
 }
 
-@include tablet {
-}

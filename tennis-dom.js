@@ -5,11 +5,14 @@
 Реализовать игру «Теннис» методами DOM (проект TENNIS_DOM).
 Мяч прыгает по полю, слева и справа ракетки его отбивают.
 Размер поля НЕ резиновый, он должен быть задан на уровне JavaScript-кода константами.
-Запуск мяча — по кнопке «старт!», при этом мяч вылетает прямо из середины поля в случайном направлении под случайным (в разумных пределах) углом.
+Запуск мяча — по кнопке «старт!», при этом мяч вылетает прямо из середины поля 
+в случайном направлении под случайным (в разумных пределах) углом.
 Управление левой ракеткой — клавишами Shift (вверх) и Ctrl (вниз),
-правой ракеткой — «стрелка вверх» и «стрелка вниз». Пока клавиша удерживается, ракетка плавно движется; клавиша отпущена — ракетка останавливается.
+правой ракеткой — «стрелка вверх» и «стрелка вниз». Пока клавиша удерживается, 
+ракетка плавно движется; клавиша отпущена — ракетка останавливается.
 Если ракетка отбивает мяч — мяч должен отпрыгнуть от ракетки (а не долететь до стенки сквозь ракетку).
-Если мяч долетает до левой или правой стенки — засчитывается гол (ведётся подсчёт очков) и до следующего нажатия «старт!» мяч остановлен возле самой стенки, прикоснувшись к ней.
+Если мяч долетает до левой или правой стенки — засчитывается гол (ведётся подсчёт очков) 
+и до следующего нажатия «старт!» мяч остановлен возле самой стенки, прикоснувшись к ней.
 Никаких «волшебных констант» в коде не использовать — все константы вынести в начало скрипта с чётким документированием.
 */
 
@@ -25,6 +28,8 @@
 
     var timer;
     const TENNIS_SIZE = window.matchMedia("(max-width: 768px)").matches?300:500;
+
+    const SPEED = 3;
     
     const SIZES = {
         playgroundWidth: TENNIS_SIZE,
@@ -32,11 +37,12 @@
         playerWidth: TENNIS_SIZE*0.02,
         playerHeight: TENNIS_SIZE*0.2,
         ball: TENNIS_SIZE*0.05,
+        scoreboardFontSize: TENNIS_SIZE*0.1,
     };
     const COLORS = {
         playground: "#e8e89b",
-        playerOne: "#323a94",
-        playerTwo: "#e7723c",
+        playerLeft: "#323a94",
+        playerRight: "#e7723c",
         ball: "brown",
     }
 
@@ -45,17 +51,13 @@
 
         constructor() {
             this.elem;
-            this.posX;
-            this.posY;
-            this.speedX = 1;
-            this.speedY = 1;
-            this.width;
-            this.height;
         };
 
-        create = function(cnt,color,width,height) {
+        create = function(cnt,color,width,height,speed) {
             this.width = width;
             this.height = height;
+            this.speedX = speed;
+            this.speedY = speed;
             this.elem = document.createElement("div");
             this.elem.style.width = this.width + "px";
             this.elem.style.height = this.height + "px";
@@ -67,8 +69,10 @@
         };
 
         moveTo = function (posX,posY) {
-            this.elem.style.left = posX + "px";
-            this.elem.style.top = posY + "px";
+            this.posX = posX;
+            this.posY = posY;
+            this.elem.style.left = this.posX + "px";
+            this.elem.style.top = this.posY + "px";
         };
       
     }
@@ -78,11 +82,7 @@
 
         constructor() {
             this.elem;
-            this.posX;
-            this.posY;
-            this.speed = 1;
-            this.width;
-            this.height;
+            this.speed = 0;
         };
 
         create = function(cnt,color,width,height) {
@@ -97,9 +97,11 @@
             cnt.appendChild(this.elem);
         };
 
-        moveTo = function (posX,posY) {
-            this.elem.style.left = posX + "px";
-            this.elem.style.top = posY + "px";
+        moveTo = function (posX, posY) {
+            this.posX = posX;
+            this.posY = posY;
+            this.elem.style.left = this.posX + "px";
+            this.elem.style.top = this.posY + "px";
         };
       
     }
@@ -109,6 +111,17 @@
 
         var pgHeight = SIZES.playgroundHeight;
         var pgWidth = SIZES.playgroundWidth;
+        var scoreLeft = 0;
+        var scoreRight = 0;
+
+        //создаем табло
+        var scoreboard = document.createElement("span");
+        scoreboard.classList.add("tennis__scoreboard");
+        scoreboard.style.fontSize = SIZES.scoreboardFontSize + "px";
+        scoreboard.style.height = SIZES.scoreboardFontSize + "px";
+        scoreboard.style.lineHeight = "normal";
+        cnt.appendChild(scoreboard);
+        updateScore();
 
         //создаем корт
         var tennis = document.createElement("div");
@@ -119,67 +132,141 @@
         cnt.appendChild(tennis);
         
         //создаем игрока 1
-        var playerOne = new Player();
-        playerOne.create(tennis,COLORS.playerOne,SIZES.playerWidth,SIZES.playerHeight);
-        playerOne.moveTo(SIZES.playgroundWidth - playerOne.width,SIZES.playgroundHeight/2);
+        var playerLeft = new Player();
+        playerLeft.create(tennis,COLORS.playerLeft,SIZES.playerWidth,SIZES.playerHeight);
+        playerLeft.moveTo(0,SIZES.playgroundHeight/2);
 
         //создаем игрока 2
-        var playerTwo = new Player();
-        playerTwo.create(tennis,COLORS.playerTwo,SIZES.playerWidth,SIZES.playerHeight);
-        playerTwo.moveTo(0,SIZES.playgroundHeight/2);
+        var playerRight = new Player();
+        playerRight.create(tennis,COLORS.playerRight,SIZES.playerWidth,SIZES.playerHeight);
+        playerRight.moveTo(SIZES.playgroundWidth - playerRight.width,SIZES.playgroundHeight/2);
                 
         //создаем мяч
         var ball = new Ball();
-        ball.create(tennis,COLORS.ball,SIZES.ball,SIZES.ball);
+        ball.create(tennis,COLORS.ball,SIZES.ball,SIZES.ball,SPEED);
         ball.moveTo((SIZES.playgroundWidth/2),(SIZES.playgroundHeight/2))
 
+        //создаем кнопку старта
+        var btnStart = document.createElement("button");
+        btnStart.classList.add("tennis__start");
+        btnStart.textContent = "Start";
+        cnt.appendChild(btnStart);
+        btnStart.addEventListener("click", startGame);
 
-        window.addEventListener("keydown", function(evt) {
-            if (evt.keyCode === 27) {
-            evt.preventDefault();
-            closeModals();
-            }
-        });
+        function updateScore() {
+            scoreboard.textContent =  scoreLeft + ":" + scoreRight;
+        }
 
-        function runTennis() {
-            function start() {
-                // плавное движение - от 25 кадр/сек
-                setInterval(tick,40);
+        function startGame() {
+            clearInterval(timer);
+
+            function movePlayer(player) {
+                var posY = player.posY + player.speed;
+                if (posY < 0) {
+                    posY = 0;
+                };
+                if ((posY + player.height) > pgHeight) {
+                    posY = pgHeight - player.height;
+                };
+                player.moveTo(player.posX,posY);
             }
-        
-            function tick() {
-        
-                ballH.posX+=ballH.speedX;
-                // вылетел ли мяч правее стены?
-                if ( ballH.posX+ballH.width>areaH.width ) {
-                    ballH.speedX=-ballH.speedX;
-                    ballH.posX=areaH.width-ballH.width;
+
+            function move() {
+                //движения игроков
+                movePlayer(playerLeft);
+                movePlayer(playerRight);
+
+                //движения мячика
+                ball.posX += ball.speedX;
+                // попал ли мяч в правую ракетку?
+                if ((ball.posX + ball.width/2) > (pgWidth - playerRight.width)) {
+                    var posDown = playerRight.posY + playerRight.height;
+                    var posUp = playerRight.posY;
+                    if ((ball.posY <= posDown) && (ball.posY >= posUp)) {
+                        ball.speedX =- ball.speedX;
+                        ball.posX = pgWidth - ball.width/2 - playerRight.width;
+                    }
                 }
-                // вылетел ли мяч левее стены?
-                if ( ballH.posX<0 ) {
-                    ballH.speedX=-ballH.speedX;
-                    ballH.posX=0;
+                // ударился ли мяч в правую стену?
+                if ((ball.posX + ball.width/2) > pgWidth) {
+                    ball.speedX =- ball.speedX;
+                    ball.posX = pgWidth - ball.width/2;
+                    clearInterval(timer);
+                    scoreLeft += 1;
+                    updateScore();
                 }
-        
-                ballH.posY+=ballH.speedY;
+                // попал ли мяч в левую ракетку?
+                if ((ball.posX - ball.width/2) < playerLeft.width) {
+                    var posDown = playerLeft.posY + playerLeft.height;
+                    var posUp = playerLeft.posY;
+                    if ((ball.posY <= posDown) && (ball.posY >= posUp)) {
+                        ball.speedX =- ball.speedX;
+                        ball.posX = playerRight.width + ball.width/2;
+                    }
+                }
+               // ударился ли мяч в левую стену?
+                if ((ball.posX - ball.width/2) < 0) {
+                    ball.speedX =- ball.speedX;
+                    ball.posX = ball.width/2;
+                    clearInterval(timer);
+                    scoreRight += 1;
+                    updateScore();
+                }
+                
+                ball.posY += ball.speedY;
                 // вылетел ли мяч ниже пола?
-                if ( ballH.posY+ballH.height>areaH.height ) {
-                    ballH.speedY=-ballH.speedY;
-                    ballH.posY=areaH.height-ballH.height;
+                if ((ball.posY + ball.height/2) > pgHeight) {
+                    ball.speedY =- ball.speedY;
+                    ball.posY = pgHeight - ball.height/2;
                 }
                 // вылетел ли мяч выше потолка?
-                if ( ballH.posY<0 ) {
-                    ballH.speedY=-ballH.speedY;
-                    ballH.posY=0;
+                if ((ball.posY - ball.height/2)< 0) {
+                    ball.speedY =- ball.speedY;
+                    ball.posY = ball.height/2;
                 }
-        
-                ballH.update();
+                ball.moveTo(ball.posX,ball.posY);
             }
+
+            window.addEventListener("keydown", function(evt) {
+                if (evt.keyCode === 17) { //ctrl
+                    evt.preventDefault;
+                    playerLeft.speed = SPEED;
+                };
+                if (evt .keyCode === 16) { //shift
+                    evt.preventDefault;
+                    playerLeft.speed = -SPEED;
+                };
+                if (evt.keyCode === 40) { //down
+                    evt.preventDefault;
+                    playerRight.speed = SPEED;
+                };
+                if (evt.keyCode === 38) { //up
+                    evt.preventDefault;
+                    playerRight.speed = -SPEED;
+                };
+            });
+
+            window.addEventListener("keyup", function(evt) {
+                if (evt.keyCode === 17) { //ctrl
+                    evt.preventDefault;
+                    playerLeft.speed = 0;
+                }
+                if (evt .keyCode === 16) { //shift
+                    evt.preventDefault;
+                    playerLeft.speed = 0;
+                }
+                if (evt.keyCode === 40) { //down
+                    evt.preventDefault;
+                    playerRight.speed = 0;
+                }
+                if (evt.keyCode === 38) { //up
+                    evt.preventDefault;
+                    playerRight.speed = 0;
+                }
+            });
+
+            timer = setInterval(move,40);
         }
-           
-    
-        //запускаем теннис
-        //runTennis();
     }
 
     btnTennisDOM.addEventListener('click', function() {

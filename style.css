@@ -1051,16 +1051,8 @@ form .shorttext {
 }
 
 .tennis__playground {
-  outline: 2px solid #333;
+  border: 2px solid #333;
   position: relative;
   margin: 0 auto;
 }
-
-.tennis__scoreboard {
-  margin-bottom: 10px;
-}
-
-.tennis__start {
-  margin: 10px auto;
-}
-/*# sourceMappingURL=style.min.css.map */
+/*# sourceMappingURL=style.css.map */
