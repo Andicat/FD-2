@@ -161,6 +161,9 @@
             clearInterval(timer);
 
             function movePlayer(player) {
+                if (!!player.speed) {
+                    return;
+                }
                 var posY = player.posY + player.speed;
                 if (posY < 0) {
                     posY = 0;
@@ -212,7 +215,7 @@
                     scoreRight += 1;
                     updateScore();
                 }
-                
+
                 ball.posY += ball.speedY;
                 // вылетел ли мяч ниже пола?
                 if ((ball.posY + ball.height/2) > pgHeight) {
