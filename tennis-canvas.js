@@ -38,7 +38,7 @@
         scoreboardFontSize: TENNIS_SIZE*0.1,
     };
     const COLORS = {
-        playground: "#d4cdc4",
+        playground: "#eae3d8",
         playerLeft: "#d5a129",
         playerRight: "#787132",
         ball: "#9b4e23",
@@ -47,59 +47,48 @@
     //мячик
     class Ball {
 
-        constructor() {
-            this.elem;
+        constructor(cnt,color,radius,posX,posY) {
             this.speedX;
             this.speedY;
-        };
-
-        create = function(cnt,color,radius) {
+            this.cnt = cnt;
+            this.color = color;
             this.radius = radius;
-            this.elem = document.createElementNS("http://www.w3.org/2000/svg","circle");
-            this.elem.setAttribute("r", radius);
-            this.elem.setAttribute("fill", color);
-            cnt.appendChild(this.elem);
-        };
-
-        moveTo = function (posX,posY) {
+            this.elem;
             this.posX = posX;
             this.posY = posY;
-            this.elem.setAttribute("cx", this.posX);
-            this.elem.setAttribute("cy", this.posY);
         };
-      
+
+        draw = function() {
+            this.cnt.fillStyle = this.color;
+            this.cnt.beginPath();
+            this.cnt.arc(this.posX, this.posY, this.radius, 0, Math.PI*2, false);
+            this.cnt.fill();
+        };
     }
 
     //ракетка
     class Player {
 
-        constructor() {
+        constructor(cnt,color,width,height,posX,posY) {
+            this.cnt = cnt;
+            this.color = color;
+            this.width = width;
+            this.height = height;
             this.elem;
+            this.posX = posX;
+            this.posY = posY;
             this.speed = 0;
         };
 
-        create = function(cnt,color,width,height) {
-            this.width = width;
-            this.height = height;
-            this.elem = document.createElementNS("http://www.w3.org/2000/svg","rect");
-            this.elem.classList.add("tennis__player");
-            this.elem.setAttribute("x",0);
-            this.elem.setAttribute("y",0);
-            this.elem.setAttribute("width", this.width);
-            this.elem.setAttribute("height", this.height);
-            this.elem.setAttribute("fill", color);
-            this.elem.setAttribute("rx", this.width/2);
-            this.elem.setAttribute("ry", this.width/2);
-            cnt.appendChild(this.elem);
+        draw = function() {
+            this.cnt.strokeStyle = this.color;
+            this.cnt.lineWidth = this.width;
+            this.cnt.lineCap = "round";
+            this.cnt.beginPath();
+            this.cnt.moveTo(this.posX,this.posY);
+            this.cnt.lineTo(this.posX,this.posY + this.height);
+            this.cnt.stroke();
         };
-
-        moveTo = function (posX, posY) {
-            this.posX = posX;
-            this.posY = posY;
-            this.elem.setAttribute("x", this.posX);
-            this.elem.setAttribute("y", this.posY);
-        };
-      
     }
 
     //создание тенниса с помощью Canvas
@@ -110,12 +99,6 @@
         var scoreLeft = 0;
         var scoreRight = 0;
 
-        var tennisCanvas = document.createElement("canvas");
-        tennisCanvas.setAttribute("width",pgWidth);
-        tennisCanvas.setAttribute("height",pgHeight);
-        cnt.appendChild(tennisCanvas);
-        var context = tennisCanvas.getContext("2d");
-
         //создаем табло
         var scoreboard = document.createElement("span");
         scoreboard.classList.add("tennis__scoreboard");
@@ -125,62 +108,60 @@
         cnt.appendChild(scoreboard);
         updateScore();
 
-        //создаем корт
-        var tennisSVG = document.createElementNS("http://www.w3.org/2000/svg","svg");
-        tennisSVG.classList.add("tennis__playground");
-        tennisSVG.setAttribute("width", pgWidth);
-        tennisSVG.setAttribute("height", pgHeight);
-        tennisSVG.setAttribute("xmlns","http://www.w3.org/2000/svg");
-        cnt.appendChild(tennisSVG);
-        
-        var tennis = document.createElementNS("http://www.w3.org/2000/svg","rect");
-        tennis.setAttribute("x",0);
-        tennis.setAttribute("y",0);
-        tennis.setAttribute("width", pgWidth);
-        tennis.setAttribute("height", pgHeight);
-        tennis.setAttribute("fill", COLORS.playground);
-        tennisSVG.appendChild(tennis);
-        
+        //создаем канвас
+        var tennisCanvas = document.createElement("canvas");
+        tennisCanvas.setAttribute("width",pgWidth);
+        tennisCanvas.setAttribute("height",pgHeight);
+        cnt.appendChild(tennisCanvas);
+        var context = tennisCanvas.getContext("2d");
+
         //создаем кнопку старта
         var btnStart = document.createElement("button");
         btnStart.classList.add("tennis__start");
         btnStart.textContent = "Start";
         cnt.appendChild(btnStart);
         btnStart.addEventListener("click", startGame);
-        
+
         //создаем левую ракетку
-        var playerLeft = new Player();
-        playerLeft.create(tennisSVG,COLORS.playerLeft,SIZES.playerWidth,SIZES.playerHeight);
-        playerLeft.moveTo(0,pgHeight/2 - playerLeft.height/2);
-
+        var playerLeft = new Player(context,COLORS.playerLeft,SIZES.playerWidth,SIZES.playerHeight,SIZES.playerWidth/2,pgHeight/2 - SIZES.playerHeight/2);
         //создаем правую ракетку
-        var playerRight = new Player();
-        playerRight.create(tennisSVG,COLORS.playerRight,SIZES.playerWidth,SIZES.playerHeight);
-        playerRight.moveTo(pgWidth - playerRight.width,pgHeight/2 - playerRight.height/2);
-                
+        var playerRight = new Player(context,COLORS.playerRight,SIZES.playerWidth,SIZES.playerHeight,pgWidth - SIZES.playerWidth/2,pgHeight/2 - SIZES.playerHeight/2);
         //создаем мяч
-        var ball = new Ball();
-        ball.create(tennisSVG,COLORS.ball,SIZES.ball/2);
-        ball.moveTo((pgWidth/2),(pgHeight/2));
-
+        var ball = new Ball(context,COLORS.ball,SIZES.ball/2,pgWidth/2,pgHeight/2);
+      
         //обновление табло
         function updateScore() {
             scoreboard.textContent =  scoreLeft + ":" + scoreRight;
         }
 
-        //движение ракетки
+        //создание рисунка на канвасе
+        function draw() {
+            //рисуем корт
+            context.strokeStyle = "#333333";
+            context.lineWidth = 2;
+            context.fillStyle = COLORS.playground;
+            context.fillRect(0,0,pgWidth,pgHeight);
+            context.strokeRect(0,0,pgWidth,pgHeight);
+            //рисуем ракетки и мяч
+            playerLeft.draw();
+            playerRight.draw();
+            ball.draw();
+        }
+
+        draw();
+
+        //координаты ракетки
         function movePlayer(player) {
             if (!player.speed) {
                 return;
             }
-            var posY = player.posY + player.speed;
-            if (posY < 0) {
-                posY = 0;
+            player.posY = player.posY + player.speed;
+            if (player.posY < player.width/2) {
+                player.posY = player.width/2;
             };
-            if ((posY + player.height) > pgHeight) {
-                posY = pgHeight - player.height;
+            if ((player.posY + player.height) > pgHeight - player.width/2) {
+                player.posY = pgHeight - player.height - player.width/2;
             };
-            player.moveTo(player.posX,posY);
         }
 
         function randomDiap(n,m) {
@@ -234,10 +215,12 @@
         function startGame() {
             //очищаем таймер и ставим мяч в центр поля
             clearInterval(timer);
-            ball.moveTo((pgWidth/2),(pgHeight/2));
+            draw();
             //определим рандомно начальное направление и скорость мяча
             ball.speedX = randomDiap(SPEED,SPEED+2)*randomSign();
             ball.speedY = randomDiap(SPEED,SPEED+2)*randomSign();
+            ball.posX = pgWidth/2;
+            ball.posY = pgHeight/2;
             //запускаем мяч и ракетки
             function move() {
                 //движения ракеток
@@ -292,7 +275,7 @@
                     ball.speedY =- ball.speedY;
                     ball.posY = ball.radius;
                 }
-                ball.moveTo(ball.posX,ball.posY);
+                draw();
             }
             timer = setInterval(move,40);
         }

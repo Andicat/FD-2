@@ -38,10 +38,10 @@
         scoreboardFontSize: TENNIS_SIZE*0.1,
     };
     const COLORS = {
-        playground: "#efd091",
-        playerLeft: "#85aac5",
-        playerRight: "#ba7735",
-        ball: "#024f94",
+        playground: "#eceac7",
+        playerLeft: "#c0978d",
+        playerRight: "#5d5e62",
+        ball: "#972426",
     }
 
     //мячик
