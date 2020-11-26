@@ -1,8 +1,8 @@
 'use strict';
 
-//======================================TENNIS==================================
+//======================================TENNIS SVG==================================
 /*
-Реализовать игру «Теннис» методами DOM (проект TENNIS_DOM).
+Реализовать игру «Теннис» методами SVG
 Мяч прыгает по полю, слева и справа ракетки его отбивают.
 Размер поля НЕ резиновый, он должен быть задан на уровне JavaScript-кода константами.
 Запуск мяча — по кнопке «старт!», при этом мяч вылетает прямо из середины поля 
@@ -20,7 +20,7 @@
 
     try {
         var blockTennis = document.querySelector('.tennis');
-        var btnTennisDOM = blockTennis.querySelector('.tennis__button-dom');
+        var btnTennisSVG = blockTennis.querySelector('.tennis__button-svg');
         var cntTennis = blockTennis.querySelector('.tennis__container');
     } catch {
         return;
@@ -38,10 +38,10 @@
         scoreboardFontSize: TENNIS_SIZE*0.1,
     };
     const COLORS = {
-        playground: "#e8e89b",
-        playerLeft: "#323a94",
-        playerRight: "#e7723c",
-        ball: "brown",
+        playground: "#efd091",
+        playerLeft: "#85aac5",
+        playerRight: "#ba7735",
+        ball: "#024f94",
     }
 
     //мячик
@@ -49,28 +49,23 @@
 
         constructor() {
             this.elem;
+            this.speedX;
+            this.speedY;
         };
 
-        create = function(cnt,color,width,height,speed) {
-            this.width = width;
-            this.height = height;
-            this.speedX = speed;
-            this.speedY = speed;
-            this.elem = document.createElement("div");
-            this.elem.style.width = this.width + "px";
-            this.elem.style.height = this.height + "px";
-            this.elem.style.backgroundColor = color;
-            this.elem.style.position = "absolute";
-            this.elem.style.borderRadius = "50%";
-            this.elem.style.transform = "translate(-50%,-50%)";
+        create = function(cnt,color,radius) {
+            this.radius = radius;
+            this.elem = document.createElementNS("http://www.w3.org/2000/svg","circle");
+            this.elem.setAttribute("r", radius);
+            this.elem.setAttribute("fill", color);
             cnt.appendChild(this.elem);
         };
 
         moveTo = function (posX,posY) {
             this.posX = posX;
             this.posY = posY;
-            this.elem.style.left = this.posX + "px";
-            this.elem.style.top = this.posY + "px";
+            this.elem.setAttribute("cx", this.posX);
+            this.elem.setAttribute("cy", this.posY);
         };
       
     }
@@ -86,27 +81,29 @@
         create = function(cnt,color,width,height) {
             this.width = width;
             this.height = height;
-            this.elem = document.createElement("div");
+            this.elem = document.createElementNS("http://www.w3.org/2000/svg","rect");
             this.elem.classList.add("tennis__player");
-            this.elem.style.width = this.width + "px";
-            this.elem.style.height = this.height + "px";
-            this.elem.style.backgroundColor = color;
-            this.elem.style.borderRadius = this.width/2 + "px";
-            this.elem.style.position = "absolute";
+            this.elem.setAttribute("x",0);
+            this.elem.setAttribute("y",0);
+            this.elem.setAttribute("width", this.width);
+            this.elem.setAttribute("height", this.height);
+            this.elem.setAttribute("fill", color);
+            this.elem.setAttribute("rx", this.width/2);
+            this.elem.setAttribute("ry", this.width/2);
             cnt.appendChild(this.elem);
         };
 
         moveTo = function (posX, posY) {
             this.posX = posX;
             this.posY = posY;
-            this.elem.style.left = this.posX + "px";
-            this.elem.style.top = this.posY + "px";
+            this.elem.setAttribute("x", this.posX);
+            this.elem.setAttribute("y", this.posY);
         };
       
     }
 
-    //создание тенниса с помощью DOM-элементов
-    function renderTennisDOM (cnt) {
+    //создание тенниса с помощью SVG
+    function renderTennisSVG (cnt) {
 
         var pgHeight = SIZES.playgroundHeight;
         var pgWidth = SIZES.playgroundWidth;
@@ -123,13 +120,21 @@
         updateScore();
 
         //создаем корт
-        var tennis = document.createElement("div");
-        tennis.classList.add("tennis__playground");
-        tennis.style.width = pgWidth + "px";
-        tennis.style.height = pgHeight + "px";
-        tennis.style.backgroundColor = COLORS.playground;
-        cnt.appendChild(tennis);
-
+        var tennisSVG = document.createElementNS("http://www.w3.org/2000/svg","svg");
+        tennisSVG.classList.add("tennis__playground");
+        tennisSVG.setAttribute("width", pgWidth);
+        tennisSVG.setAttribute("height", pgHeight);
+        tennisSVG.setAttribute("xmlns","http://www.w3.org/2000/svg");
+        cnt.appendChild(tennisSVG);
+        
+        var tennis = document.createElementNS("http://www.w3.org/2000/svg","rect");
+        tennis.setAttribute("x",0);
+        tennis.setAttribute("y",0);
+        tennis.setAttribute("width", pgWidth);
+        tennis.setAttribute("height", pgHeight);
+        tennis.setAttribute("fill", COLORS.playground);
+        tennisSVG.appendChild(tennis);
+        
         //создаем кнопку старта
         var btnStart = document.createElement("button");
         btnStart.classList.add("tennis__start");
@@ -137,19 +142,19 @@
         cnt.appendChild(btnStart);
         btnStart.addEventListener("click", startGame);
         
-        //создаем ракетку 1
+        //создаем левую ракетку
         var playerLeft = new Player();
-        playerLeft.create(tennis,COLORS.playerLeft,SIZES.playerWidth,SIZES.playerHeight);
-        playerLeft.moveTo(0,pgHeight/2);
+        playerLeft.create(tennisSVG,COLORS.playerLeft,SIZES.playerWidth,SIZES.playerHeight);
+        playerLeft.moveTo(0,pgHeight/2 - playerLeft.height/2);
 
-        //создаем ракетк 2
+        //создаем правую ракетку
         var playerRight = new Player();
-        playerRight.create(tennis,COLORS.playerRight,SIZES.playerWidth,SIZES.playerHeight);
-        playerRight.moveTo(pgWidth - playerRight.width,pgHeight/2);
+        playerRight.create(tennisSVG,COLORS.playerRight,SIZES.playerWidth,SIZES.playerHeight);
+        playerRight.moveTo(pgWidth - playerRight.width,pgHeight/2 - playerRight.height/2);
                 
         //создаем мяч
         var ball = new Ball();
-        ball.create(tennis,COLORS.ball,SIZES.ball,SIZES.ball,SPEED);
+        ball.create(tennisSVG,COLORS.ball,SIZES.ball/2);
         ball.moveTo((pgWidth/2),(pgHeight/2));
 
         //обновление табло
@@ -221,12 +226,13 @@
 
         //старт, продолжение игры
         function startGame() {
+            //очищаем таймер и ставим мяч в центр поля
             clearInterval(timer);
             ball.moveTo((pgWidth/2),(pgHeight/2));
-            //определим рандомно направление и скорость мяча
+            //определим рандомно начальное направление и скорость мяча
             ball.speedX = randomDiap(SPEED,SPEED+2)*randomSign();
             ball.speedY = randomDiap(SPEED,SPEED+2)*randomSign();
-
+            //запускаем мяч и ракетки
             function move() {
                 //движения ракеток
                 movePlayer(playerLeft);
@@ -235,35 +241,35 @@
                 //движения мячика
                 ball.posX += ball.speedX;
                 // попал ли мяч в правую ракетку?
-                if ((ball.posX + ball.width/2) > (pgWidth - playerRight.width)) {
+                if ((ball.posX + ball.radius) > (pgWidth - playerRight.width)) {
                     var posDown = playerRight.posY + playerRight.height;
                     var posUp = playerRight.posY;
                     if ((ball.posY <= posDown) && (ball.posY >= posUp)) {
                         ball.speedX =- ball.speedX;
-                        ball.posX = pgWidth - ball.width/2 - playerRight.width;
+                        ball.posX = pgWidth - ball.radius - playerRight.width;
                     }
                 }
                 // ударился ли мяч в правую стену?
-                if ((ball.posX + ball.width/2) > pgWidth) {
+                if ((ball.posX + ball.radius) > pgWidth) {
                     ball.speedX =- ball.speedX;
-                    ball.posX = pgWidth - ball.width/2;
+                    ball.posX = pgWidth - ball.radius;
                     clearInterval(timer);
                     scoreLeft += 1;
                     updateScore();
                 }
                 // попал ли мяч в левую ракетку?
-                if ((ball.posX - ball.width/2) < playerLeft.width) {
+                if ((ball.posX - ball.radius) < playerLeft.width) {
                     var posDown = playerLeft.posY + playerLeft.height;
                     var posUp = playerLeft.posY;
                     if ((ball.posY <= posDown) && (ball.posY >= posUp)) {
                         ball.speedX =- ball.speedX;
-                        ball.posX = playerRight.width + ball.width/2;
+                        ball.posX = playerRight.width + ball.radius;
                     }
                 }
                // ударился ли мяч в левую стену?
-                if ((ball.posX - ball.width/2) < 0) {
+                if ((ball.posX - ball.radius) < 0) {
                     ball.speedX =- ball.speedX;
-                    ball.posX = ball.width/2;
+                    ball.posX = ball.radius;
                     clearInterval(timer);
                     scoreRight += 1;
                     updateScore();
@@ -271,14 +277,14 @@
 
                 ball.posY += ball.speedY;
                 // вылетел ли мяч ниже пола?
-                if ((ball.posY + ball.height/2) > pgHeight) {
+                if ((ball.posY + ball.radius) > pgHeight) {
                     ball.speedY =- ball.speedY;
-                    ball.posY = pgHeight - ball.height/2;
+                    ball.posY = pgHeight - ball.radius;
                 }
                 // вылетел ли мяч выше потолка?
-                if ((ball.posY - ball.height/2)< 0) {
+                if ((ball.posY - ball.radius)< 0) {
                     ball.speedY =- ball.speedY;
-                    ball.posY = ball.height/2;
+                    ball.posY = ball.radius;
                 }
                 ball.moveTo(ball.posX,ball.posY);
             }
@@ -286,9 +292,9 @@
         }
     }
 
-    btnTennisDOM.addEventListener('click', function() {
+    btnTennisSVG.addEventListener('click', function() {
         clearInterval(timer);
         cntTennis.innerHTML = "";
-        renderTennisDOM(cntTennis);
+        renderTennisSVG(cntTennis);
     });
 })();
