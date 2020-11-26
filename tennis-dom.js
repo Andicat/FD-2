@@ -27,7 +27,7 @@
     }
 
     var timer;
-    const TENNIS_SIZE = window.matchMedia("(max-width: 768px)").matches?300:500;
+    const TENNIS_SIZE = window.matchMedia("(max-width: 768px)").matches?300:600;
     const SPEED = 5;
     const SIZES = {
         playgroundWidth: TENNIS_SIZE,
@@ -91,6 +91,7 @@
             this.elem.style.width = this.width + "px";
             this.elem.style.height = this.height + "px";
             this.elem.style.backgroundColor = color;
+            this.elem.style.borderRadius = this.width/2 + "px";
             this.elem.style.position = "absolute";
             cnt.appendChild(this.elem);
         };
