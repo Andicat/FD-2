@@ -269,9 +269,6 @@
                 }
                 ball.moveTo(ball.posX,ball.posY);
             }
-
-            
-
             timer = setInterval(move,40);
         }
     }
