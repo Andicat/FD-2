@@ -33,7 +33,7 @@
         playgroundWidth: TENNIS_SIZE,
         playgroundHeight: TENNIS_SIZE/1.5,
         playerWidth: TENNIS_SIZE*0.02,
-        playerHeight: TENNIS_SIZE*0.2,
+        playerHeight: TENNIS_SIZE*(0.2-0.02),
         ball: TENNIS_SIZE*0.05,
         scoreboardFontSize: TENNIS_SIZE*0.1,
     };
@@ -110,6 +110,7 @@
 
         //создаем канвас
         var tennisCanvas = document.createElement("canvas");
+        tennisCanvas.classList.add("tennis__playground");
         tennisCanvas.setAttribute("width",pgWidth);
         tennisCanvas.setAttribute("height",pgHeight);
         cnt.appendChild(tennisCanvas);
@@ -137,11 +138,8 @@
         //создание рисунка на канвасе
         function draw() {
             //рисуем корт
-            context.strokeStyle = "#333333";
-            context.lineWidth = 2;
             context.fillStyle = COLORS.playground;
             context.fillRect(0,0,pgWidth,pgHeight);
-            context.strokeRect(0,0,pgWidth,pgHeight);
             //рисуем ракетки и мяч
             playerLeft.draw();
             playerRight.draw();
@@ -150,7 +148,7 @@
 
         draw();
 
-        //координаты ракетки
+        //двигаем ракетки
         function movePlayer(player) {
             if (!player.speed) {
                 return;

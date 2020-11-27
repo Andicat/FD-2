@@ -140,12 +140,12 @@
         //создаем ракетку 1
         var playerLeft = new Player();
         playerLeft.create(tennis,COLORS.playerLeft,SIZES.playerWidth,SIZES.playerHeight);
-        playerLeft.moveTo(0,pgHeight/2);
+        playerLeft.moveTo(0,pgHeight/2 - playerLeft.height/2);
 
         //создаем ракетк 2
         var playerRight = new Player();
         playerRight.create(tennis,COLORS.playerRight,SIZES.playerWidth,SIZES.playerHeight);
-        playerRight.moveTo(pgWidth - playerRight.width,pgHeight/2);
+        playerRight.moveTo(pgWidth - playerRight.width,pgHeight/2 - playerRight.height/2);
                 
         //создаем мяч
         var ball = new Ball();
