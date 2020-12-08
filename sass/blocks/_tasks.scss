@@ -7,6 +7,14 @@
 	h2 {
 		max-width: 80%;
 	}
+
+	&__title {
+		width: 100%;
+		font-size: 24px;
+		line-height: normal;
+		font-weight: 600;
+		margin: 10px;;
+	}
 	
 	&__list {
 		list-style: none;
@@ -19,8 +27,8 @@
 
 	&__item {
 		display: flex;
-		//align-items: center;
-		flex-grow: 1;
+		flex-wrap: wrap;
+		justify-content: center;
 
 		&--done {
 			display: none;
