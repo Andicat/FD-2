@@ -296,10 +296,4 @@
         cntClock.innerHTML = "";
         renderClockSVG(cntClock);
     });
-
-    /*
-    Точность часов!!!!
-    запускаем как SetTimeout(1000-getmiliseconds)
-    */
-
 })();
