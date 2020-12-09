@@ -87,7 +87,7 @@
 
             var btnShow = document.createElement("button");
             btnShow.classList.add("locStorage__show");
-            btnShow.textContent = this.storage.storageNameRu + " - показать информацию";
+            btnShow.textContent = this.storage.storageNameRu + " - показать весь перечень";
             this.container.appendChild(btnShow);
             btnShow.addEventListener("click", this.showItems.bind(this));
             
