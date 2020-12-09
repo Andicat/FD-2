@@ -51,9 +51,9 @@ Controller — реализовать вариант старта/останов
         cntClock.classList.add("clock-mvc__container");
         cntClockMVC.appendChild(cntClock);
 
-        clock.init(viewClock);
         viewClock.init(clock,cntClock);
         controller.init(clock,cntClock);
+        clock.init(viewClock);
 
         // инициируем первичное отображение Model во View
         clock.updateView();

@@ -14,9 +14,7 @@ class Clock {
     
     init = function(view) {
         this.myView = view;
-        this.time = new Date();
-        var hoursUTC = this.time.getUTCHours();
-        this.time.setHours(hoursUTC + this.UTC);
+        this.start();
     }
 
     start = function() {
