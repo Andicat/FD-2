@@ -186,7 +186,7 @@
     };
 
     btnCreate.addEventListener('click', (event) => {
-        var formDef1 = [
+        /*var formDef1 = [
             {label:'Название сайта:',kind:'longtext',name:'sitename'},
             {label:'URL сайта:',kind:'longtext',name:'siteurl'},
             {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
@@ -216,9 +216,9 @@
 
         var form2 = document.createElement("form");
         createForm(form2,formDef2,"form2");*/
-        //getDataJSON("formDef1");
-        var jjj = JSON.stringify(formDef1);
-        console.log(jjj);
+        getDataJSON("formDef1");
+        /*var jjj = JSON.stringify(formDef1);
+        console.log(jjj);*/
     });
 
 })();
