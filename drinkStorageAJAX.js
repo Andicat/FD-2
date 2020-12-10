@@ -169,10 +169,4 @@
     drinksControls.start(drinksStorage,cntDrinksStorage);  
     console.log(drinksStorage._storage);
 
-    //Блюда
-    //var dishesStorage = new LocStorage("dishesStorage","Блюда");
-    //var dishesControls = new ControllerButtons();
-    //var cntDishesStorage = document.querySelector('.locStorage--dishes');
-    //dishesControls.start(dishesStorage,cntDishesStorage);  
-
 })();
