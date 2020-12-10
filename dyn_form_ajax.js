@@ -174,10 +174,9 @@
 
     function getDataJSON(fileName) {
         var xhr = new XMLHttpRequest();
-        xhr.responseType = 'json';
+        xhr.responseType = 'text';
         xhr.addEventListener('load', function () {
-            debugger
-            var formDef = xhr.response;
+            var formDef = JSON.parse(xhr.response);
             console.log(formDef);
             //var formCnt = document.createElement("form-" + fileName);
             //createForm(formCnt,formDef,"form" + fileName);
@@ -187,7 +186,7 @@
     };
 
     btnCreate.addEventListener('click', (event) => {
-        /*var formDef1 = [
+        var formDef1 = [
             {label:'Название сайта:',kind:'longtext',name:'sitename'},
             {label:'URL сайта:',kind:'longtext',name:'siteurl'},
             {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
@@ -200,7 +199,7 @@
             {label:'Описание сайта:',kind:'memo',name:'description'},
             {label:'Опубликовать',kind:'submit'},
         ];
-        debugger
+        /*debugger
         var jjj = JSON.stringify(formDef1);
         console.log(jjj);
         var formDef2 = [
@@ -217,7 +216,9 @@
 
         var form2 = document.createElement("form");
         createForm(form2,formDef2,"form2");*/
-        getDataJSON("formDef1");
+        //getDataJSON("formDef1");
+        var jjj = JSON.stringify(formDef1);
+        console.log(jjj);
     });
 
 })();
