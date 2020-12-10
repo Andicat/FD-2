@@ -166,9 +166,9 @@
     function createFormFromJSON(fileName) {
         var URL = 'https://andicat.github.io/FD-2/';
         var xhr = new XMLHttpRequest();
-        xhr.responseType = 'text';
+        xhr.responseType = 'json';
         xhr.addEventListener('load', function () {
-            var formData = JSON.parse(xhr.response);
+            var formData = xhr.response;
             createForm(formData,fileName);
         });
         xhr.open('GET', 'https://andicat.github.io/FD-2/' + fileName + '.json');
