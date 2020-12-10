@@ -162,21 +162,32 @@
         cntForm.appendChild(form);
     }
 
-    /*var URL = 'https://andicat.github.io/FD-2/';
+    var URL = 'https://andicat.github.io/FD-2/';
     var serverTime = 10000;
     var statusOk = 200;
-    var ajaxHandlerScript="https://fe.it-academy.by/AjaxStringStorage2.php";
-    var stringName='Sadykov_TripleTownProject';
-    var recordsTable;
-          
+    //var ajaxHandlerScript="https://fe.it-academy.by/AjaxStringStorage2.php";
+    //var stringName='Sadykov_TripleTownProject';
+    //var recordsTable;
 
-    $.ajax( {
-        url: ajaxHandlerScript, type: 'POST', cache: false, dataType:'json',
-        data: { f: 'READ', n: stringName },
-        success: readReady, error: errorHandler
-    });*/
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'json';
+
+    function getDataJSON(fileName) {
+        var xhr = new XMLHttpRequest();
+        xhr.responseType = 'json';
+        xhr.addEventListener('load', function () {
+            debugger
+            var formDef = xhr.response;
+            console.log(formDef);
+            //var formCnt = document.createElement("form-" + fileName);
+            //createForm(formCnt,formDef,"form" + fileName);
+        });
+        xhr.open('GET', 'https://andicat.github.io/FD-2/' + fileName + '.json');
+        xhr.send();
+    };
+
     btnCreate.addEventListener('click', (event) => {
-        var formDef1 = [
+        /*var formDef1 = [
             {label:'Название сайта:',kind:'longtext',name:'sitename'},
             {label:'URL сайта:',kind:'longtext',name:'siteurl'},
             {label:'Посетителей в сутки:',kind:'number',name:'visitors'},
@@ -205,7 +216,8 @@
         createForm(form1,formDef1,"form1");
 
         var form2 = document.createElement("form");
-        createForm(form2,formDef2,"form2");
+        createForm(form2,formDef2,"form2");*/
+        getDataJSON("formDef1");
     });
 
 })();
