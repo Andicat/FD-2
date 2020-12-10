@@ -17,7 +17,8 @@
     }
 
     //строим форму динамически
-    function createForm(form,elemArr, formName) {
+    function createForm(elemArr, formName) {
+        var form = document.createElement("form");
         form.setAttribute("name",formName);
         form.setAttribute("action","https://fe.it-academy.by/TestForm.php");
         form.setAttribute("method","post");
@@ -162,41 +163,22 @@
         cntForm.appendChild(form);
     }
     
-    function getDataJSON(fileName) {
+    function createFormFromJSON(fileName) {
         var URL = 'https://andicat.github.io/FD-2/';
         var xhr = new XMLHttpRequest();
         xhr.responseType = 'text';
         xhr.addEventListener('load', function () {
-            var formDef = JSON.parse(xhr.response);
-            console.log(formDef);
-            
+            var formData = JSON.parse(xhr.response);
+            createForm(formData,fileName);
         });
         xhr.open('GET', 'https://andicat.github.io/FD-2/' + fileName + '.json');
         xhr.send();
     };
 
     btnCreate.addEventListener('click', (event) => {
-        var formDef2 = [
-            {label:'Фамилия:',kind:'longtext',name:'lastname'},
-            {label:'Имя:',kind:'longtext',name:'firstname'},
-            {label:'Отчество:',kind:'longtext',name:'secondname'},
-            {label:'Возраст:',kind:'number',name:'age'},
-            {label:'Зарегистрироваться',kind:'submit'},
-        ];
-        var jjj = JSON.stringify(formDef2);
-        console.log(jjj);
         cntForm.innerHTML = "";
-        
-        /*var form1 = document.createElement("form");
-        createForm(form1,formDef1,"form1");
-
-        var form2 = document.createElement("form");
-        createForm(form2,formDef2,"form2");*/
-        /*var formCnt = document.createElement("form-" + fileName);
-            createForm(formCnt,formDef,"form" + fileName);
-        getDataJSON("formDef1");*/
-        /*var jjj = JSON.stringify(formDef1);
-        console.log(jjj);*/
+        createFormFromJSON("formDef1");
+        createFormFromJSON("formDef2");
     });
 
 })();
