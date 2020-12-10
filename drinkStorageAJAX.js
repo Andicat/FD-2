@@ -2,10 +2,9 @@
 
 //======================================DRINKS_AJAX_STORAGE==================================
 /*
-В проекте DRINKS разработать класс LocStorage (в модуле LocStorage.js)
-для хранения информации в локальном хранилище (localStorage).
-На веб-странице создать два объекта класса LocStorage и реализовать 
-два интерфейса (набора кнопок) — для работы с напитками и для работы с блюдами.
+В проекте DRINKS разработать класс AJAXStorage (в модуле AJAXStorage.js)
+для сохранения информации о напитках, кроме сохранения в локальном хэше,
+также и на удалённом сервере (обмен данными с сервером — через AJAX, сервис AjaxStringStorage2).
 */
 
 (function () {
@@ -166,14 +165,14 @@
     //Напитки
     var drinksStorage = new LocStorage("drinksStorage","Напитки");
     var drinksControls = new ControllerButtons();
-    var cntDrinksStorage = document.querySelector('.locStorage--drinks');
+    var cntDrinksStorage = document.querySelector('.locStorage--drinks-ajax');
     drinksControls.start(drinksStorage,cntDrinksStorage);  
     console.log(drinksStorage._storage);
 
     //Блюда
-    var dishesStorage = new LocStorage("dishesStorage","Блюда");
-    var dishesControls = new ControllerButtons();
-    var cntDishesStorage = document.querySelector('.locStorage--dishes');
-    dishesControls.start(dishesStorage,cntDishesStorage);  
+    //var dishesStorage = new LocStorage("dishesStorage","Блюда");
+    //var dishesControls = new ControllerButtons();
+    //var cntDishesStorage = document.querySelector('.locStorage--dishes');
+    //dishesControls.start(dishesStorage,cntDishesStorage);  
 
 })();
