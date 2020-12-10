@@ -24,7 +24,7 @@ class Clock {
 
     stop = function() {
         this.isRun = false;
-        clearTimeout(this.timer);
+        this.timer = null;
         this.updateView();
     }
 
