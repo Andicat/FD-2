@@ -8,44 +8,6 @@
 */
 
 (function () {
-  
-    //model
-    class LocStorage {
-
-        _storage = {};
-
-        constructor(storageName, storageNameRu){
-            this.storageName = storageName;
-            this.storageNameRu = storageNameRu;
-            var ls = localStorage.getItem(storageName);
-            if (ls) {
-                this._storage = JSON.parse(ls);
-            }
-        }
-        
-        addValue = function (key,value) {
-            this._storage[key] = value;
-            localStorage.setItem(this.storageName,JSON.stringify(this._storage));
-            return this;
-        }
-
-        getValue = function (key) {
-            return this._storage[key];
-        }
-
-        deleteValue = function (key) {
-            if (key in this._storage) {
-                delete this._storage[key];
-                localStorage.setItem(this.storageName,JSON.stringify(this._storage));
-                return true;
-            };
-            return false;
-        }
-
-        getKeys = function () {
-            return Object.keys(this._storage);
-        }
-    }
 
     // controller
     class ControllerButtons {
@@ -58,7 +20,6 @@
         start = function(storage, container) {
             this.storage = storage;
             this.container = container;
-            //this.setListeners();
             
             //создадим наименование и кнопки
             var titleStorage = document.createElement("span");
@@ -162,11 +123,9 @@
         }
     }
 
-    //Напитки
-    var drinksStorage = new LocStorage("drinksStorage","Напитки");
+    var drinksStorage = new AJAXStorage('ANDREEVA_DRINKS_STORAGE',"drinksStorage","Напитки");
     var drinksControls = new ControllerButtons();
     var cntDrinksStorage = document.querySelector('.locStorage--drinks-ajax');
-    drinksControls.start(drinksStorage,cntDrinksStorage);  
-    console.log(drinksStorage._storage);
+    drinksControls.start(drinksStorage,cntDrinksStorage);
 
 })();

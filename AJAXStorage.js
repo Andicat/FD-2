@@ -2,68 +2,92 @@
 
 class AJAXStorage {
 
-    constructor() {
+    _storage = {};
+
+    constructor(stringName, storageName, storageNameRu) {
         this.url = "https://fe.it-academy.by/AjaxStringStorage2.php";
-        this.password = null;
-        this.stringName = 'ANDREEVA_DRINKS_STORAGE';
+        this.stringName = stringName;
+        this.storageName = storageName;
+        this.storageNameRu = storageNameRu;
+        this.password;
+        this.read();
     }
 
-    
-    store = function() {
-        this.password = Math.random();
-        $.ajax( {
-                url : this.url, type : 'POST', cache : false, dataType:'json',
-                data : { f : 'LOCKGET', n : this.stringName, p : this.password },
-                success : lockGetReady, error : error
-            }
-        );
+    addValue = function (key,value) {
+        this._storage[key] = value;
+        this.save();
+        return this;
     }
 
-    lockGetReady = function(callresult) {
-        if ( callresult.error!=undefined )
-            alert(callresult.error);
-        else {
-            // нам всё равно, что было прочитано -
-            // всё равно перезаписываем
-            var info = {
-                name : document.getElementById('IName').value,
-                age : document.getElementById('IAge').value
-            };
-            $.ajax( {
-                    url : this.url, type : 'POST', cache : false, dataType:'json',
-                    data : { f : 'UPDATE', n : this.stringName, v : JSON.stringify(info), p : this.password },
-                    success : updateReady, error : error
-                }
-            );
-        }
+    getValue = function (key) {
+        return this._storage[key];
     }
 
-    updateReady = function(callresult) {
-        if ( callresult.error!=undefined )
-            alert(callresult.error);
+    deleteValue = function (key) {
+        if (key in this._storage) {
+            delete this._storage[key];
+            this.save();
+            return true;
+        };
+        return false;
     }
 
-    restoreInfo = function() {
+    getKeys = function () {
+        return Object.keys(this._storage);
+    }
+
+    read = function() {
         $.ajax(
             {
                 url : this.url, type : 'POST', cache : false, dataType:'json',
                 data : { f : 'READ', n : this.stringName },
-                success : read, error : error
+                success : successRead.bind(this), error : this.onError
             }
         );
-    }
 
-    read = function(callresult) {
-        if ( callresult.error!=undefined )
-            alert(callresult.error);
-        else if ( callresult.result!="" ) {
-            var info=JSON.parse(callresult.result);
-            document.getElementById('IName').value=info.name;
-            document.getElementById('IAge').value=info.age;
+        function successRead(callresult) {
+            if ( callresult.error!=undefined )
+                alert(callresult.error);
+            else if ( callresult.result!="" ) {
+                this._storage = JSON.parse(callresult.result);
+                localStorage.setItem(this.storageName,JSON.stringify(this._storage));
+            }
         }
     }
 
-    error = function(jqXHR,statusStr,errorStr) {
+    save = function(info) {
+        this.password = Math.random();
+        $.ajax( {
+                url : this.url, type : 'POST', cache : false, dataType:'json',
+                data : { f : 'LOCKGET', n : this.stringName, p : this.password },
+                success : lock.bind(this), error : this.onError
+            }
+        );
+
+        function lock(callresult) {
+            if ( callresult.error!=undefined )
+                alert(callresult.error);
+            else {
+                $.ajax( {
+                        url : this.url, type : 'POST', cache : false, dataType:'json',
+                        data : { f : 'UPDATE', n : this.stringName, v : JSON.stringify(this._storage), p : this.password },
+                        success : this.onUpdate.bind(this), error : this.onError
+                    }
+                );
+            }
+        }
+
+    }
+
+    onUpdate = function(callresult) {
+        if ( callresult.error!=undefined ) {
+            alert(callresult.error);
+        } else {
+            localStorage.setItem(this.storageName,JSON.stringify(this._storage));
+        }
+    }
+
+    onError = function(jqXHR,statusStr,errorStr) {
         alert(statusStr + ' ' + errorStr);
     }
 };
